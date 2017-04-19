@@ -5,34 +5,54 @@ using PDC.Characters;
 using PDC.StatusEffects;
 using System;
 
-public class Snake : AICharacter
+namespace PDC.Characters
 {
-    public StatusEffect effect;
-
-    void Awake()
+    public class Snake : AICharacter
     {
-        //effect.AddEffect(this);
-        SetupAI();
-    }
+        public StatusEffect effect;
+        bool attacking = false;
 
-    void Update()
-    {
-        UpdateAI();
-    }
+        void Awake()
+        {
+            //effect.AddEffect(this);
+            SetupAI();
+        }
 
-    public override void Attack()
-    {
-        print("ATTACKZZZ");
-        //rb.velocity += (transform.position - player.transform.position).normalized * 10000;
-    }
+        void Update()
+        {
+            if (!attacking)
+                UpdateAI();
+        }
 
-    public override void Die()
-    {
-        throw new NotImplementedException();
-    }
+        public override void Attack()
+        {
+            print("ATTACKZZZ");
+            anim.SetTrigger("Attack");
+        }
 
-    public override void Move()
-    {
-        throw new NotImplementedException();
+        public void StartAttack()
+        {
+            attacking = true;
+        }
+
+        public void JumpAttack()
+        {
+            rb.velocity += (player.transform.position - transform.position).normalized * 10000;
+        }
+
+        public void StopAttack()
+        {
+            attacking = false;
+        }
+
+        public override void Die()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Move()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

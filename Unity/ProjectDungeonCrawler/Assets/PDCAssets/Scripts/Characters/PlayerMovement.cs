@@ -11,22 +11,16 @@ public class PlayerMovement : MonoBehaviour {
     float verticalInput;
     Vector3 rotation;
     Vector3 camRotation;
-    Vector3 originalScale;
-    bool sprinting;
-    bool crouching;
 
     [SerializeField] float speed = 5f;
-    [SerializeField] float sprintMultiplier = 1.5f;
-    [SerializeField] float standToCrouchSpeed = 5f;
     [SerializeField] Camera cam;
 
     void Start()
     {
-        originalScale = transform.localScale;
         rb = GetComponent<Rigidbody>();
     }
 
-    public bool SetMove(float _xInput, float _yInput, bool _isSprinting, bool _isCrouching)
+    public bool SetMove(float _xInput, float _yInput)
     {
         verticalInput = _yInput;
 
@@ -34,14 +28,6 @@ public class PlayerMovement : MonoBehaviour {
         Vector3 _moveVertical = transform.forward * _yInput;
 
         Vector3 _dir = (_moveHorizontal + _moveVertical).normalized * speed;
-
-        sprinting = _isSprinting;
-        crouching = _isCrouching;
-
-        if (_isCrouching)
-            _dir /= 2f;
-        else if (_isSprinting)
-            _dir *= sprintMultiplier;
 
         direction = _dir;
 
@@ -79,16 +65,6 @@ public class PlayerMovement : MonoBehaviour {
 
     void PreformMovement()
     {
-        if (crouching)
-        {
-            Vector3 _newScale = originalScale;
-            _newScale /= 2.2f;
-            transform.localScale = Vector3.Lerp(transform.localScale, _newScale, standToCrouchSpeed * Time.fixedDeltaTime);
-        }
-        else
-        {
-            transform.localScale = Vector3.Lerp(transform.localScale, originalScale, standToCrouchSpeed * Time.fixedDeltaTime);
-        }
         if (direction != Vector3.zero)
         {
             Vector3 _direction = direction;
