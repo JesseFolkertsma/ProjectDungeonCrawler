@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using PDC.Abilities;
 using PDC.StatusEffects;
+using System;
+using UnityEngine.AI;
 
 namespace PDC
 {
@@ -41,6 +43,102 @@ namespace PDC
             public abstract void Attack();
 
             public abstract void Die();
+        }
+
+        public enum AIState
+        {
+            Idle,
+            Searching,
+            Persueing,
+        }
+
+        public class AICharacter : BaseCharacter
+        {
+            public AIState state = AIState.Idle;
+            public Rigidbody rb;
+            public float sightRange;
+            public float attackRange = 4;
+            public GameObject player;
+            [SerializeField]
+            Transform headBone;
+            NavMeshAgent agent;
+
+            public void SetupAI()
+            {
+                rb = GetComponent<Rigidbody>();
+                player = GameObject.FindGameObjectWithTag("Player");
+                agent = GetComponent<NavMeshAgent>();
+                agent.isStopped = true;
+                agent.stoppingDistance = attackRange - .5f;
+            }
+
+            float startSearch = 0f;
+            public void UpdateAI()
+            {
+                switch (state)
+                {
+                    case AIState.Idle:
+                        if (CheckForPlayer())
+                        {
+                            state = AIState.Persueing;
+                            agent.isStopped = false;
+                        }
+                        break;
+                    case AIState.Searching:
+                        if (CheckForPlayer())
+                        {
+                            state = AIState.Persueing;
+                            agent.isStopped = false;
+                        }
+                        break;
+                    case AIState.Persueing:
+                        agent.destination = player.transform.position;
+                        if (PlayerDistance() > 20)
+                        {
+                            state = AIState.Searching;
+                        }
+                        else if(agent.remainingDistance < attackRange)
+                        {
+                            Attack();
+                        }
+                        break;
+                }
+            }
+
+            bool CheckForPlayer()
+            {
+                return true;
+                Vector3 dir = (headBone.position - player.transform.position).normalized;
+                RaycastHit hit;
+                if(Physics.Raycast(headBone.position, dir, out hit, sightRange))
+                {
+                    if (hit.transform.tag == "Player")
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            float PlayerDistance()
+            {
+                return Vector3.Distance(transform.position, player.transform.position);
+            }
+
+            public override void Attack()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override void Die()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override void Move()
+            {
+                throw new NotImplementedException();
+            }
         }
 
         [System.Serializable]

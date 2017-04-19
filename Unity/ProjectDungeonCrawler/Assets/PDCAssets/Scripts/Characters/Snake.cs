@@ -5,17 +5,25 @@ using PDC.Characters;
 using PDC.StatusEffects;
 using System;
 
-public class Snake : BaseCharacter
+public class Snake : AICharacter
 {
     public StatusEffect effect;
 
-    void Start()
+    void Awake()
     {
-        effect.AddEffect(this);
+        //effect.AddEffect(this);
+        SetupAI();
     }
+
+    void Update()
+    {
+        UpdateAI();
+    }
+
     public override void Attack()
     {
-        throw new NotImplementedException();
+        print("ATTACKZZZ");
+        //rb.velocity += (transform.position - player.transform.position).normalized * 10000;
     }
 
     public override void Die()
