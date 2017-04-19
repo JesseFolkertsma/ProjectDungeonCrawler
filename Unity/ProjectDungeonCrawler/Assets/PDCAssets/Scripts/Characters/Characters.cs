@@ -1,16 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PDC.Abilities;
+using PDC.StatusEffects;
 
 namespace PDC
 {
     namespace Characters
     {
+        [System.Serializable]
         public abstract class BaseCharacter : MonoBehaviour
         {
             public string characterName = "New Character";
             public Stats characterStats;
-            List<Coroutine> statusEffects;
+            public List<OngoingEffect> ongoingEffects = new List<OngoingEffect>();
 
             public void TakeDamage(float damage)
             {
@@ -19,16 +22,17 @@ namespace PDC
                     Die();
             }
 
-            public void GiveStatusEffect(Coroutine effect)
+            public void GiveStatusEffect(OngoingEffect effect)
             {
-                statusEffects.Add(effect);
+                effect.routine = StartCoroutine(effect.effect);
+                ongoingEffects.Add(effect);
             }
 
             public void CureEffects()
             {
-                foreach(Coroutine c in statusEffects)
+                foreach(OngoingEffect oge in ongoingEffects)
                 {
-                    StopCoroutine(c);
+                    StopCoroutine(oge.effect);
                 }
             }
 
@@ -39,7 +43,7 @@ namespace PDC
             public abstract void Die();
         }
 
-        [SerializeField]
+        [System.Serializable]
         public class Stats
         {
             [SerializeField]
