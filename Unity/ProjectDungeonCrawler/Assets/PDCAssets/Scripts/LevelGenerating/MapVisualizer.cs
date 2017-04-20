@@ -29,6 +29,11 @@ namespace PDC
                     Debug.Log("The max Interior density is lower than it's minimal counterpart!");
                     return;
                 }
+                if (densityEnemyMax < densityEnemyMin)
+                {
+                    Debug.Log("The max enemy density is lower than it's minimal counterpart!");
+                    return;
+                }
 
                 StartCoroutine(_SpawnRooms(level, entrance));
             }
