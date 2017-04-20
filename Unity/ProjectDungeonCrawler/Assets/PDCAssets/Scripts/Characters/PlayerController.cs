@@ -7,16 +7,15 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
     PlayerMovement movement;
     HeadBobComponent bobComponent;
+    [HideInInspector] public Animator anim;
 
     [SerializeField] Camera cam;
     [SerializeField] public Camera armsCam;
 
     [Header("PlayerStats")]
     [SerializeField] float speed = 5f;
-    [SerializeField] float sprintMultiplier = 1.5f;
     [SerializeField] float jumpHeight = 5f;
     [SerializeField] bool isGrounded = true;
-    [SerializeField] float bumpCheckRange = .3f;
 
     [Header("GameStats")]
     [SerializeField] float sensitivity = 5f;
@@ -25,20 +24,15 @@ public class PlayerController : MonoBehaviour {
 
     [Header("Headbob Stats")]
     [SerializeField] float walkBobSpeed = 1.5f;
-    [SerializeField] float sprintBobSpeed = 1.5f;
-
-    Vector3 originalScale;
-    bool bumpHead = false;
-    public bool ducked = false;
 
     void Start()
     {
-        originalScale = transform.localScale;
         movement = GetComponent<PlayerMovement>();
         bobComponent = GetComponent<HeadBobComponent>();
         bobComponent.SetupHeadBob(cam);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        anim = GetComponent<Animator>();
     }
 
     void Update()
@@ -52,24 +46,12 @@ public class PlayerController : MonoBehaviour {
     {
         #region Movement input
         //Calculate movement
-        bool _sprinting = Input.GetButton("LeftShift");
-        bool _crouching = Input.GetButton("LeftControl");
-        if (!_crouching)
-            _crouching = bumpHead;
         float _xMove = Input.GetAxisRaw("Horizontal");
         float _yMove = Input.GetAxisRaw("Vertical");
 
-        if (movement.SetMove(_xMove, _yMove, _sprinting, _crouching))
-        {
-            if (!_sprinting)
-            {
-                bobComponent.BobHead(.05f, walkBobSpeed, false);
-            }
-            else
-            {
-                bobComponent.BobHead(.05f, sprintBobSpeed, false);
-            }
-        }
+        anim.SetFloat("Move", _yMove);
+        if (movement.SetMove(_xMove, _yMove))
+            bobComponent.BobHead(.05f, walkBobSpeed, false);
 
         //Calculate player rotation
         float yRot = Input.GetAxisRaw("Mouse X");
@@ -88,6 +70,17 @@ public class PlayerController : MonoBehaviour {
                 movement.Jump(jumpHeight);
         }
         #endregion
+
+        if (Input.GetButtonDown("Fire1"))
+        {
+            anim.ResetTrigger("HeavyAttack");
+            anim.SetTrigger("LightAttack");
+        }
+        if (Input.GetButtonDown("Fire2"))
+        {
+            anim.ResetTrigger("LightAttack");
+            anim.SetTrigger("HeavyAttack");
+        }
     }
 
     void HandleChecks()

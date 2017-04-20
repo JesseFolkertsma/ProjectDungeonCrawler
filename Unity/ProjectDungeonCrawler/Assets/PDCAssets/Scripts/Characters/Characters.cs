@@ -56,16 +56,20 @@ namespace PDC
         {
             public AIState state = AIState.Idle;
             public Rigidbody rb;
+            public Animator anim;
             public float sightRange;
             public float attackRange = 4;
             public GameObject player;
             [SerializeField]
             Transform headBone;
             NavMeshAgent agent;
+            [SerializeField]
+            GameObject hitbox;
 
             public void SetupAI()
             {
                 rb = GetComponent<Rigidbody>();
+                anim = GetComponent<Animator>();
                 player = GameObject.FindGameObjectWithTag("Player");
                 agent = GetComponent<NavMeshAgent>();
                 agent.isStopped = true;
@@ -123,6 +127,16 @@ namespace PDC
             float PlayerDistance()
             {
                 return Vector3.Distance(transform.position, player.transform.position);
+            }
+
+            public void ActivateHitbox()
+            {
+                hitbox.SetActive(true);
+            }
+
+            public void DeactivateHitbox()
+            {
+                hitbox.SetActive(false);
             }
 
             public override void Attack()
