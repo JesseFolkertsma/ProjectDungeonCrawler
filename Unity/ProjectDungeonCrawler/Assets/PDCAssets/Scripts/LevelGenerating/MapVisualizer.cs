@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -51,9 +52,9 @@ namespace PDC
                             //spawn room
                             MapGenerator.Node n = level[x, y, z];
                             Vector3 pos = new Vector3();
-                            pos.x = sizeX + roomWidth * x;
-                            pos.y = sizeY + roomHeight * y;
-                            pos.z = sizeZ + roomWidth * z;
+                            pos.x = minX + roomWidth * x;
+                            pos.y = minY + roomHeight * y;
+                            pos.z = minZ + roomWidth * z;
                             GameObject room = Instantiate(n.room.room, pos, new Quaternion(0, (float)n.room.rotation, 0, 0));
 
                             //set interior
@@ -123,6 +124,7 @@ namespace PDC
                         }
             }
 
+            [Serializable]
             public class Enemy
             {
                 public GameObject obj;
