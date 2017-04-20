@@ -5,13 +5,13 @@ using PDC.Characters;
 
 public abstract class Pickup : MonoBehaviour {
     public GameObject pickupCol;
+    public GameObject lightEffect;
     public Rigidbody rb;
     public bool canPickup = true;
     public bool isThrown = false;
 
     void OnCollisionEnter(Collision col)
     {
-        print(col.transform.name);
         if (col.transform.root.GetComponentInChildren<BaseCharacter>())
         {
             if (col.transform.root.GetComponentInChildren<HumanoidCharacter>())
@@ -23,7 +23,7 @@ public abstract class Pickup : MonoBehaviour {
             }
             if (isThrown)
             {
-                col.transform.root.GetComponentInChildren<BaseCharacter>().TakeDamage(50);
+                col.transform.root.GetComponentInChildren<BaseCharacter>().TakeDamage(50, Color.red);
             }
         }
     }
@@ -36,6 +36,7 @@ public abstract class Pickup : MonoBehaviour {
             {
                 isThrown = false;
                 canPickup = true;
+                lightEffect.SetActive(true);
             }
         }
     }

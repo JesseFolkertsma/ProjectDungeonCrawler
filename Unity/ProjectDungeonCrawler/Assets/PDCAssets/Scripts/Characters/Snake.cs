@@ -23,7 +23,8 @@ namespace PDC.Characters
         {
             if (!isdead)
             {
-                Instantiate(snekdoll, transform.position, transform.rotation);
+                GameObject go = Instantiate(snekdoll, transform.position, transform.rotation);
+                go.transform.localScale = transform.localScale;
                 Destroy(gameObject);
                 isdead = true;
             }

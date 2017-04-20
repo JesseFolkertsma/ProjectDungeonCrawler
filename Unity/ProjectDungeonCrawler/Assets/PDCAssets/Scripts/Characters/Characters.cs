@@ -19,11 +19,21 @@ namespace PDC
             public List<OngoingEffect> ongoingEffects = new List<OngoingEffect>();
             public bool isdead = false;
 
-            public virtual void TakeDamage(float damage)
+            public virtual void TakeDamage(float damage, Color barColor)
             {
                 characterStats.currentHP -= damage;
                 if(characterStats.currentHP <= 0)
                     Die();
+            }
+
+            public virtual void Heal(float hp)
+            {
+                if (characterStats.currentHP >= characterStats.MaxHP)
+                    return;
+
+                characterStats.currentHP += hp;
+                if(characterStats.currentHP >= characterStats.MaxHP)
+                    characterStats.currentHP = characterStats.MaxHP;
             }
 
             public void GiveStatusEffect(OngoingEffect effect)
@@ -63,6 +73,7 @@ namespace PDC
             public Transform playerTarget;
             public Transform headBone;
             public AIState state = AIState.Idle;
+            public GameObject poison;
 
             //Public variables
             public float lookRange = 15;
@@ -94,15 +105,56 @@ namespace PDC
 
             public void SetupAI()
             {
-                healthbar = Instantiate(healthbar, headBone.position + Vector3.up, headBone.rotation);
+                playerTarget = FindObjectOfType<PlayerCharacter>().transform;
+                healthbar = Instantiate(healthbar, headBone.position + Vector3.up /2, headBone.rotation);
                 healthbar.transform.SetParent(headBone);
                 hpMaxScale = healthbar.transform.localScale;
+                healthbar.GetComponentInChildren<SpriteRenderer>().color = new Color(1, 0, 0, .3f);
+                poison.SetActive(false);
             }
 
-            public override void TakeDamage(float damage)
+            Coroutine hpLoop;
+            public override void TakeDamage(float damage, Color barColor)
             {
-                base.TakeDamage(damage);
+                base.TakeDamage(damage, barColor);
+                if(barColor == Color.green)
+                {
+                    poison.SetActive(true);
+                }
+                if(barColor == null)
+                {
+                    barColor = Color.red;
+                }
+                else
+                {
+                    healthbar.GetComponentInChildren<SpriteRenderer>().color = barColor;
+                }
                 healthbar.transform.localScale = new Vector3((characterStats.currentHP / characterStats.MaxHP) * hpMaxScale.x, hpMaxScale.y, hpMaxScale.z);
+                if(hpLoop != null)
+                {
+                    StopCoroutine(hpLoop);
+                }
+                hpLoop = StartCoroutine(HPLoop());
+            }
+
+            public override void Heal(float hp)
+            {
+                base.Heal(hp);
+                healthbar.transform.localScale = new Vector3((characterStats.currentHP / characterStats.MaxHP) * hpMaxScale.x, hpMaxScale.y, hpMaxScale.z);
+                healthbar.GetComponentInChildren<SpriteRenderer>().color = Color.blue;
+                if (hpLoop != null)
+                {
+                    StopCoroutine(hpLoop);
+                }
+                hpLoop = StartCoroutine(HPLoop());
+            }
+
+            IEnumerator HPLoop()
+            {
+                yield return new WaitForSeconds(1);
+                poison.SetActive(false);
+                healthbar.GetComponentInChildren<SpriteRenderer>().color = new Color(1, 0, 0, .3f);
+                hpLoop = null;
             }
 
             public void AIUpdate()

@@ -36,7 +36,7 @@ public class Revolver : BaseWeapon
                 BaseCharacter hitchar = hit.transform.root.GetComponent<BaseCharacter>();
                 if (hitchar != null)
                 {
-                    hitchar.TakeDamage(damage);
+                    hitchar.TakeDamage(damage, Color.red);
                     foreach (StatusEffect se in effects)
                     {
                         se.AddEffect(hitchar);

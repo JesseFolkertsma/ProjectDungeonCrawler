@@ -10,6 +10,7 @@ public class PlayerCharacter : HumanoidCharacter {
 
     Vector3 direction;
     float verticalInput;
+    float moveInput;
     Vector3 rotation;
     Vector3 camRotation;
 
@@ -25,6 +26,7 @@ public class PlayerCharacter : HumanoidCharacter {
     public bool SetMove(float _xInput, float _yInput)
     {
         verticalInput = _yInput;
+        moveInput = Mathf.Lerp(moveInput, _yInput, Time.deltaTime * 6f);
 
         Vector3 _moveHorizontal = transform.right * _xInput;
         Vector3 _moveVertical = transform.forward * _yInput;
@@ -82,6 +84,7 @@ public class PlayerCharacter : HumanoidCharacter {
     {
         if (direction != Vector3.zero)
         {
+            anim.SetFloat("Walk", moveInput);
             Vector3 _direction = direction;
             if (verticalInput < 0)
             {

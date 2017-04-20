@@ -34,7 +34,7 @@ public class Hitbox : MonoBehaviour {
         if (canHit)
         {
             BaseCharacter bc = col.transform.root.GetComponentInChildren<BaseCharacter>();
-            bc.TakeDamage(attachedWeapon.damage);
+            bc.TakeDamage(attachedWeapon.damage, Color.red);
             foreach (StatusEffect se in attachedWeapon.effects)
             {
                 se.AddEffect(bc);

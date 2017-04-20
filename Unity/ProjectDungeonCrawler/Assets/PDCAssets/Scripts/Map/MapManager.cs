@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MapManager : MonoBehaviour {
     [SerializeField]
@@ -10,6 +11,7 @@ public class MapManager : MonoBehaviour {
     [SerializeField]
     private float speed;
     private Coroutine curCoroutine;
+    public string loadLevelName = "GeneratorTest";
 
 	public void Travel(RectTransform t)
     {
@@ -27,6 +29,6 @@ public class MapManager : MonoBehaviour {
         }
 
         //nothing is happening with the place yet, so Im just going to load a random level
-
+        SceneManager.LoadScene(loadLevelName);
     }
 }

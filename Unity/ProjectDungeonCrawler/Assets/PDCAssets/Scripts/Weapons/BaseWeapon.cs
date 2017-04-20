@@ -38,11 +38,9 @@ namespace PDC.Weapons
 
         public void Throw(HumanoidCharacter hc)
         {
-            transform.parent = null;
-            rb.isKinematic = false;
+            OnDrop();
             rb.AddForce(Camera.main.transform.forward * hc.throwForce);
             isThrown = true;
-            pickupCol.SetActive(true);
         }
 
         public void SetupWeapon()
@@ -66,6 +64,14 @@ namespace PDC.Weapons
             attacking = false;
         }
 
+        public void OnDrop()
+        {
+            gameObject.layer = LayerMask.NameToLayer("Default");
+            transform.parent = null;
+            rb.isKinematic = false;
+            pickupCol.SetActive(true);
+        }
+
         public override void PickupItem(HumanoidCharacter hc)
         {
             if (hc.PickupWeapon(this))
@@ -74,6 +80,8 @@ namespace PDC.Weapons
                 pickupCol.SetActive(false);
                 canPickup = false;
                 transform.localEulerAngles += offset;
+                gameObject.layer = LayerMask.NameToLayer("PlayerArms");
+                lightEffect.SetActive(false);
             }
         }
     }
