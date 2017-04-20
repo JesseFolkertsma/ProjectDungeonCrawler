@@ -21,7 +21,7 @@ namespace PDC.StatusEffects
         {
             while (startTime + effectDuration > Time.time)
             {
-                character.characterStats.currentHP -= damagePerTick;
+                character.TakeDamage(damagePerTick);
                 yield return new WaitForSeconds(1 / tickRate);
             }
         }

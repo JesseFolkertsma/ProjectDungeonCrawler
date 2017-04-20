@@ -9,9 +9,19 @@ namespace PDC.Characters
 {
     public class Snake : AICharacter
     {
+        public GameObject snekdoll;
         void Update()
         {
             AIUpdate();
+        }
+        public override void Die()
+        {
+            if (!isdead)
+            {
+                Instantiate(snekdoll, transform.position, transform.rotation);
+                Destroy(gameObject);
+                isdead = true;
+            }
         }
     }
 }

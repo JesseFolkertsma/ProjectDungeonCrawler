@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using PDC.Characters;
+using System;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerMovement : MonoBehaviour {
+public class PlayerCharacter : HumanoidCharacter {
     Rigidbody rb;
 
     Vector3 direction;
@@ -18,6 +19,7 @@ public class PlayerMovement : MonoBehaviour {
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        SetupHuman();
     }
 
     public bool SetMove(float _xInput, float _yInput)
@@ -59,21 +61,8 @@ public class PlayerMovement : MonoBehaviour {
 
     void FixedUpdate()
     {
-        PreformMovement();
+        Move();
         PreformRotation();
-    }
-
-    void PreformMovement()
-    {
-        if (direction != Vector3.zero)
-        {
-            Vector3 _direction = direction;
-            if(verticalInput < 0)
-            {
-                _direction /= 2;
-            }
-            rb.MovePosition(rb.position + _direction * Time.fixedDeltaTime);
-        }
     }
 
     void PreformRotation()
@@ -87,5 +76,23 @@ public class PlayerMovement : MonoBehaviour {
         {
             Debug.LogError("Camera in PlayerMovement component is not setup!");
         }
+    }
+
+    public override void Move()
+    {
+        if (direction != Vector3.zero)
+        {
+            Vector3 _direction = direction;
+            if (verticalInput < 0)
+            {
+                _direction /= 2;
+            }
+            rb.MovePosition(rb.position + _direction * Time.fixedDeltaTime);
+        }
+    }
+
+    public override void Die()
+    {
+        print("ded");
     }
 }

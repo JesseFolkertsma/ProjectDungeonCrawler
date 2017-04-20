@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerMovement))]
+[RequireComponent(typeof(PlayerCharacter))]
 [RequireComponent(typeof(HeadBobComponent))]
 public class PlayerController : MonoBehaviour {
-    PlayerMovement movement;
+    PlayerCharacter movement;
     HeadBobComponent bobComponent;
     [HideInInspector] public Animator anim;
 
@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour {
 
     void Start()
     {
-        movement = GetComponent<PlayerMovement>();
+        movement = GetComponent<PlayerCharacter>();
         bobComponent = GetComponent<HeadBobComponent>();
         bobComponent.SetupHeadBob(cam);
         Cursor.visible = false;
@@ -71,15 +71,17 @@ public class PlayerController : MonoBehaviour {
         }
         #endregion
 
+        if (Input.GetButtonDown("Fire3"))
+        {
+            movement.ThrowWeapon();
+        }
         if (Input.GetButtonDown("Fire1"))
         {
-            anim.ResetTrigger("HeavyAttack");
-            anim.SetTrigger("LightAttack");
+            movement.Attack();
         }
         if (Input.GetButtonDown("Fire2"))
         {
-            anim.ResetTrigger("LightAttack");
-            anim.SetTrigger("HeavyAttack");
+            movement.HeavyAttack();
         }
     }
 

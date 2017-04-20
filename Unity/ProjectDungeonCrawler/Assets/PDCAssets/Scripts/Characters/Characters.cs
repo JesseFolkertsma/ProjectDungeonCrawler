@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using PDC.Abilities;
 using PDC.StatusEffects;
+using PDC.Weapons;
 using System;
 using UnityEngine.AI;
 
@@ -16,6 +17,7 @@ namespace PDC
             public string characterName = "New Character";
             public Stats characterStats;
             public List<OngoingEffect> ongoingEffects = new List<OngoingEffect>();
+            public bool isdead = false;
 
             public void TakeDamage(float damage)
             {
@@ -53,6 +55,7 @@ namespace PDC
             InView,
         }
 
+        [System.Serializable]
         public class AICharacter : BaseCharacter
         {
             [Header("AI Controller variables")]
@@ -269,6 +272,92 @@ namespace PDC
             public override void Attack()
             {
                 throw new NotImplementedException();
+            }
+
+            public override void Die()
+            {
+                throw new NotImplementedException();
+            }
+
+            public override void Move()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        [System.Serializable]
+        public class HumanoidCharacter : BaseCharacter
+        {
+            [HideInInspector]
+            public Animator anim;
+            public BaseWeapon equippedWeapon;
+            public float throwForce = 500f;
+            [SerializeField]
+            Transform weaponBone;
+
+            public void SetupHuman()
+            {
+                anim = GetComponent<Animator>();
+            }
+
+            public override void Attack()
+            {
+                if (equippedWeapon != null)
+                {
+                    equippedWeapon.LightAttack(this);
+                }
+            }
+
+            public void HeavyAttack()
+            {
+                if (equippedWeapon != null)
+                {
+                    equippedWeapon.HeavyAttack(this);
+                }
+            }
+
+            public void EnableHitbox()
+            {
+                if (equippedWeapon != null)
+                {
+                    equippedWeapon.EnableHitbox();
+                }
+            }
+
+            public void DisableHitbox()
+            {
+                if (equippedWeapon != null)
+                {
+                    equippedWeapon.DisableHitbox();
+                }
+            }
+
+            public void ThrowWeapon()
+            {
+                if (equippedWeapon != null)
+                {
+                    equippedWeapon.Throw(this);
+                    equippedWeapon = null;
+                    anim.SetInteger("EquippedWeapon", 0);
+                }
+            }
+
+            public bool PickupWeapon(BaseWeapon weapon)
+            {
+                if (equippedWeapon == null)
+                {
+                    equippedWeapon = weapon;
+                    anim.SetInteger("EquippedWeapon", (int)weapon.type);
+                    Transform trans = weapon.transform;
+                    trans.SetParent(weaponBone);
+                    trans.localPosition = Vector3.zero;
+                    trans.localEulerAngles = Vector3.zero;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
 
             public override void Die()
