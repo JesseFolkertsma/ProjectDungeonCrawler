@@ -48,95 +48,222 @@ namespace PDC
         public enum AIState
         {
             Idle,
-            Searching,
-            Persueing,
+            LateIdle,
+            InRange,
+            InView,
         }
 
         public class AICharacter : BaseCharacter
         {
+            [Header("AI Controller variables")]
+            public Transform playerTarget;
+            public Transform headBone;
             public AIState state = AIState.Idle;
-            public Rigidbody rb;
-            public Animator anim;
-            public float sightRange;
-            public float attackRange = 4;
-            public GameObject player;
-            [SerializeField]
-            Transform headBone;
-            NavMeshAgent agent;
-            [SerializeField]
-            GameObject hitbox;
 
-            public void SetupAI()
+            //Public variables
+            public float lookRange = 15;
+            public float maxRange = 30;
+            public float sightAngle = 90;
+            public float turnSpeed = 45;
+
+            //Private variables
+            Vector3 direction;
+            float distance = 0;
+            bool inView = false;
+            bool inAngle = false;
+
+            #region FrameManagement
+            delegate void Frame();
+            Frame frame;
+            delegate void LateFrame();
+            LateFrame lateFrame;
+            delegate void LatestFrame();
+            LatestFrame latestFrame;
+
+            float lateFr = 15;
+            float lateFr_Counter = 0f;
+
+            float latestFr = 30f;
+            float latestFr_Counter = 0f;
+            #endregion
+
+            public void AIUpdate()
             {
-                rb = GetComponent<Rigidbody>();
-                anim = GetComponent<Animator>();
-                player = GameObject.FindGameObjectWithTag("Player");
-                agent = GetComponent<NavMeshAgent>();
-                agent.isStopped = true;
-                agent.stoppingDistance = attackRange - .5f;
+                HandleStates();
+
+                if (frame != null)
+                    frame();
+
+                lateFr_Counter++;
+                if (lateFr_Counter > lateFr)
+                {
+                    if (lateFrame != null)
+                        lateFrame();
+
+                    lateFr_Counter = 0;
+                }
+
+                latestFr_Counter++;
+                if (latestFr_Counter > latestFr)
+                {
+                    if (latestFrame != null)
+                        latestFrame();
+
+                    latestFr_Counter = 0;
+                }
             }
 
-            float startSearch = 0f;
-            public void UpdateAI()
+            void HandleStates()
             {
                 switch (state)
                 {
                     case AIState.Idle:
-                        if (CheckForPlayer())
+                        if(distance > maxRange)
                         {
-                            state = AIState.Persueing;
-                            agent.isStopped = false;
+                            ChangeState(AIState.LateIdle);
+                        }
+                        else if(distance < lookRange)
+                        {
+                            ChangeState(AIState.InRange);
                         }
                         break;
-                    case AIState.Searching:
-                        if (CheckForPlayer())
+                    case AIState.LateIdle:
+                        if(distance < maxRange)
                         {
-                            state = AIState.Persueing;
-                            agent.isStopped = false;
+                            ChangeState(AIState.Idle);
                         }
                         break;
-                    case AIState.Persueing:
-                        agent.destination = player.transform.position;
-                        if (PlayerDistance() > 20)
+                    case AIState.InRange:
+                        if(distance > lookRange)
                         {
-                            state = AIState.Searching;
+                            ChangeState(AIState.Idle);
                         }
-                        else if(agent.remainingDistance < attackRange)
+                        if (inView)
                         {
-                            Attack();
+                            ChangeState(AIState.InView);
                         }
+                        break;
+                    case AIState.InView:
+                        if (!inView)
+                        {
+                            ChangeState(AIState.InRange);
+                        }
+                        break;
+                    default:
                         break;
                 }
             }
 
-            bool CheckForPlayer()
+            public void ChangeState(AIState newState)
             {
-                return true;
-                Vector3 dir = (headBone.position - player.transform.position).normalized;
-                RaycastHit hit;
-                if(Physics.Raycast(headBone.position, dir, out hit, sightRange))
+                state = newState;
+                frame = null;
+                lateFrame = null;
+                latestFrame = null;
+
+                switch (newState)
                 {
-                    if (hit.transform.tag == "Player")
-                    {
-                        return true;
-                    }
+                    case AIState.Idle:
+                        lateFrame += IdleBehaviour;
+                        break;
+                    case AIState.LateIdle:
+                        latestFrame += IdleBehaviour;
+                        break;
+                    case AIState.InRange:
+                        lateFrame += InRangeBehaviour;
+                        break;
+                    case AIState.InView:
+                        lateFrame += InRangeBehaviour;
+                        frame += InViewBehaviour;
+                        break;
+                    default:
+                        break;
                 }
-                return false;
             }
 
-            float PlayerDistance()
+            void IdleBehaviour()
             {
-                return Vector3.Distance(transform.position, player.transform.position);
+                if (playerTarget == null)
+                    return;
+
+                DistanceCheck(playerTarget);
             }
 
-            public void ActivateHitbox()
+            void InRangeBehaviour()
             {
-                hitbox.SetActive(true);
+                if (playerTarget == null)
+                    return;
+
+                DistanceCheck(playerTarget);
+                GetDirection(playerTarget);
+                CheckAngle(playerTarget);
+                SightCheck(playerTarget);
             }
 
-            public void DeactivateHitbox()
+            void InViewBehaviour()
             {
-                hitbox.SetActive(false);
+                if (playerTarget == null)
+                    return;
+
+                GetDirection(playerTarget);
+                LookAtTarget();
+            }
+
+            void DistanceCheck(Transform target)
+            {
+                if (target == null)
+                    return;
+
+                distance = Vector3.Distance(transform.position, target.position);
+            }
+
+            void SightCheck(Transform target)
+            {
+                if (target == null)
+                    return;
+
+
+                Debug.DrawRay(headBone.position, direction * 100, Color.red, .1f);
+                RaycastHit hit;
+                if (Physics.Raycast(headBone.position, direction, out hit, lookRange))
+                {
+                    Debug.Log(hit.transform.name);
+                    if (hit.transform.CompareTag("Player"))
+                    {
+                        inView = true;
+                    }
+                    else
+                        inView = false;
+                }
+                else
+                    inView = false;
+            }
+
+            void GetDirection(Transform target)
+            {
+                if (target == null)
+                    return;
+
+                direction = (target.position + Vector3.up - transform.position).normalized;
+            }
+
+            void CheckAngle(Transform target)
+            {
+                if (target == null)
+                    return;
+
+                float angle = Vector3.Angle(headBone.forward, direction);
+
+                inAngle = (angle < sightAngle);
+            }
+
+            void LookAtTarget()
+            {
+                if (playerTarget == null)
+                    return;
+
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * turnSpeed);
             }
 
             public override void Attack()
