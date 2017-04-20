@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour {
         float _xMove = Input.GetAxisRaw("Horizontal");
         float _yMove = Input.GetAxisRaw("Vertical");
 
-        anim.SetFloat("Move", _yMove);
+        anim.SetFloat("Walk", _yMove);
         if (movement.SetMove(_xMove, _yMove))
             bobComponent.BobHead(.05f, walkBobSpeed, false);
 
