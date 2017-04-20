@@ -121,7 +121,7 @@ namespace PDC
             {
                 //data
                 size = random.Next(widthMin, widthMax);
-                level = new Node[size, size, size];
+                level = new Node[size, 1, size]; //y normally also is "size", but for the demo this is deactivated
                 for (int x = 0; x < size; x++)
                 {
                     yield return null;
