@@ -56,6 +56,11 @@ namespace PDC
                         {
                             //spawn room
                             MapGenerator.Node n = level[x, y, z];
+
+                            //check if room is require
+                            if (!n.initialized)
+                                continue;
+                            
                             Vector3 pos = new Vector3();
                             pos.x = minX + roomWidth * x + roomWidth / 2;
                             pos.y = minY + roomHeight * y + roomHeight / 2;
@@ -64,6 +69,11 @@ namespace PDC
 
                             //set interior
                             RoomInterior rI = room.GetComponent<RoomInterior>();
+                            if(!(rI != null))
+                            {
+                                Debug.Log("There isnt a script on this room. Location: " + x + " " + y + " " + z + " Name: " + n.room.room.name);
+                                continue;
+                            }
                             int points = mG.random.Next(densityInteriorMin, densityInteriorMax);
                             int _points = 0;
 
