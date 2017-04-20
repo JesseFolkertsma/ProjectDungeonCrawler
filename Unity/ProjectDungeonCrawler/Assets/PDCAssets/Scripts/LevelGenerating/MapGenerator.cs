@@ -46,6 +46,8 @@ namespace PDC
                 foreach (Room rc in rooms)
                 {
                     Room temp = rc;
+                    if (!temp.needsConverting)
+                        continue;
                     for (int i = 0; i < 4; i++)
                     {
                         Room _temp = TurnRoom(temp);
@@ -481,6 +483,8 @@ namespace PDC
             {
                 public GameObject room;
                 //entrances
+                [Tooltip("Whether or not you need rotated versions of this room.")]
+                public bool needsConverting;
                 public Connection top, down,
                     left, right,
                     front, back;
