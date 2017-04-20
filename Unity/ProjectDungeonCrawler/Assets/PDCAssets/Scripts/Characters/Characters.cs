@@ -19,7 +19,7 @@ namespace PDC
             public List<OngoingEffect> ongoingEffects = new List<OngoingEffect>();
             public bool isdead = false;
 
-            public void TakeDamage(float damage)
+            public virtual void TakeDamage(float damage)
             {
                 characterStats.currentHP -= damage;
                 if(characterStats.currentHP <= 0)
@@ -59,6 +59,7 @@ namespace PDC
         public class AICharacter : BaseCharacter
         {
             [Header("AI Controller variables")]
+            public GameObject healthbar;
             public Transform playerTarget;
             public Transform headBone;
             public AIState state = AIState.Idle;
@@ -74,6 +75,7 @@ namespace PDC
             float distance = 0;
             bool inView = false;
             bool inAngle = false;
+            Vector3 hpMaxScale;
 
             #region FrameManagement
             delegate void Frame();
@@ -89,6 +91,19 @@ namespace PDC
             float latestFr = 30f;
             float latestFr_Counter = 0f;
             #endregion
+
+            public void SetupAI()
+            {
+                healthbar = Instantiate(healthbar, headBone.position + Vector3.up, headBone.rotation);
+                healthbar.transform.SetParent(headBone);
+                hpMaxScale = healthbar.transform.localScale;
+            }
+
+            public override void TakeDamage(float damage)
+            {
+                base.TakeDamage(damage);
+                healthbar.transform.localScale = new Vector3((characterStats.currentHP / characterStats.MaxHP) * hpMaxScale.x, hpMaxScale.y, hpMaxScale.z);
+            }
 
             public void AIUpdate()
             {
@@ -230,7 +245,6 @@ namespace PDC
                 RaycastHit hit;
                 if (Physics.Raycast(headBone.position, direction, out hit, lookRange))
                 {
-                    Debug.Log(hit.transform.name);
                     if (hit.transform.CompareTag("Player"))
                     {
                         inView = true;

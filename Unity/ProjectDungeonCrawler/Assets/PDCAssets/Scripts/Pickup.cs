@@ -19,7 +19,6 @@ public abstract class Pickup : MonoBehaviour {
                 if (canPickup)
                 {
                     PickupItem(col.transform.root.GetComponentInChildren<HumanoidCharacter>());
-                    canPickup = false;
                 }
             }
             if (isThrown)

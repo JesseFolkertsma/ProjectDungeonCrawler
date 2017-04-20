@@ -10,6 +10,11 @@ namespace PDC.Characters
     public class Snake : AICharacter
     {
         public GameObject snekdoll;
+
+        void Start()
+        {
+            SetupAI();
+        }
         void Update()
         {
             AIUpdate();

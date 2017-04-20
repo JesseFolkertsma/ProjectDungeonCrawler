@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         anim = GetComponent<Animator>();
+        Screen.SetResolution(256, 144, true);
     }
 
     void Update()
@@ -88,7 +89,7 @@ public class PlayerController : MonoBehaviour {
     void HandleChecks()
     {
         //Check if grounded
-        if (Physics.Raycast(transform.position + transform.up, -transform.up, 1.1f, playerLayer))
+        if (Physics.Raycast(transform.position + transform.up, -transform.up, 1.3f, playerLayer))
         {
             isGrounded = true;
         }
