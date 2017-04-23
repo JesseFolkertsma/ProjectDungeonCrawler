@@ -47,7 +47,10 @@ namespace PDC
                 {
                     Room temp = rc;
                     if (!temp.needsConverting)
+                    {
+                        _rooms.Add(temp);
                         continue;
+                    }
                     for (int i = 0; i < 4; i++)
                     {
                         Room _temp = TurnRoom(temp);
@@ -125,7 +128,7 @@ namespace PDC
                 for (int x = 0; x < size; x++)
                 {
                     yield return null;
-                    for (int y = 0; y < size; y++)
+                    for (int y = 0; y < 1; y++) //tijdelijk
                     {
                         for (int z = 0; z < size; z++)
                         {
@@ -151,7 +154,7 @@ namespace PDC
             {
                 int x = random.Next(0, size);
                 int z = random.Next(0, size);
-                entrance = level[x, size - 1, z];
+                entrance = level[x, 0, z]; //entrance = level[x, size - 1, z];
             }
 
             //STEP #4
@@ -176,6 +179,7 @@ namespace PDC
                         //else continue
                         case (int)RootDirection.Down:
                             newN = level[oldN.posX, oldN.posY - 1, oldN.posZ]; //no additional checks required
+                            oldN.room.down = Connection.Required;
                             break;
                         case (int)RootDirection.Left:
                             if (oldN.posX <= 0) //check if adjecent excist
@@ -221,6 +225,11 @@ namespace PDC
                     //repeat until the ground floor has been reached
                 }
 
+                //used for 1 floor dungeons
+                Node exit = path[path.Count - 1];
+                if(!exit.initialized)
+                    InitializeNode(exit);
+
                 //function: create branches
                 while (path.Count > 0) //use same list in a different way, always get bottom of the list (0)
                 {
@@ -228,12 +237,13 @@ namespace PDC
                     //check foreach adjecents, if accessible but empty, fill and add to list
 
                     Node n = path[0];
+                    path.RemoveAt(0);
 
                     //check adjecent
 
                     //top
                     if (n.room.top != Connection.Closed) //check out of bounds
-                        if (n.posY < size)
+                        if (n.posY < size - 1)
                         {
                             //check !initialized
                             Node _n = level[n.posX, n.posY + 1, n.posZ];
@@ -260,7 +270,7 @@ namespace PDC
 
                     //right
                     if (n.room.right != Connection.Closed)
-                        if (n.posX < size)
+                        if (n.posX < size - 1)
                         {
                             Node _n = level[n.posX + 1, n.posY, n.posZ];
                             if (!_n.initialized)
@@ -284,7 +294,7 @@ namespace PDC
 
                     //front
                     if (n.room.front != Connection.Closed)
-                        if (n.posZ < size)
+                        if (n.posZ < size - 1)
                         {
                             Node _n = level[n.posX, n.posY, n.posZ + 1];
                             if (!_n.initialized)
@@ -307,6 +317,7 @@ namespace PDC
                         }
 
                     //repeat until no _rooms are left to fill
+                    
                     yield return null;
                 }
 
@@ -328,6 +339,7 @@ namespace PDC
                 //pick random GetFitRooms to put in old node node
                 int chosen = random.Next(0, fitRooms.Count - 1);
                 n.room = fitRooms[chosen];
+                n.initialized = true;
             }
 
             private List<Room> GetFitRooms(Node n)
@@ -344,11 +356,13 @@ namespace PDC
             //check borders
             public bool CheckBorders(Node node, Room room) //checks both borders and (if initialized) if they meet set required passages
             {
+                if (!(node.room != null))
+                    node.room = new Room();
                 //check top
                 if (room.top != Connection.Closed)
                 {
                     //check out of bounds
-                    if (size <= node.posY)
+                    if (size - 1 <= node.posY)
                         return false;
 
                     //check own requirements
@@ -404,15 +418,16 @@ namespace PDC
                 //check right
                 if (room.right != Connection.Closed)
                 {
-                    //check out of bounds
-                    if (size <= node.posX)
-                        return false;
 
+                    //check out of bounds
+                    if (size - 1 <= node.posX)
+                        return false;
+                    
                     //check own requirements
                     if (node.initialized)
                         if (node.room.right != room.right && node.room.right != Connection.Required)
                             return false;
-
+                    
                     //check adjecent requirements
                     Node adj = level[node.posX + 1, node.posY, node.posZ];
                     if (adj.initialized)
@@ -424,7 +439,7 @@ namespace PDC
                 if (room.front != Connection.Closed)
                 {
                     //check out of bounds
-                    if (size <= node.posZ)
+                    if (size - 1 <= node.posZ)
                         return false;
 
                     //check own requirements

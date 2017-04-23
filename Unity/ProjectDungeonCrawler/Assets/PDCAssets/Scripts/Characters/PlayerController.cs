@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(PlayerMovement))]
+[RequireComponent(typeof(PlayerCharacter))]
 [RequireComponent(typeof(HeadBobComponent))]
 public class PlayerController : MonoBehaviour {
-    PlayerMovement movement;
+    PlayerCharacter motor;
     HeadBobComponent bobComponent;
     [HideInInspector] public Animator anim;
 
@@ -13,26 +13,25 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] public Camera armsCam;
 
     [Header("PlayerStats")]
-    [SerializeField] float speed = 5f;
     [SerializeField] float jumpHeight = 5f;
     [SerializeField] bool isGrounded = true;
 
     [Header("GameStats")]
     [SerializeField] float sensitivity = 5f;
     [SerializeField] LayerMask playerLayer;
-    [SerializeField] LayerMask interactableLayer;
 
     [Header("Headbob Stats")]
     [SerializeField] float walkBobSpeed = 1.5f;
 
     void Start()
     {
-        movement = GetComponent<PlayerMovement>();
+        motor = GetComponent<PlayerCharacter>();
         bobComponent = GetComponent<HeadBobComponent>();
         bobComponent.SetupHeadBob(cam);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         anim = GetComponent<Animator>();
+        Screen.SetResolution(256, 144, true);
     }
 
     void Update()
@@ -49,44 +48,45 @@ public class PlayerController : MonoBehaviour {
         float _xMove = Input.GetAxisRaw("Horizontal");
         float _yMove = Input.GetAxisRaw("Vertical");
 
-        anim.SetFloat("Walk", _yMove);
-        if (movement.SetMove(_xMove, _yMove))
+        if (motor.SetMove(_xMove, _yMove))
             bobComponent.BobHead(.05f, walkBobSpeed, false);
 
         //Calculate player rotation
         float yRot = Input.GetAxisRaw("Mouse X");
         Vector3 rotation = new Vector3(0, yRot, 0) * sensitivity;
-        movement.SetRotation(rotation);
+        motor.SetRotation(rotation);
 
         //Calculate camera rotation
         float xRot = Input.GetAxisRaw("Mouse Y");
         Vector3 camRotation = new Vector3(xRot, 0, 0) * sensitivity;
-        movement.SetCamRotation(-camRotation);
+        motor.SetCamRotation(-camRotation);
 
         //Check Jump Input
         if (Input.GetButtonDown("Jump"))
         {
             if (isGrounded)
-                movement.Jump(jumpHeight);
+                motor.Jump(jumpHeight);
         }
         #endregion
 
+        if (Input.GetButtonDown("Fire3"))
+        {
+            motor.ThrowWeapon();
+        }
         if (Input.GetButtonDown("Fire1"))
         {
-            anim.ResetTrigger("HeavyAttack");
-            anim.SetTrigger("LightAttack");
+            motor.Attack();
         }
         if (Input.GetButtonDown("Fire2"))
         {
-            anim.ResetTrigger("LightAttack");
-            anim.SetTrigger("HeavyAttack");
+            motor.HeavyAttack();
         }
     }
 
     void HandleChecks()
     {
         //Check if grounded
-        if (Physics.Raycast(transform.position + transform.up, -transform.up, 1.1f, playerLayer))
+        if (Physics.Raycast(transform.position + transform.up, -transform.up, 1.3f, playerLayer))
         {
             isGrounded = true;
         }
@@ -94,10 +94,5 @@ public class PlayerController : MonoBehaviour {
         {
             isGrounded = false;
         }
-    }
-
-    public void SetArms(bool _b)
-    {
-        armsCam.gameObject.SetActive(_b);
     }
 }

@@ -30,7 +30,7 @@ namespace PDC.StatusEffects
         {
             while (startTime + effectDuration > Time.time)
             {
-                character.characterStats.currentHP += healPerTick;
+                character.Heal(healPerTick);
                 yield return new WaitForSeconds(1 / tickRate);
             }
         }

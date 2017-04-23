@@ -9,9 +9,25 @@ namespace PDC.Characters
 {
     public class Snake : AICharacter
     {
+        public GameObject snekdoll;
+
+        void Start()
+        {
+            SetupAI();
+        }
         void Update()
         {
             AIUpdate();
+        }
+        public override void Die()
+        {
+            if (!isdead)
+            {
+                GameObject go = Instantiate(snekdoll, transform.position, transform.rotation);
+                go.transform.localScale = transform.localScale;
+                Destroy(gameObject);
+                isdead = true;
+            }
         }
     }
 }
