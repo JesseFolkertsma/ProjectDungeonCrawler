@@ -24,7 +24,7 @@ namespace PDC
             private string seed;
             [HideInInspector]
             public int _seed;
-            [HideInInspector]
+            [SerializeField]
             private bool randomSeed;
             public Node entrance;
             private MapVisualizer visualizer;
@@ -46,16 +46,21 @@ namespace PDC
                 foreach (Room rc in rooms)
                 {
                     Room temp = rc;
-                    if (!temp.needsConverting)
-                    {
-                        _rooms.Add(temp);
+                    _rooms.Add(temp);
+                    if (temp.converter == Converting.None)
                         continue;
-                    }
-                    for (int i = 0; i < 4; i++)
+
+                    if(temp.converter == Converting.All)
+                        for (int i = 0; i < 3; i++)
+                        {
+                            temp = TurnRoom(temp);
+                            _rooms.Add(temp);
+                        }
+                    else
                     {
                         Room _temp = TurnRoom(temp);
-                        _rooms.Add(_temp);
-                        temp = _temp;
+                        temp = TurnRoom(_temp);
+                        _rooms.Add(temp);
                     }
                 }
             }
@@ -63,17 +68,15 @@ namespace PDC
             private Room TurnRoom(Room r)
             {
                 Room ret = new Room();
-                ret.front = r.left;
-                ret.right = r.front;
-                ret.back = r.right;
-                ret.left = r.back;
+                ret.front = r.right;
+                ret.right = r.back;
+                ret.back = r.left;
+                ret.left = r.front; //stabilize rotation
+                int rot = (int)r.rotation - 90;
 
-                //stabilize rotation
-                int rot = (int)r.rotation + 90;
-                if (rot > 270)
+                if (rot == -360)
                     rot = 0;
                 ret.rotation = (Rotation)rot;
-
                 ret.room = r.room;
                 return ret;
             }
@@ -322,9 +325,24 @@ namespace PDC
                 }
 
                 visualizer.SpawnRooms(level, entrance);
+
+                //tijdelijk
+                for (int i = 0; i < size; i++)
+                    for (int y = 0; y < size; y++) {
+                        Room r = level[i, 0, y].room;
+                        if (!(r != null))
+                            continue;
+                        print(r.front + " " + r.right + " " + r.back + " " + r.left + " " + i + " " + y + r.room.name);
+                    }
             }
 
             #region Tools
+
+            private void InitializeNodeRoom(Node n)
+            {
+                n.initialized = true;
+                n.room = new Room();
+            }
 
             private void InitializeNode(Node n)
             {
@@ -332,7 +350,7 @@ namespace PDC
                 List<Room> fitRooms = GetFitRooms(n);
                 if (fitRooms.Count == 0)
                 {
-                    Debug.Log("There arent any fit _rooms for this Node!");
+                    Debug.Log("There arent any fit _rooms for this Node: " + n.posX + " " + n.posY + " " + n.posZ);
                     return;
                 }
 
@@ -356,123 +374,125 @@ namespace PDC
             //check borders
             public bool CheckBorders(Node node, Room room) //checks both borders and (if initialized) if they meet set required passages
             {
+                Node adj = null;
+                //HIER ZORGEN DAT ANDERE KAMERS NAAST DEZE OOK GECHECKT WORDEN OF ZE HIERNAARTOE EEN MANIER HEBBEN
                 if (!(node.room != null))
                     node.room = new Room();
+
                 //check top
-                if (room.top != Connection.Closed)
-                {
-                    //check out of bounds
-                    if (size - 1 <= node.posY)
+                //check required
+                if (node.initialized)
+                    if (node.room.top != room.top && node.room.top != Connection.Required)
                         return false;
 
-                    //check own requirements
-                    if (node.initialized)
-                        if (node.room.top != room.top && node.room.top != Connection.Required)
-                            return false;
-
-                    //check adjecent requirements
-                    Node adj = level[node.posX, node.posY + 1, node.posZ];
+                if (0 > node.posY) //size - 1
+                    adj = level[node.posX, node.posY + 1, node.posZ];
+                else
+                    adj = null;
+                if (adj != null)
+                {
                     if (adj.initialized)
                         if (adj.room.down != room.top)
                             return false;
                 }
+                //check out of bounds
+                else if (room.top != Connection.Closed)
+                    return false;
 
                 //check bottom
-                if (room.down != Connection.Closed)
-                {
-                    //check out of bounds
-                    if (0 == node.posY)
+                //check required
+                if (node.initialized)
+                    if (node.room.down != room.down && node.room.down != Connection.Required)
                         return false;
-
-                    //check own requirements
-                    if (node.initialized)
-                        if (node.room.down != room.down && node.room.down != Connection.Required)
-                            return false;
-
-                    //check adjecent requirements
-                    Node adj = level[node.posX, node.posY - 1, node.posZ];
+                if (0 < node.posY)
+                    adj = level[node.posX, node.posY - 1, node.posZ];
+                else
+                    adj = null;
+                if (adj != null)
+                {
                     if (adj.initialized)
                         if (adj.room.top != room.down)
                             return false;
                 }
+                //check out of bounds
+                else if (room.down != Connection.Closed)
+                    return false;
 
                 //check left
-                if (room.left != Connection.Closed)
-                {
-                    //check out of bounds
-                    if (0 == node.posX)
+                //check required
+                if (node.initialized)
+                    if (node.room.left != room.left && node.room.left != Connection.Required)
                         return false;
-
-                    //check own requirements
-                    if (node.initialized)
-                        if (node.room.left != room.left && node.room.left != Connection.Required)
-                            return false;
-
-                    //check adjecent requirements
-                    Node adj = level[node.posX - 1, node.posY, node.posZ];
+                if (0 < node.posX)
+                    adj = level[node.posX - 1, node.posY, node.posZ];
+                else
+                    adj = null;
+                if (adj != null)
+                {
                     if (adj.initialized)
                         if (adj.room.right != room.left)
                             return false;
                 }
+                //check out of bounds
+                else if (room.left != Connection.Closed)
+                    return false;
 
                 //check right
-                if (room.right != Connection.Closed)
-                {
-
-                    //check out of bounds
-                    if (size - 1 <= node.posX)
+                //check required
+                if (node.initialized)
+                    if (node.room.right != room.right && node.room.right != Connection.Required)
                         return false;
-                    
-                    //check own requirements
-                    if (node.initialized)
-                        if (node.room.right != room.right && node.room.right != Connection.Required)
-                            return false;
-                    
-                    //check adjecent requirements
-                    Node adj = level[node.posX + 1, node.posY, node.posZ];
+                if (size - 1 > node.posX)
+                    adj = level[node.posX + 1, node.posY, node.posZ];
+                else
+                    adj = null;
+                if (adj != null)
+                {
                     if (adj.initialized)
                         if (adj.room.left != room.right)
                             return false;
                 }
+                //check out of bounds
+                else if (room.right != Connection.Closed)
+                    return false;
 
                 //check front
-                if (room.front != Connection.Closed)
-                {
-                    //check out of bounds
-                    if (size - 1 <= node.posZ)
+                //check required
+                if (node.initialized)
+                    if (node.room.front != room.front && node.room.front != Connection.Required)
                         return false;
-
-                    //check own requirements
-                    if (node.initialized)
-                        if (node.room.front != room.front && node.room.front != Connection.Required)
-                            return false;
-
-                    //check adjecent requirements
-                    Node adj = level[node.posX, node.posY, node.posZ + 1];
+                if (size - 1 > node.posZ)
+                    adj = level[node.posX, node.posY, node.posZ + 1];
+                else
+                    adj = null;
+                if (adj != null)
+                {
                     if (adj.initialized)
                         if (adj.room.back != room.front)
                             return false;
                 }
-
+                //check out of bounds
+                else if (room.front != Connection.Closed)
+                    return false;
 
                 //check back
-                if (room.back != Connection.Closed)
-                {
-                    //check out of bounds
-                    if (0 == node.posZ)
+                //check required
+                if (node.initialized)
+                    if (node.room.back != room.back && node.room.back != Connection.Required)
                         return false;
-
-                    //check own requirements
-                    if (node.initialized)
-                        if (node.room.back != room.back && node.room.back != Connection.Required)
-                            return false;
-
-                    //check adjecent requirements
-                    Node adj = level[node.posX, node.posY, node.posZ - 1];
+                if (0 < node.posZ)
+                    adj = level[node.posX, node.posY, node.posZ - 1];
+                else
+                    adj = null;
+                if (adj != null)
+                {
                     if (adj.initialized)
                         if (adj.room.front != room.back)
                             return false;
                 }
+                //check out of bounds
+                else if (room.back != Connection.Closed)
+                    return false;
 
                 return true;
             }
@@ -492,6 +512,7 @@ namespace PDC
 
             public enum Connection { Closed, Entrance, Full, Required }
             public enum Rotation { Default, Right = 90, Turned = 180, Left = 270 }
+            public enum Converting {None, Double, All }
 
             [Serializable]
             public class Room //create array in room for props to set active at will
@@ -499,12 +520,12 @@ namespace PDC
                 public GameObject room;
                 //entrances
                 [Tooltip("Whether or not you need rotated versions of this room.")]
-                public bool needsConverting;
+                public Converting converter;
                 public Connection top, down,
                     left, right,
                     front, back;
                 [HideInInspector]
-                public Rotation rotation;
+                public Rotation rotation = 0;
             }
 
             #endregion

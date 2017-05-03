@@ -65,7 +65,8 @@ namespace PDC
                             pos.x = minX + roomWidth * x + roomWidth / 2;
                             pos.y = minY + roomHeight * y + roomHeight / 2;
                             pos.z = minZ + roomWidth * z + roomWidth / 2;
-                            GameObject room = Instantiate(n.room.room, pos, new Quaternion(0, (float)n.room.rotation, 0, 0));
+                            GameObject room = Instantiate(n.room.room, pos, Quaternion.identity);
+                            room.transform.eulerAngles = new Vector3(0, (float)n.room.rotation, 0);
 
                             //set interior
                             RoomInterior rI = room.GetComponent<RoomInterior>();
