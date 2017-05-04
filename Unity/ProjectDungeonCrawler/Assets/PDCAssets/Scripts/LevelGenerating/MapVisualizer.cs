@@ -22,6 +22,12 @@ namespace PDC
             [SerializeField]
             private List<Enemy> enemies = new List<Enemy>();
 
+            #region Quest Info
+
+            public int enemyValue;
+
+            #endregion
+
             public void SpawnRooms(MapGenerator.Node[,,] level, MapGenerator.Node entrance)
             {
                 if(densityInteriorMax < densityInteriorMin)
@@ -134,6 +140,7 @@ namespace PDC
                                 //spawn enemy
                                 Transform t = rI.spawnPositions[enemySpawnpos].spawnPosition;
                                 Instantiate(enemy.obj, t.position, t.rotation);
+                                enemyValue += enemy.cost;
                             }
 
                             yield return null;

@@ -517,6 +517,7 @@ namespace PDC
             [Serializable]
             public class Room //create array in room for props to set active at will
             {
+                [Header("Ga met de entrances uit van een 0,0,0 rotatie.")]
                 public GameObject room;
                 //entrances
                 [Tooltip("Whether or not you need rotated versions of this room.")]
