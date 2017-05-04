@@ -339,15 +339,6 @@ namespace PDC
                 }
 
                 visualizer.SpawnRooms(level, entrance, tags);
-
-                //tijdelijk
-                for (int i = 0; i < size; i++)
-                    for (int y = 0; y < size; y++) {
-                        Room r = level[i, 0, y].room;
-                        if (!(r != null))
-                            continue;
-                        print(r.front + " " + r.right + " " + r.back + " " + r.left + " " + i + " " + y + r.room.name);
-                    }
             }
 
             #region Tools
