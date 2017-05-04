@@ -28,7 +28,7 @@ namespace PDC
 
             #endregion
 
-            public void SpawnRooms(MapGenerator.Node[,,] level, MapGenerator.Node entrance)
+            public void SpawnRooms(MapGenerator.Node[,,] level, MapGenerator.Node entrance, List<TagManager.TagType> tags)
             {
                 if(densityInteriorMax < densityInteriorMin)
                 {
@@ -41,10 +41,10 @@ namespace PDC
                     return;
                 }
 
-                StartCoroutine(_SpawnRooms(level, entrance));
+                StartCoroutine(_SpawnRooms(level, entrance, tags));
             }
 
-            private IEnumerator _SpawnRooms(MapGenerator.Node[,,] level, MapGenerator.Node entrance)
+            private IEnumerator _SpawnRooms(MapGenerator.Node[,,] level, MapGenerator.Node entrance, List<TagManager.TagType> tags)
             {
                 //for loop length
                 int sizeX = level.GetLength(0);
@@ -89,11 +89,26 @@ namespace PDC
                                 _points += item.cost;
                             if (points > _points)
                                 points = _points;
-                            int sizeInteriorInRoom = rI.objectsInRoom.Count;
-                            while (points > 0)
+                            List<RoomInterior.InteriorItem> interior = rI.objectsInRoom;
+                            bool stillFit = true;
+                            while (points > 0 && interior.Count > 0 && stillFit)
                             {
+                                //check if hasItemWithFitTag
+                                stillFit = false;
+                                foreach (RoomInterior.InteriorItem _iI in interior)
+                                    if (tags.Contains(_iI.obj.GetComponent<TagManager>()._tag))
+                                    {
+                                        stillFit = true;
+                                        break;
+                                    }
+
                                 //enable another interior item
-                                RoomInterior.InteriorItem iI = rI.objectsInRoom[mG.random.Next(0, sizeInteriorInRoom)];
+                                RoomInterior.InteriorItem iI = interior[mG.random.Next(0, interior.Count)]; //also remove
+                                TagManager t = iI.obj.GetComponent<TagManager>();
+                                if (!tags.Contains(t._tag))
+                                    continue;
+
+                                interior.Remove(iI);
                                 points -= iI.cost;
                                 iI.obj.SetActive(true);
                             }
@@ -112,6 +127,20 @@ namespace PDC
                             if(enemies.Count == 0)
                             {
                                 Debug.Log("There are no enemies to be spawned!");
+                                yield break;
+                            }
+
+                            bool _fit = false;
+                            foreach(Enemy en in enemies)
+                                if (tags.Contains(en.obj.GetComponent<TagManager>()._tag))
+                                {
+                                    _fit = true;
+                                    break;
+                                }
+
+                            if(!_fit)
+                            {
+                                Debug.Log("There are no normal enemies!");
                                 yield break;
                             }
 

@@ -7,13 +7,14 @@ namespace PDC
 {
     namespace Generating
     {
-        [RequireComponent(typeof(MapVisualizer))]
+        [RequireComponent(typeof(MapVisualizer)), RequireComponent(typeof(MapData))]
         public class MapGenerator : MonoBehaviour
         {
-            #region Inspector Settings
+            #region Mapdata Settings
 
-            [SerializeField]
             private int widthMin, widthMax;
+            private List<TagManager.TagType> tags;
+
             #endregion
 
             public Node[,,] level;
@@ -28,6 +29,7 @@ namespace PDC
             private bool randomSeed;
             public Node entrance;
             private MapVisualizer visualizer;
+            private MapData mapData;
 
             #region Shortcuts for data
             [HideInInspector]
@@ -84,6 +86,20 @@ namespace PDC
 
             private void Awake()
             {
+                visualizer = GetComponent<MapVisualizer>();
+                mapData = GetComponent<MapData>();
+
+                if (!MapData.initialized)
+                {
+                    Debug.Log("No Map Data has been initialized! How can this script know which tags to use and what size " +
+                        "this dungeon should be? You should be ashamed, and you probably are an artist. Will now use standard settings.");
+                }
+
+                //set map data
+                widthMin = MapData.widthMin;
+                widthMax = MapData.widthMax;
+                tags = MapData.tags;
+
                 if (widthMin < 2)
                 {
                     Debug.Log("Try setting the minimal width to at least 2.");
@@ -94,8 +110,6 @@ namespace PDC
                     Debug.Log("The max width is lower than the min width!");
                     return;
                 }
-
-                visualizer = GetComponent<MapVisualizer>();
 
                 //convert room to all directions
                 ConvertRooms();
@@ -324,7 +338,7 @@ namespace PDC
                     yield return null;
                 }
 
-                visualizer.SpawnRooms(level, entrance);
+                visualizer.SpawnRooms(level, entrance, tags);
 
                 //tijdelijk
                 for (int i = 0; i < size; i++)
