@@ -37,18 +37,62 @@ public class MapManager : MonoBehaviour {
     #endregion
 
     //map node system
+    private Node[,] grid;
 
-    
-
-    private void Awake()
+    private enum TerrainType {Road, Walkable, Difficult, Unwalkable }
+    private class Node
     {
+        public int x, y;
+        public TerrainType terrain;
 
+        public Node(int _x, int _y, TerrainType _terrain)
+        {
+            x = _x;
+            y = _y;
+            terrain = _terrain;
+        }
     }
 
-    private void InitializeMap() //make this a customeditor button
+    [SerializeField, Tooltip("Green: Road, White: Walkable, Grey: Difficult, Black: Unwalkable."), 
+        Header("Also enable Read/Write in the Texture's import settings.")]
+    private Texture2D mapSkeleton;
+    [Tooltip("Size of texture grid"), SerializeField]
+    private int texX, texY;
+    public void InitializeMap() //make this a customeditor button
     {
+        float x = mapSkeleton.width / texX; //percentage of place where to place pos
+        float y = mapSkeleton.height / texY;
+
         //so im going to use a few colored map to check three colors: black, grey, white
         //black you cant walk, grey you can, and white you can walk faster
         //create a duplicate of the map in those colors and somehow scan that picture
+        grid = new Node[texX, texY];
+
+        Vector2 pos;
+        for (int _x = 0; _x < texX; _x++)
+            for (int _y = 0; _y < texY; _y++)
+            {
+                pos = new Vector2(x * _x, y * _y);
+
+                //calculate terrain type
+                TerrainType terrain = TerrainType.Walkable;
+                Color col;
+
+                //get color from terrain
+                col = mapSkeleton.GetPixel((int)pos.x, (int)pos.y);
+
+                //I cannot use a switch with a color, too bad iguess
+                if (col == Color.green)
+                    terrain = TerrainType.Road;
+                else if (col == Color.white)
+                    terrain = TerrainType.Walkable;
+                else if (col == Color.grey)
+                    terrain = TerrainType.Difficult;
+                else if (col == Color.black)
+                    terrain = TerrainType.Unwalkable;
+                else print("Wrong color! color: " + col);
+
+                grid[_x, _y] = new Node(_x, _y, terrain);
+            }
     }
 }
