@@ -39,7 +39,7 @@ public class MapManager : MonoBehaviour {
     //map node system
     private Node[,] grid;
 
-    private enum TerrainType {Road, Walkable, Difficult, Unwalkable }
+    private enum TerrainType {Road = 1, Walkable = 3, Difficult = 8, Unwalkable }
     private class Node
     {
         public int x, y;
@@ -90,7 +90,7 @@ public class MapManager : MonoBehaviour {
                     terrain = TerrainType.Difficult;
                 else if (col == Color.black)
                     terrain = TerrainType.Unwalkable;
-                else print("Wrong color! color: " + col);
+                else print("Combination of colors encountered! unable to clearly see which color it is so will make it walkable.");
 
                 grid[_x, _y] = new Node(_x, _y, terrain);
             }
