@@ -1,11 +1,5 @@
 fileFormatVersion: 2
 guid: db4f6c5e0e4b75b4fb1cf870749992b3
-<<<<<<< HEAD
-timeCreated: 1492694783
-=======
-timeCreated: 1492699584
->>>>>>> 0e37b4dcc7e3d9d282fb3fea0748223801e67a92
-licenseType: Free
 SubstanceImporter:
   serializedVersion: 5
   materialInstances:
@@ -150,16 +144,16 @@ SubstanceImporter:
     buildTargetSettings:
     - serializedVersion: 2
       buildTarget: 
-      textureWidth: 64
-      textureHeight: 64
-      textureFormat: 1
+      textureWidth: 128
+      textureHeight: 128
+      textureFormat: 0
       loadingBehavior: 1
   - serializedVersion: 16
     name: New_Graph_1
     prototypeName: New_Graph
     shaderName: 
     shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-    shaderKeywords: _METALLICGLOSSMAP _NORMALMAP _PARALLAXMAP
+    shaderKeywords: 
     renderQueue: -1
     lightmapFlags: 4
     inputs:
@@ -187,48 +181,16 @@ SubstanceImporter:
     materialInformation:
       serializedVersion: 5
       offset: {x: 0, y: 0}
-      scale: {x: 2, y: 2}
+      scale: {x: 1.5, y: 1.5}
       generateMipmaps: 1
       generateAllOutputs: 0
       animationUpdateRate: 0
     materialProperties:
       serializedVersion: 3
       texEnvs:
-      - _BumpMap:
-          texture: {instanceID: 0}
-          scale: {x: 2, y: 2}
-          offset: {x: 0, y: 0}
-      - _DetailAlbedoMap:
-          texture: {instanceID: 0}
-          scale: {x: 1, y: 1}
-          offset: {x: 0, y: 0}
-      - _DetailMask:
-          texture: {instanceID: 0}
-          scale: {x: 1, y: 1}
-          offset: {x: 0, y: 0}
-      - _DetailNormalMap:
-          texture: {instanceID: 0}
-          scale: {x: 1, y: 1}
-          offset: {x: 0, y: 0}
-      - _EmissionMap:
-          texture: {instanceID: 0}
-          scale: {x: 2, y: 2}
-          offset: {x: 0, y: 0}
       - _MainTex:
           texture: {instanceID: 0}
-          scale: {x: 2, y: 2}
-          offset: {x: 0, y: 0}
-      - _MetallicGlossMap:
-          texture: {instanceID: 0}
-          scale: {x: 2, y: 2}
-          offset: {x: 0, y: 0}
-      - _OcclusionMap:
-          texture: {instanceID: 0}
-          scale: {x: 2, y: 2}
-          offset: {x: 0, y: 0}
-      - _ParallaxMap:
-          texture: {instanceID: 0}
-          scale: {x: 2, y: 2}
+          scale: {x: 1.5, y: 1.5}
           offset: {x: 0, y: 0}
       floats:
       - _BumpScale: 1
@@ -277,26 +239,14 @@ SubstanceImporter:
       aniso: 1
       wrapMode: 0
     textureAssignments:
-    - shaderProp: _BumpMap
-      material: {instanceID: 0}
-      baseUID: 679316570
     - shaderProp: _MainTex
       material: {instanceID: 0}
       baseUID: 679316568
-    - shaderProp: _MetallicGlossMap
-      material: {instanceID: 0}
-      baseUID: 679316574
-    - shaderProp: _OcclusionMap
-      material: {instanceID: 0}
-      baseUID: 748699753
-    - shaderProp: _ParallaxMap
-      material: {instanceID: 0}
-      baseUID: 739419823
     buildTargetSettings:
     - serializedVersion: 2
       buildTarget: 
-      textureWidth: 64
-      textureHeight: 64
+      textureWidth: 128
+      textureHeight: 128
       textureFormat: 0
       loadingBehavior: 1
   deletedPrototypes: []
