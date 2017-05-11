@@ -17,6 +17,10 @@ namespace PDC
             private int densityInteriorMin, densityInteriorMax;
             [SerializeField, Range(0, 20)]
             private int densityEnemyMin, densityEnemyMax;
+            [SerializeField, Range(0, 100)]
+            private int difficulty;
+            [SerializeField]
+            private int difficultyBuffer;
             [SerializeField]
             private GameObject player;
             [SerializeField]
@@ -28,7 +32,7 @@ namespace PDC
 
             #endregion
 
-            public void SpawnRooms(MapGenerator.Node[,,] level, MapGenerator.Node entrance, List<TagManager.TagType> tags)
+            public void SpawnRooms(MapGenerator.Node[,,] level, MapGenerator.Node entrance, MapGenerator.Node exit, List<TagManager.TagType> tags)
             {
                 if(densityInteriorMax < densityInteriorMin)
                 {
@@ -41,10 +45,10 @@ namespace PDC
                     return;
                 }
 
-                StartCoroutine(_SpawnRooms(level, entrance, tags));
+                StartCoroutine(_SpawnRooms(level, entrance, exit, tags));
             }
 
-            private IEnumerator _SpawnRooms(MapGenerator.Node[,,] level, MapGenerator.Node entrance, List<TagManager.TagType> tags)
+            private IEnumerator _SpawnRooms(MapGenerator.Node[,,] level, MapGenerator.Node entrance, MapGenerator.Node exit, List<TagManager.TagType> tags)
             {
                 //for loop length
                 int sizeX = level.GetLength(0);
@@ -81,6 +85,7 @@ namespace PDC
                                 Debug.Log("There isnt a script on this room. Location: " + x + " " + y + " " + z + " Name: " + n.room.room.name);
                                 continue;
                             }
+
                             int points = mG.random.Next(densityInteriorMin, densityInteriorMax);
                             int _points = 0;
 
@@ -127,20 +132,30 @@ namespace PDC
                             if(enemies.Count == 0)
                             {
                                 Debug.Log("There are no enemies to be spawned!");
-                                yield break;
+                                continue;
                             }
 
-                            bool _fit = false;
+                            List<Enemy> fitEnemies = new List<Enemy>();
                             foreach(Enemy en in enemies)
                                 if (tags.Contains(en.obj.GetComponent<TagManager>()._tag))
                                 {
-                                    _fit = true;
+                                    //check if right difficulty
+                                    if (en.difficulty < difficulty - difficultyBuffer || 
+                                        en.difficulty > difficulty + difficultyBuffer)
+                                        continue;
+                                    fitEnemies.Add(en);
                                     break;
                                 }
 
-                            if(!_fit)
+                            if(fitEnemies.Count == 0)
                             {
-                                Debug.Log("There are no normal enemies!");
+                                Debug.Log("There are no normal enemies! / the difficulty doesn't match the available enemies!");
+                                continue;
+                            }
+
+                            if(rI.spawnPositions.Count == 0)
+                            {
+                                Debug.Log("There are no spawn positions in this room");
                                 yield break;
                             }
 
@@ -149,8 +164,8 @@ namespace PDC
                             List<int> positions = new List<int>();
                             while(_e < e)
                             {
-                                int newEnemy = mG.random.Next(0, enemies.Count - 1);
-                                Enemy enemy = enemies[newEnemy];
+                                int newEnemy = mG.random.Next(0, fitEnemies.Count - 1);
+                                Enemy enemy = fitEnemies[newEnemy];
                                 _e += enemy.cost;
                                 int enemySpawnpos = 0;
                                 bool fit = false;
@@ -181,6 +196,8 @@ namespace PDC
             {
                 public GameObject obj;
                 public int cost;
+                [Range(0,100)]
+                public int difficulty;
             }
         }
     }

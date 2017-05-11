@@ -14,6 +14,8 @@ namespace PDC
 
             private int widthMin, widthMax;
             private List<TagManager.TagType> tags;
+            public enum MapType {Two_Dimensional, Three_Dimensional }
+            public MapType mapType;
 
             #endregion
 
@@ -33,7 +35,7 @@ namespace PDC
 
             #region Shortcuts for data
             [HideInInspector]
-            public int size;
+            public int size, ySize;
             #endregion
 
             #region Room Management
@@ -45,8 +47,17 @@ namespace PDC
             private void ConvertRooms()
             {
                 _rooms = new List<Room>();
+                TagManager tM = null;
                 foreach (Room rc in rooms)
                 {
+                    tM = rc.room.GetComponent<TagManager>();
+                    if(!(tM != null))
+                    {
+                        Debug.Log("There is no tag manager attached to a room. Retard.");
+                        return;
+                    }
+                    if (!tags.Contains(tM._tag))
+                        continue;
                     Room temp = rc;
                     _rooms.Add(temp);
                     if (temp.converter == Converting.None)
@@ -141,11 +152,12 @@ namespace PDC
             {
                 //data
                 size = random.Next(widthMin, widthMax);
-                level = new Node[size, 1, size]; //y normally also is "size", but for the demo this is deactivated
+                ySize = mapType == MapType.Three_Dimensional ? size : 1;
+                level = new Node[size, ySize, size];
                 for (int x = 0; x < size; x++)
                 {
                     yield return null;
-                    for (int y = 0; y < 1; y++) //tijdelijk
+                    for (int y = 0; y < ySize; y++)
                     {
                         for (int z = 0; z < size; z++)
                         {
@@ -171,7 +183,7 @@ namespace PDC
             {
                 int x = random.Next(0, size);
                 int z = random.Next(0, size);
-                entrance = level[x, 0, z]; //entrance = level[x, size - 1, z];
+                entrance = level[x, ySize - 1, z];
             }
 
             //STEP #4
@@ -242,10 +254,16 @@ namespace PDC
                     //repeat until the ground floor has been reached
                 }
 
+                Node exit = null;
                 //used for 1 floor dungeons
-                Node exit = path[path.Count - 1];
-                if(!exit.initialized)
+                if (mapType == MapType.Two_Dimensional)
+                {
+                    exit = entrance;
                     InitializeNode(exit);
+                }
+                else
+                    exit = path[path.Count - 1];
+
 
                 //function: create branches
                 while (path.Count > 0) //use same list in a different way, always get bottom of the list (0)
@@ -338,7 +356,21 @@ namespace PDC
                     yield return null;
                 }
 
-                visualizer.SpawnRooms(level, entrance, tags);
+                //find exit
+                if (mapType == MapType.Two_Dimensional) {
+                    bool exitFound = false;
+                    while (!exitFound)
+                    {
+                        int x = random.Next(0, size - 1);
+                        int z = random.Next(0, size - 1);
+                        exit = level[x, ySize - 1, z];
+                        if (exit.initialized)
+                            if (exit != entrance)
+                                exitFound = true;
+                    }
+                }
+
+                visualizer.SpawnRooms(level, entrance, exit, tags);
             }
 
             #region Tools
@@ -380,7 +412,7 @@ namespace PDC
             public bool CheckBorders(Node node, Room room) //checks both borders and (if initialized) if they meet set required passages
             {
                 Node adj = null;
-                //HIER ZORGEN DAT ANDERE KAMERS NAAST DEZE OOK GECHECKT WORDEN OF ZE HIERNAARTOE EEN MANIER HEBBEN
+
                 if (!(node.room != null))
                     node.room = new Room();
 
