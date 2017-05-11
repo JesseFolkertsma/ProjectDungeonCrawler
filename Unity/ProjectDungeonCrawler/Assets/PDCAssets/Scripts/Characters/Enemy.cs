@@ -8,7 +8,7 @@ namespace PDC.Characters {
 
     public class Enemy : BaseCharacter
     {
-        
+        //protected static PlayerController pC;
 
         public class EnemyManagement
         {
