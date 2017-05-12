@@ -6,13 +6,13 @@ using System;
 using UnityEngine.AI;
 
 namespace PDC.Characters {
-
+    [RequireComponent(typeof(NavMeshAgent))]
     public class Enemy : BaseCharacter
     {
-        protected static PlayerReference pC;
+        protected static PlayerReference pC = null;
         protected NavMeshAgent navAgent;
-        public enum Status {Idle, Yield, Attacking}
-        public Status status = Status.Yield;
+        public enum Status {Idle, Attacking, Moving}
+        public Status status = Status.Idle;
 
         public class PlayerReference
         {
@@ -42,7 +42,7 @@ namespace PDC.Characters {
         }
 
         [SerializeField, Tooltip("Used for scanning of player")]
-        private int heightChar, widthChar;
+        private float heightChar, widthChar;
         protected List<Vector3> GetMultiPlayerPos()
         {
             //get normal, mid, left mid / right mid, high
@@ -67,22 +67,30 @@ namespace PDC.Characters {
             return ret;
         }
 
+        [Serializable]
         public class EnemyManagement
         {
             public float fastUpdate = 0.1f, slowUpdate = 1; //speed of updating, depending how far the player is from this enemy
-            public int fastDis, slowDis, engagementRange; //lerp between ^ this with percentage distance
+            public float fastDis, slowDis, engagementRange, attackRange; //lerp between ^ this with percentage distance
         }
 
         public EnemyManagement enemy;
 
         protected virtual void Awake()
         {
-            SearchForPlayer();
+            SetupNavMesh();
+            StartCoroutine(SearchForPlayer());
+        }
+
+        private void SetupNavMesh()
+        {
+            navAgent = GetComponent<NavMeshAgent>();
+            navAgent.speed = characterStats.movementSpeed;
         }
 
         protected IEnumerator SearchForPlayer()
         {
-            while((pC != null)) //makes sure there is a playercontroller reference
+            while(!(pC != null)) //makes sure there is a playercontroller reference
             {
                 if (PlayerController.instance != null)
                     pC = new PlayerReference(PlayerController.instance);
@@ -99,60 +107,56 @@ namespace PDC.Characters {
 
         [HideInInspector]
         public bool loopIdle = true;
+        float updateTime;
         protected virtual IEnumerator Idle()
         {
-            Coroutine followPlayer = null;
-            float updateTime = enemy.slowUpdate;
+            updateTime = enemy.slowUpdate;
             float playerDistance = 0;
             //func idle, default case for most ai
             while (loopIdle)
             {
-                while (status == Status.Attacking)
-                    yield return new WaitForSeconds(updateTime);
-                status = Status.Idle;
                 //check distance
-                playerDistance = GetPlayerDistance();  
-                if (playerDistance <= enemy.engagementRange)
+                playerDistance = GetPlayerDistance();
+
+                //while moving
+                while (status == Status.Moving)
                 {
-                    //search for player
-                    if (CheckIfSeePlayer())
-                    {
+                    CalcRefreshRate();
+                    if (CheckIfAbleToAttack())
                         //check if able to attack
-                        if (CheckIfAbleToAttack())
-                            Attack();
-                        //check if close enough to move
-                        else
-                            Move();
-                    }
-                    else if (!(followPlayer != null))
-                        followPlayer = StartCoroutine(FollowingPlayer());
+                        Attack();
+                    else
+                        Move(); //because it also calculates new player position
+                    yield return new WaitForSeconds(updateTime);
                 }
 
-                //calculate new updatetime
-                //ienumerator that balances checks per second on distance to player
-                float percentage = Mathf.InverseLerp(enemy.fastDis, enemy.slowDis, playerDistance);
-                if (percentage > 100)
-                    percentage = 100;
-                updateTime = Mathf.Lerp(enemy.fastUpdate, enemy.slowUpdate, percentage);
+                //while attacking
+                while (status == Status.Attacking)
+                {
+                    CalcRefreshRate();
+                    yield return new WaitForSeconds(updateTime);
+                }
 
-                //update yield return value seconds
-                status = Status.Yield;
+                //check in range
+                //if so move
+                CalcRefreshRate();
+                PauseMovement();
+                if (playerDistance <= enemy.engagementRange)
+                    if (CheckIfSeePlayer())
+                        Move();
+
                 yield return new WaitForSeconds(updateTime);
             }
         }
 
-        [SerializeField]
-        private int chaseTime = 5;
-        private float _chaseTime;
-        protected virtual IEnumerator FollowingPlayer()
+        private void CalcRefreshRate()
         {
-            _chaseTime = chaseTime;
-            while(_chaseTime > 0)
-            {
-                _chaseTime -= Time.deltaTime;
-                yield return null;
-            }
-            _chaseTime = 0;
+            //calculate new updatetime
+            //ienumerator that balances checks per second on distance to player
+            float percentage = Mathf.InverseLerp(enemy.fastDis, enemy.slowDis, GetPlayerDistance()); //seems like calculation is off
+            if (percentage > 100)
+                percentage = 100;
+            updateTime = Mathf.Lerp(enemy.fastUpdate, enemy.slowUpdate, percentage);
         }
 
         protected float GetPlayerDistance()
@@ -175,16 +179,16 @@ namespace PDC.Characters {
 
         protected virtual bool CheckIfAbleToAttack()
         {
-            if (status != Status.Idle)
-                return false;
+            bool ret = GetPlayerDistance() < enemy.attackRange;
             //check attack info, check if close enough        
-            return true;
+            return ret;
         }
 
         public override void Attack()
         {
-            status = Status.Attacking;
             //shoot raycasts and get direction, and rotate that way
+            PauseMovement();
+            status = Status.Attacking;
             print("Attacking!");
         }
 
@@ -195,8 +199,14 @@ namespace PDC.Characters {
 
         public override void Move()
         {
-            //flying / grounded are both a thing, just move to player boi
-            navAgent.Move(pC.Position);
+            navAgent.destination = pC.Position;
+            status = Status.Moving;
+        }
+
+        private void PauseMovement()
+        {
+            navAgent.destination = transform.position;
+            status = Status.Idle;
         }
     }
 }
