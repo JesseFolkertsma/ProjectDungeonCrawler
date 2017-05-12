@@ -3,23 +3,100 @@ using System.Collections.Generic;
 using UnityEngine;
 using PDC.Characters;
 using System;
+using UnityEngine.AI;
 
 namespace PDC.Characters {
-
+    [RequireComponent(typeof(NavMeshAgent))]
     public class Enemy : BaseCharacter
     {
-        //protected static PlayerController pC;
+        protected static PlayerReference pC = null;
+        protected NavMeshAgent navAgent;
+        public enum Status {Idle, Attacking, Moving}
+        public Status status = Status.Idle;
 
+        public class PlayerReference
+        {
+            public PlayerController playerController;
+            //room for other scripts
+            public Transform transform;
+            public Vector3 Position
+            {
+                get
+                {
+                    return transform.position;
+                }
+            }
+            public GameObject GameObject
+            {
+                get
+                {
+                    return transform.gameObject;
+                }
+            }
+
+            public PlayerReference(PlayerController _pC)
+            {
+                playerController = _pC;
+                transform = _pC.transform;
+            }
+        }
+
+        [SerializeField, Tooltip("Used for scanning of player")]
+        private float heightChar, widthChar;
+        protected List<Vector3> GetMultiPlayerPos()
+        {
+            //get normal, mid, left mid / right mid, high
+            List<Vector3> ret = new List<Vector3>();
+            ret.Add(pC.Position);
+
+            //neutral mid
+            Vector3 mid = pC.Position;
+            mid.y += heightChar / 2;
+            ret.Add(mid);
+            //left mid
+            mid.x -= widthChar / 2;
+            ret.Add(mid);
+            //right mid
+            mid.x += widthChar;
+            ret.Add(mid);
+            //high
+            mid = pC.Position;
+            mid.y += heightChar;
+            ret.Add(mid);
+
+            return ret;
+        }
+
+        [Serializable]
         public class EnemyManagement
         {
             public float fastUpdate = 0.1f, slowUpdate = 1; //speed of updating, depending how far the player is from this enemy
-            public int fastDis, slowDis; //lerp between ^ this with percentage distance
+            public float fastDis, slowDis, engagementRange, attackRange; //lerp between ^ this with percentage distance
         }
 
         public EnemyManagement enemy;
 
         protected virtual void Awake()
         {
+            SetupNavMesh();
+            StartCoroutine(SearchForPlayer());
+        }
+
+        private void SetupNavMesh()
+        {
+            navAgent = GetComponent<NavMeshAgent>();
+            navAgent.speed = characterStats.movementSpeed;
+        }
+
+        protected IEnumerator SearchForPlayer()
+        {
+            while(!(pC != null)) //makes sure there is a playercontroller reference
+            {
+                if (PlayerController.instance != null)
+                    pC = new PlayerReference(PlayerController.instance);
+                yield return null;
+            }
+
             StartIdle();
         }
 
@@ -30,37 +107,89 @@ namespace PDC.Characters {
 
         [HideInInspector]
         public bool loopIdle = true;
+        float updateTime;
         protected virtual IEnumerator Idle()
         {
-            float updateTime = enemy.slowUpdate;
+            updateTime = enemy.slowUpdate;
+            float playerDistance = 0;
             //func idle, default case for most ai
             while (loopIdle)
             {
-                //check if able to see player {
-                //check if able to attack
-                //else
-                //check if close enough to move }
+                //check distance
+                playerDistance = GetPlayerDistance();
 
-                //else
-                //func searchforplayer
+                //while moving
+                while (status == Status.Moving)
+                {
+                    CalcRefreshRate();
+                    if (CheckIfAbleToAttack())
+                        //check if able to attack
+                        Attack();
+                    else
+                        Move(); //because it also calculates new player position
+                    yield return new WaitForSeconds(updateTime);
+                }
 
-                //ienumerator that balances checks per second on distance to player
-                //update yield return value seconds
+                //while attacking
+                while (status == Status.Attacking)
+                {
+                    CalcRefreshRate();
+                    yield return new WaitForSeconds(updateTime);
+                }
+
+                //check in range
+                //if so move
+                CalcRefreshRate();
+                PauseMovement();
+                if (playerDistance <= enemy.engagementRange)
+                    if (CheckIfSeePlayer())
+                        Move();
+
                 yield return new WaitForSeconds(updateTime);
             }
         }
 
-        //if !close distance return till next check
+        private void CalcRefreshRate()
+        {
+            //calculate new updatetime
+            //ienumerator that balances checks per second on distance to player
+            float percentage = Mathf.InverseLerp(enemy.fastDis, enemy.slowDis, GetPlayerDistance()); //seems like calculation is off
+            if (percentage > 100)
+                percentage = 100;
+            updateTime = Mathf.Lerp(enemy.fastUpdate, enemy.slowUpdate, percentage);
+        }
+
+        protected float GetPlayerDistance()
+        {
+            return Vector3.Distance(transform.position, pC.Position);
+        }
+
+        protected virtual bool CheckIfSeePlayer()
+        {
+            /*
+            so this is a weird check
+            since the player has no collider whatsoever, im going to pass the "see player"
+            if at least one of the raycasts DOESNT hit anything
+            */
+            foreach (Vector3 pos in GetMultiPlayerPos())
+                if(!Physics.Linecast(transform.position, pos))
+                    return true;
+            return false;
+        }
 
         protected virtual bool CheckIfAbleToAttack()
         {
-            //check plz
-            return true;
+            bool ret = GetPlayerDistance() < enemy.attackRange;
+            //check attack info, check if close enough        
+            return ret;
         }
 
         public override void Attack()
         {
-            //shoot raycasts
+            //shoot raycasts and get direction, and rotate that way
+            PauseMovement();
+            status = Status.Attacking;
+            print("Attacking!");
         }
 
         public override void Die()
@@ -70,7 +199,14 @@ namespace PDC.Characters {
 
         public override void Move()
         {
-            //flying / grounded are both a thing
+            navAgent.destination = pC.Position;
+            status = Status.Moving;
+        }
+
+        private void PauseMovement()
+        {
+            navAgent.destination = transform.position;
+            status = Status.Idle;
         }
     }
 }
