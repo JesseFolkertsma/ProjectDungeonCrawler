@@ -14,6 +14,8 @@ namespace PDC.Characters
         public Rigidbody rb;
         [HideInInspector]
         public AudioSource audioS;
+        [HideInInspector]
+        public Animator weaponAnim;
         public Transform camHolder;
         public Camera playerCam;
         public Transform weaponPos;
@@ -38,6 +40,7 @@ namespace PDC.Characters
         float bobY;
         float bobX;
         float acc;
+        float moveValue;
         bool grounded;
         bool bobUp;
 
@@ -71,14 +74,18 @@ namespace PDC.Characters
 
             rb = GetComponent<Rigidbody>();
             audioS = GetComponent<AudioSource>();
+            weaponAnim = weaponPos.GetComponent<Animator>();
 
             if (headbobVariables.mikeMode)
             {
                 headbobVariables.headbobIntensity = new Vector2(.1f, .5f);
                 headbobVariables.maxBobSpeed = 7;
-                headbobVariables.maxCameraPan = 80;
+                headbobVariables.maxCameraPan = 60;
                 headbobVariables.fovBonus = 50;
             }
+
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         void Update()
@@ -139,21 +146,41 @@ namespace PDC.Characters
         void WeaponEffects()
         {
             WeaponSway();
+            WeaponAnimation();
+        }
+
+        void WeaponAnimation()
+        {
+            float walkF = acc / acceleration;
+            if(!grounded)
+                walkF = Mathf.Lerp(walkF, 0, Time.deltaTime * 6);
+            weaponAnim.SetFloat("Walk", walkF);
         }
 
         void WeaponSway()
         {
             Vector3 newPos = new Vector3(-xInput /7, -rb.velocity.y/20, 0);
+            if (newPos.y > .1f)
+                newPos.y = .1f;
+            else if (newPos.y < -.1f)
+                newPos.y = -.1f;
             weaponTrans.localPosition = Vector3.Lerp(weaponTrans.localPosition, newPos, Time.deltaTime * 2);
         }
 
         void CameraEffects()
         {
+            //HeadBobbing
+            if(direction != Vector3.zero && grounded)
+            {
+                Bobhead(1f);
+                weaponAnim.SetFloat("Walk", acc / acceleration);
+            }
+
             if (headbobVariables.enableCameraEffects)
             {
                 //Stafe effects
                 if (xInput != 0)
-                {
+                {   
                     Quaternion newRot = camHolder.rotation;
                     newRot.eulerAngles += new Vector3(0, 0, headbobVariables.maxCameraPan * -xInput);
                     playerCam.transform.rotation = Quaternion.Lerp(playerCam.transform.rotation, newRot, headbobVariables.panSpeed * Time.deltaTime);
@@ -167,9 +194,6 @@ namespace PDC.Characters
                 {
                     //FOV effect
                     playerCam.fieldOfView = Mathf.Lerp(playerCam.fieldOfView, headbobVariables.baseFOV + headbobVariables.fovBonus / movementModifier * acc, headbobVariables.changeFOVSpeed * Time.deltaTime);
-
-                    //Headbobbing
-                    Bobhead(1f);
                 }
                 else
                 {
@@ -178,11 +202,6 @@ namespace PDC.Characters
 
                     if (playerCam.transform.localPosition != Vector3.zero)
                         playerCam.transform.localPosition = Vector3.Lerp(playerCam.transform.localPosition, Vector3.zero, headbobVariables.maxBobSpeed * Time.deltaTime);
-                }
-                //Walking backwards effects
-                if (yInput < -0.1)
-                {
-                    Bobhead(.5f);
                 }
             }
         }

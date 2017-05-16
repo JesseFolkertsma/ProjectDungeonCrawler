@@ -4,15 +4,19 @@ using UnityEngine;
 using PDC.Characters;
 using System;
 
-namespace PDC.StatusEffects
+namespace PDC
 {
     public enum EffectType
     {
-        Buff = 0,
-        Poison = 1,
-        Heal = 2,
+        Normal = 0,
+        Buff = 1,
+        Poison = 2,
+        Heal = 3,
     };
+}
 
+namespace PDC.StatusEffects
+{
     public class OngoingEffect
     {
         public EffectType effectType;

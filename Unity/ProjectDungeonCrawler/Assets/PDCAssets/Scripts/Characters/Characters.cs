@@ -16,7 +16,7 @@ namespace PDC.Characters
         public List<OngoingEffect> ongoingEffects = new List<OngoingEffect>();
         public bool isdead = false;
 
-        public virtual void TakeDamage(float damage, Color barColor)
+        public virtual void TakeDamage(float damage, EffectType damageType)
         {
             characterStats.currentHP -= damage;
             if(characterStats.currentHP <= 0)
