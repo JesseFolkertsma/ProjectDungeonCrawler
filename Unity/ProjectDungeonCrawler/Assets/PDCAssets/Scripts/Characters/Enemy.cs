@@ -9,6 +9,12 @@ namespace PDC.Characters {
     [RequireComponent(typeof(NavMeshAgent))]
     public class Enemy : BaseCharacter
     {
+        [Serializable]
+        public class EnemyStats : Stats
+        {
+            public int damage;
+        }
+        public new EnemyStats characterStats;
         protected static PlayerReference pC = null;
         protected NavMeshAgent navAgent;
         public enum Status {Idle, Attacking, Moving}
@@ -107,7 +113,7 @@ namespace PDC.Characters {
 
         [HideInInspector]
         public bool loopIdle = true;
-        float updateTime;
+        private float updateTime;
         protected virtual IEnumerator Idle()
         {
             updateTime = enemy.slowUpdate;
@@ -149,6 +155,7 @@ namespace PDC.Characters {
             }
         }
 
+        //optimization
         private void CalcRefreshRate()
         {
             //calculate new updatetime
@@ -194,7 +201,7 @@ namespace PDC.Characters {
 
         public override void Die()
         {
-            //drop items, calc which ones
+            //drop items, calc which ones in enemymanager
         }
 
         public override void Move()
@@ -203,9 +210,9 @@ namespace PDC.Characters {
             status = Status.Moving;
         }
 
-        private void PauseMovement()
+        protected virtual void PauseMovement()
         {
-            navAgent.destination = transform.position;
+            navAgent.Stop();
             status = Status.Idle;
         }
     }
