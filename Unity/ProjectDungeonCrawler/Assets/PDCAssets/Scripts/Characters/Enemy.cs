@@ -10,11 +10,11 @@ namespace PDC.Characters {
     public class Enemy : BaseCharacter
     {
         [Serializable]
-        public class EnemyStats : Stats
+        public class EnemyStats
         {
             public int damage;
         }
-        public new EnemyStats characterStats;
+        public EnemyStats enemyStats;
         protected static PlayerReference pC = null;
         protected NavMeshAgent navAgent;
         public enum Status {Idle, Attacking, Moving}
