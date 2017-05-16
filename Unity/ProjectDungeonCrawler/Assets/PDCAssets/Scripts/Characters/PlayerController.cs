@@ -12,6 +12,7 @@ namespace PDC.Characters
         //Public variables
         [HideInInspector]
         public Rigidbody rb;
+        [HideInInspector]
         public AudioSource audioS;
         public Transform camHolder;
         public Camera playerCam;
@@ -142,7 +143,7 @@ namespace PDC.Characters
 
         void WeaponSway()
         {
-            Vector3 newPos = new Vector3(-xInput /5, -rb.velocity.y/20, 0);
+            Vector3 newPos = new Vector3(-xInput /7, -rb.velocity.y/20, 0);
             weaponTrans.localPosition = Vector3.Lerp(weaponTrans.localPosition, newPos, Time.deltaTime * 2);
         }
 
@@ -245,6 +246,7 @@ namespace PDC.Characters
                 playerCam.transform.parent = null;
                 playerCam.gameObject.AddComponent<CapsuleCollider>();
                 playerCam.gameObject.AddComponent<Rigidbody>();
+                playerCam.GetComponent<Rigidbody>().AddForce(transform.forward);
             }
         }
 
