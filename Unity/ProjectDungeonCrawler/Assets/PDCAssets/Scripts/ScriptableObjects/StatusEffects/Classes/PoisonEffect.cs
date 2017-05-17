@@ -21,7 +21,7 @@ namespace PDC.StatusEffects
         {
             while (startTime + effectDuration > Time.time)
             {
-                character.TakeDamage(damagePerTick, Color.green);
+                character.TakeDamage(damagePerTick, type);
                 yield return new WaitForSeconds(1 / tickRate);
             }
         }
