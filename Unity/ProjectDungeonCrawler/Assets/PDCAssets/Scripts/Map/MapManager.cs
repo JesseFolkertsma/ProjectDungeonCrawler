@@ -36,10 +36,29 @@ public class MapManager : MonoBehaviour {
     */
     #endregion
 
+    #region Normal Functions
+
+    public int resolutionX = 256, resolutionY = 144;
+
+    public void PressMap()
+    {
+        //convert mousepos to pixel position
+        Vector2 mousePos = Input.mousePosition;
+        int x = (int)(mousePos.x / resolutionX * 100);
+        int y = (int)(mousePos.y / resolutionY * 100);
+        print(grid);
+        print(grid[x,y].terrain);
+    }
+
+    #endregion
+
+    #region Map Baking
+
     //map node system
+    [SerializeField]
     private Node[,] grid;
 
-    private enum TerrainType {Road = 1, Walkable = 3, Difficult = 8, Unwalkable }
+    public enum TerrainType {Road = 1, Walkable = 3, Difficult = 8, Unwalkable }
     private class Node
     {
         public int x, y;
@@ -67,8 +86,8 @@ public class MapManager : MonoBehaviour {
         //black you cant walk, grey you can, and white you can walk faster
         //create a duplicate of the map in those colors and somehow scan that picture
         grid = new Node[texX, texY];
-
         Vector2 pos;
+
         for (int _x = 0; _x < texX; _x++)
             for (int _y = 0; _y < texY; _y++)
             {
@@ -86,13 +105,17 @@ public class MapManager : MonoBehaviour {
                     terrain = TerrainType.Road;
                 else if (col == Color.white)
                     terrain = TerrainType.Walkable;
-                else if (col == Color.grey)
+                else if (col == Color.red)
                     terrain = TerrainType.Difficult;
                 else if (col == Color.black)
                     terrain = TerrainType.Unwalkable;
-                else print("Combination of colors encountered! unable to clearly see which color it is so will make it walkable.");
+                else print("Combination of colors encountered! unable to clearly see which color it is so will make it walkable. Color: " + col);
 
                 grid[_x, _y] = new Node(_x, _y, terrain);
             }
+
+        Debug.Log("Baked map. Size = " + grid.GetLength(0) + " by " + grid.GetLength(1) + ".");
     }
+
+    #endregion
 }
