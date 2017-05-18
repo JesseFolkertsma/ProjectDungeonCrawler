@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 #if UNITY_EDITOR
-
+    /*
     [CustomEditor(typeof(MapManager))]
     public class MapInspector : Editor {
 
@@ -13,11 +13,12 @@ using UnityEditor;
             DrawDefaultInspector();
 
             MapManager map = (MapManager)target;
-            if (GUILayout.Button("Calculate Nodes"))
+            if (GUILayout.Button("Bake Map"))
             {
                 map.InitializeMap();
             }
         }
     }
+    */
 
 #endif
