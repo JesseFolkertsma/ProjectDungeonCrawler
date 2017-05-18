@@ -14,12 +14,8 @@ namespace PDC.Characters
         public Rigidbody rb;
         [HideInInspector]
         public AudioSource audioS;
-        [HideInInspector]
-        public Animator weaponAnim;
         public Transform camHolder;
         public Camera playerCam;
-        public Transform weaponPos;
-        public Transform weaponTrans;
         public HeadBobVariables headbobVariables;
         public LayerMask playerLayer;
         public float movementSpeed;
@@ -28,21 +24,31 @@ namespace PDC.Characters
         public float mouseSensitivity;
         public float jumpForce;
         public AudioClip[] footSteps;
+        public delegate void OnPlayerSpawn();
+        public static event OnPlayerDeath onSpawnEvent;
+        public delegate void OnPlayerDeath();
+        public static event OnPlayerDeath onDeathEvent;
 
         //Private variables
         Vector3 direction;
         Vector3 mouseX;
         Vector3 mouseY;
-        float xInput;
-        float yInput;
         float xRot;
         float yRot;
         float bobY;
         float bobX;
-        float acc;
         float moveValue;
-        bool grounded;
         bool bobUp;
+
+        //Hidden public variables
+        [HideInInspector]
+        public float acc;
+        [HideInInspector]
+        public bool grounded;
+        [HideInInspector]
+        public float xInput;
+        [HideInInspector]
+        public float yInput;
 
         [Serializable]
         public struct HeadBobVariables
@@ -74,7 +80,6 @@ namespace PDC.Characters
 
             rb = GetComponent<Rigidbody>();
             audioS = GetComponent<AudioSource>();
-            weaponAnim = weaponPos.GetComponent<Animator>();
 
             if (headbobVariables.mikeMode)
             {
@@ -86,6 +91,8 @@ namespace PDC.Characters
 
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            if(onSpawnEvent != null)
+                onSpawnEvent();
         }
 
         void Update()
@@ -95,7 +102,6 @@ namespace PDC.Characters
                 CheckInput();
                 Checks();
                 CameraEffects();
-                WeaponEffects();
             }
         }
 
@@ -142,38 +148,13 @@ namespace PDC.Characters
                 grounded = false;
             }
         }
-
-        void WeaponEffects()
-        {
-            WeaponSway();
-            WeaponAnimation();
-        }
-
-        void WeaponAnimation()
-        {
-            float walkF = acc / acceleration;
-            if(!grounded)
-                walkF = Mathf.Lerp(walkF, 0, Time.deltaTime * 6);
-            weaponAnim.SetFloat("Walk", walkF);
-        }
-
-        void WeaponSway()
-        {
-            Vector3 newPos = new Vector3(-xInput /7, -rb.velocity.y/20, 0);
-            if (newPos.y > .1f)
-                newPos.y = .1f;
-            else if (newPos.y < -.1f)
-                newPos.y = -.1f;
-            weaponTrans.localPosition = Vector3.Lerp(weaponTrans.localPosition, newPos, Time.deltaTime * 2);
-        }
-
+        
         void CameraEffects()
         {
             //HeadBobbing
             if(direction != Vector3.zero && grounded)
             {
                 Bobhead(1f);
-                weaponAnim.SetFloat("Walk", acc / acceleration);
             }
 
             if (headbobVariables.enableCameraEffects)
@@ -266,6 +247,7 @@ namespace PDC.Characters
                 playerCam.gameObject.AddComponent<CapsuleCollider>();
                 playerCam.gameObject.AddComponent<Rigidbody>();
                 playerCam.GetComponent<Rigidbody>().AddForce(transform.forward);
+                onDeathEvent();
             }
         }
 
