@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -40,14 +41,23 @@ public class MapManager : MonoBehaviour {
 
     public int resolutionX = 256, resolutionY = 144;
 
+    private void Awake()
+    {
+        InitializeMap();
+    }
+
     public void PressMap()
     {
         //convert mousepos to pixel position
         Vector2 mousePos = Input.mousePosition;
-        int x = (int)(mousePos.x / resolutionX * 100);
-        int y = (int)(mousePos.y / resolutionY * 100);
-        print(grid);
-        print(grid[x,y].terrain);
+        float x = mousePos.x / resolutionX;
+        float y = mousePos.y / resolutionY;
+
+        //calculate percentage into grid
+        x = Mathf.Lerp(0, grid.GetLength(0), x);
+        y = Mathf.Lerp(0, grid.GetLength(1), y);
+
+        print(grid[(int)x,(int)y].terrain);
     }
 
     #endregion
@@ -55,10 +65,10 @@ public class MapManager : MonoBehaviour {
     #region Map Baking
 
     //map node system
-    [SerializeField]
     private Node[,] grid;
 
     public enum TerrainType {Road = 1, Walkable = 3, Difficult = 8, Unwalkable }
+    [Serializable]
     private class Node
     {
         public int x, y;
@@ -82,9 +92,6 @@ public class MapManager : MonoBehaviour {
         float x = mapSkeleton.width / texX; //percentage of place where to place pos
         float y = mapSkeleton.height / texY;
 
-        //so im going to use a few colored map to check three colors: black, grey, white
-        //black you cant walk, grey you can, and white you can walk faster
-        //create a duplicate of the map in those colors and somehow scan that picture
         grid = new Node[texX, texY];
         Vector2 pos;
 
@@ -92,7 +99,6 @@ public class MapManager : MonoBehaviour {
             for (int _y = 0; _y < texY; _y++)
             {
                 pos = new Vector2(x * _x, y * _y);
-
                 //calculate terrain type
                 TerrainType terrain = TerrainType.Walkable;
                 Color col;
@@ -113,8 +119,6 @@ public class MapManager : MonoBehaviour {
 
                 grid[_x, _y] = new Node(_x, _y, terrain);
             }
-
-        Debug.Log("Baked map. Size = " + grid.GetLength(0) + " by " + grid.GetLength(1) + ".");
     }
 
     #endregion
