@@ -8,6 +8,7 @@ namespace PDC
     namespace Generating
     {
         [RequireComponent(typeof(MapVisualizer)), RequireComponent(typeof(MapData))]
+        [RequireComponent(typeof(MapLoader))]
         public class MapGenerator : MonoBehaviour
         {
             #region Mapdata Settings
@@ -31,6 +32,7 @@ namespace PDC
             private bool randomSeed;
             public Node entrance;
             private MapVisualizer visualizer;
+            private MapLoader loader;
             private MapData mapData;
 
             #region Shortcuts for data
@@ -98,7 +100,13 @@ namespace PDC
             private void Awake()
             {
                 visualizer = GetComponent<MapVisualizer>();
+                loader = GetComponent<MapLoader>();
                 mapData = GetComponent<MapData>();
+                StartCoroutine(Initializing());
+            }
+
+            private IEnumerator Initializing()
+            {
 
                 if (!MapData.initialized)
                 {
@@ -114,20 +122,28 @@ namespace PDC
                 if (widthMin < 2)
                 {
                     Debug.Log("Try setting the minimal width to at least 2.");
-                    return;
+                    yield break;
                 }
                 if (widthMax < widthMin)
                 {
                     Debug.Log("The max width is lower than the min width!");
-                    return;
+                    yield break;
                 }
 
+                
+
+                yield return null;
+                
                 //convert room to all directions
                 ConvertRooms();
+                loader.SetProgress(MapLoader.Progress.Convert_Rooms);
 
+                yield return null;
                 //set seed
                 SetSeed();
+                loader.SetProgress(MapLoader.Progress.Set_Seed);
 
+                yield return null;
                 //initialize nodes and nodelevels
                 StartCoroutine(InitializeLevel());
             }
@@ -264,7 +280,7 @@ namespace PDC
                 else
                     exit = path[path.Count - 1];
 
-
+                loader.SetProgress(MapLoader.Progress.Creating_Main_Path);
                 //function: create branches
                 while (path.Count > 0) //use same list in a different way, always get bottom of the list (0)
                 {
@@ -355,6 +371,8 @@ namespace PDC
                     
                     yield return null;
                 }
+
+                loader.SetProgress(MapLoader.Progress.Branching_Main_Path);
 
                 //find exit
                 if (mapType == MapType.Two_Dimensional) {
