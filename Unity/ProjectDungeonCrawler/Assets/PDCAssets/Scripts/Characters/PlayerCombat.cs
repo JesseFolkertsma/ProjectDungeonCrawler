@@ -75,9 +75,17 @@ namespace PDC.Characters
                 {
                     equippedWeapon.Fire2Hold();
                 }
+                if (Input.GetButtonUp("Fire2"))
+                {
+                    equippedWeapon.Fire2Up();
+                }
                 if (Input.GetButton("Fire1"))
                 {
                     equippedWeapon.Fire1Hold(pc.playerCam, pc.playerLayer);
+                }
+                if (Input.GetButtonUp("Fire1"))
+                {
+                    equippedWeapon.Fire1Up();
                 }
                 if (Input.GetButtonDown("Throw"))
                 {
