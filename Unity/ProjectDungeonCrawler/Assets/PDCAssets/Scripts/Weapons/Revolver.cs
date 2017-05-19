@@ -29,7 +29,7 @@ namespace PDC.Weapons
                         h.GetHit(damage, EffectType.Normal);
                     }
                 }
-                Recoil(1);
+                anim.SetTrigger("Attack");
                 print("pew");
             }
         }
