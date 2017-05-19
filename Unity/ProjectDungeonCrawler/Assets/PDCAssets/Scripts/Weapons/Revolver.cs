@@ -41,7 +41,7 @@ namespace PDC.Weapons
                 IHitable iHit = hit.transform.GetComponent<IHitable>();
                 if (iHit != null)
                 {
-                    iHit.GetHit(damage, EffectType.Normal);
+                    iHit.GetHit(damage, EffectType.Normal, weaponEffects);
                 }
             }
         }
