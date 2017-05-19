@@ -28,6 +28,7 @@ namespace PDC.Weapons
 
         public int assignedSlot;
         public Rigidbody rb;
+        public Animator anim;
         public GameObject physicsCol;
 
         public abstract void Fire1Hold(Camera playercam, LayerMask mask);
@@ -36,17 +37,13 @@ namespace PDC.Weapons
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
+            anim = GetComponent<Animator>();
         }
 
         public void Throw(Camera playercam)
         {
             transform.parent = null;
             rb.isKinematic = false;
-        }
-
-        public void Recoil(float str)
-        {
-            rb.velocity = new Vector3(rb.velocity.x, rb.velocity.y, -str);
         }
 
         private void OnCollisionEnter(Collision collision)
