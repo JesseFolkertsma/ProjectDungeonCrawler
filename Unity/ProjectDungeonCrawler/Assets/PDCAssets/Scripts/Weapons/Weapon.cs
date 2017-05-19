@@ -23,6 +23,7 @@ namespace PDC.Weapons
         public float damage = 20;
         public float throwDamage = 20;
         public StatusEffect[] weaponEffects;
+        public int maxAmmo = 8;
         public int ammo = 8;
         public bool isEquipped;
 
@@ -34,13 +35,16 @@ namespace PDC.Weapons
         public bool canAttack = true;
 
         public abstract void Fire1Hold(Camera playercam, LayerMask mask);
+        public abstract void Fire1Up();
         public abstract void Fire2Hold();
+        public abstract void Fire2Up();
+        public abstract void Attack();
 
         private void Awake()
         {
             canAttack = true;
             rb = GetComponent<Rigidbody>();
-            if(GetComponent<Animator>())
+            if(GetComponent<Animator>() != null)
                 anim = GetComponent<Animator>();
         }
 
@@ -48,23 +52,6 @@ namespace PDC.Weapons
         {
             transform.parent = null;
             rb.isKinematic = false;
-        }
-
-        public void CheckIfAnimationEnd(string animationName)
-        {
-            StartCoroutine(AnimationCheckRoutine(animationName));
-        }
-
-        IEnumerator AnimationCheckRoutine(string animationName)
-        {
-            if (anim)
-            {
-                while (anim.GetCurrentAnimatorStateInfo(0).IsName("AnimationName"))
-                {
-                    yield return new WaitForEndOfFrame();
-                }
-            }
-            canAttack = true;
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -80,10 +67,10 @@ namespace PDC.Weapons
                 }
                 else if (rb.velocity.magnitude > 1)
                 {
-                    IHitable[] hits = collision.transform.root.GetComponentsInChildren<IHitable>();
-                    foreach (IHitable h in hits)
+                    IHitable iHit = collision.transform.GetComponent<IHitable>();
+                    if (iHit != null)
                     {
-                        h.GetHit(throwDamage, EffectType.Normal);
+                        iHit.GetHit(damage, EffectType.Normal);
                     }
                 }
             }

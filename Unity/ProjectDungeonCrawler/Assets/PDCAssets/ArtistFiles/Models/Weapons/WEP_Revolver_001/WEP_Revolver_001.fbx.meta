@@ -1,15 +1,32 @@
 fileFormatVersion: 2
-guid: 52ebc2fc94be2b4429d05a8f4d5a8336
-timeCreated: 1492600510
+guid: 502b4ac0a2eff1643b6d108325912373
+timeCreated: 1495184830
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
+    100000: Armature
+    100002: Gun
+    100004: Hammer
+    100006: Hammer_end
+    100008: Revolver
+    100010: //RootNode
+    400000: Armature
+    400002: Gun
+    400004: Hammer
+    400006: Hammer_end
+    400008: Revolver
+    400010: //RootNode
     4300000: Revolver
+    7400000: Armature|Idle
+    7400002: Armature|Revolver.001Action
+    7400004: Armature|Revolver.001Action.001
+    7400006: Armature|Revolver_Idle
+    7400008: Armature|Revolver_Shoot
+    7400010: Armature|RevolverAction
+    7400012: Armature|Shoot
+    9500000: //RootNode
+    13700000: Revolver
   materials:
     importMaterials: 1
     materialName: 0
@@ -32,7 +49,47 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Armature|Revolver_Idle
+      takeName: Armature|Revolver_Idle
+      firstFrame: 0
+      lastFrame: 60
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Gun
+        weight: 1
+      - path: Armature/Gun/Hammer
+        weight: 1
+      - path: Armature/Gun/Hammer/Hammer_end
+        weight: 1
+      - path: Revolver
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
@@ -74,7 +131,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
