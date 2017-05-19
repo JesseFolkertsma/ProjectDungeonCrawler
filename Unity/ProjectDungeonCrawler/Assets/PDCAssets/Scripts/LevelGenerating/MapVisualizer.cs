@@ -26,6 +26,8 @@ namespace PDC
             [SerializeField]
             private List<Enemy> enemies = new List<Enemy>();
 
+            private MapLoader loader;
+
             #region Quest Info
 
             public int enemyValue;
@@ -34,6 +36,8 @@ namespace PDC
 
             public void SpawnRooms(MapGenerator.Node[,,] level, MapGenerator.Node entrance, MapGenerator.Node exit, List<TagManager.TagType> tags)
             {
+                loader = GetComponent<MapLoader>();
+
                 if(densityInteriorMax < densityInteriorMin)
                 {
                     Debug.Log("The max Interior density is lower than it's minimal counterpart!");
@@ -189,6 +193,8 @@ namespace PDC
 
                             yield return null;
                         }
+
+                loader.SetProgress(MapLoader.Progress.Placing_Rooms);
             }
 
             [Serializable]
