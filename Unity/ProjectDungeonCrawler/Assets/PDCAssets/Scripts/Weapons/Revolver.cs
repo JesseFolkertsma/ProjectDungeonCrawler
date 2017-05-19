@@ -9,29 +9,35 @@ namespace PDC.Weapons
     public class Revolver : Weapon
     {
         public float range = 100;
-        public float attackRate = 1;
         public Transform gunEnd;
         public GameObject muzzleFlash;
-
-        float cd;
-
+        public int ammoUsePerShot = 1;
+        
         public override void Fire1Hold(Camera playercam, LayerMask mask)
         {
-            if (cd < Time.time)
+            if (canAttack && ammo > 0)
             {
-                cd = Time.time + 1 / attackRate;
+                canAttack = false;
+                ammo--;
+                ShootVisuals();
                 RaycastHit hit;
                 if (Physics.Raycast(playercam.transform.position, playercam.transform.forward, out hit, range, mask))
                 {
-                    IHitable[] hits = hit.transform.root.GetComponents<IHitable>();
-                    foreach (IHitable h in hits)
+                    IHitable iHit = hit.transform.GetComponent<IHitable>();
+                    if (iHit != null)
                     {
-                        h.GetHit(damage, EffectType.Normal);
+                        iHit.GetHit(damage, EffectType.Normal);
                     }
                 }
-                Recoil(1);
-                print("pew");
+                CheckIfAnimationEnd("Attack");
             }
+        }
+
+        void ShootVisuals()
+        {
+            Instantiate(muzzleFlash, gunEnd.position, gunEnd.rotation);
+            if(anim)
+                anim.SetTrigger("Attack");
         }
 
         public override void Fire2Hold()
