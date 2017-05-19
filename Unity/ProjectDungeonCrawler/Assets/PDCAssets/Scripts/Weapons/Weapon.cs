@@ -26,24 +26,45 @@ namespace PDC.Weapons
         public int ammo = 8;
         public bool isEquipped;
 
-        public int assignedSlot;
-        public Rigidbody rb;
-        public Animator anim;
+        [HideInInspector] public int assignedSlot;
+        [HideInInspector] public Rigidbody rb;
+        [HideInInspector] public Animator anim;
         public GameObject physicsCol;
+        [HideInInspector]
+        public bool canAttack = true;
 
         public abstract void Fire1Hold(Camera playercam, LayerMask mask);
         public abstract void Fire2Hold();
 
         private void Awake()
         {
+            canAttack = true;
             rb = GetComponent<Rigidbody>();
-            anim = GetComponent<Animator>();
+            if(GetComponent<Animator>())
+                anim = GetComponent<Animator>();
         }
 
         public void Throw(Camera playercam)
         {
             transform.parent = null;
             rb.isKinematic = false;
+        }
+
+        public void CheckIfAnimationEnd(string animationName)
+        {
+            StartCoroutine(AnimationCheckRoutine(animationName));
+        }
+
+        IEnumerator AnimationCheckRoutine(string animationName)
+        {
+            if (anim)
+            {
+                while (anim.GetCurrentAnimatorStateInfo(0).IsName("AnimationName"))
+                {
+                    yield return new WaitForEndOfFrame();
+                }
+            }
+            canAttack = true;
         }
 
         private void OnCollisionEnter(Collision collision)
