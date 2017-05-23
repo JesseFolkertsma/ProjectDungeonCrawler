@@ -12,6 +12,7 @@ public class MapLoader : MonoBehaviour {
 
     public GameObject loadScreen;
     public Image progressBar;
+    public string progression;
 
     #endregion
 
@@ -48,7 +49,7 @@ public class MapLoader : MonoBehaviour {
         while(i > 0)
         {
             progress++;
-            progressBar.fillAmount = progress;
+            progressBar.fillAmount = progress;  
             yield return new WaitForSeconds(loadbarFillspeed);
         }
 
