@@ -23,6 +23,7 @@ namespace PDC.Weapons
         public float damage = 20;
         public float throwDamage = 20;
         public StatusEffect[] weaponEffects;
+        public int maxAmmo = 8;
         public int ammo = 8;
         public bool isEquipped;
 
@@ -34,43 +35,37 @@ namespace PDC.Weapons
         public bool canAttack = true;
 
         public abstract void Fire1Hold(Camera playercam, LayerMask mask);
+        public abstract void Fire1Up();
         public abstract void Fire2Hold();
+        public abstract void Fire2Up();
+        public abstract void Attack();
 
         private void Awake()
         {
             canAttack = true;
             rb = GetComponent<Rigidbody>();
-            if(GetComponent<Animator>())
+            if(GetComponent<Animator>() != null)
                 anim = GetComponent<Animator>();
         }
 
-        public void Throw(Camera playercam)
+        public void Throw(Camera playercam, float strenght)
         {
+            SetLayerRecursively(gameObject, "Default");
+            transform.position = transform.parent.position;
             transform.parent = null;
             rb.isKinematic = false;
+            physicsCol.SetActive(true);
+            rb.AddForce((playercam.transform.forward * strenght) + playercam.transform.up * (strenght / 6));
+            Invoke("UnEquip", .1f);
         }
 
-        public void CheckIfAnimationEnd(string animationName)
+        void UnEquip()
         {
-            StartCoroutine(AnimationCheckRoutine(animationName));
-        }
-
-        IEnumerator AnimationCheckRoutine(string animationName)
-        {
-            if (anim)
-            {
-                while (anim.GetCurrentAnimatorStateInfo(0).IsName("AnimationName"))
-                {
-                    yield return new WaitForEndOfFrame();
-                }
-            }
-            canAttack = true;
+            isEquipped = false;
         }
 
         private void OnCollisionEnter(Collision collision)
         {
-            print("Collision boii");
-
             if (!isEquipped)
             {
                 if (collision.transform.root.tag == "Player")
@@ -80,12 +75,28 @@ namespace PDC.Weapons
                 }
                 else if (rb.velocity.magnitude > 1)
                 {
-                    IHitable[] hits = collision.transform.root.GetComponentsInChildren<IHitable>();
-                    foreach (IHitable h in hits)
+                    IHitable iHit = collision.transform.GetComponent<IHitable>();
+                    if (iHit != null)
                     {
-                        h.GetHit(throwDamage, EffectType.Normal);
+                        iHit.GetHit(damage, EffectType.Normal, weaponEffects);
+                        rb.velocity = Vector3.zero;
+                        Vector3 playerdir = ((PlayerController.instance.transform.position - transform.position) * 100) + (Vector3.up * 200);
+                        rb.AddForce(playerdir);
                     }
                 }
+            }
+        }
+
+        public void SetLayerRecursively(GameObject go, string layerName)
+        {
+            if (go == null) return;
+
+            go.layer = LayerMask.NameToLayer(layerName);
+
+            foreach (Transform child in go.transform)
+            {
+                if (child == null) return;
+                SetLayerRecursively(child.gameObject, layerName);
             }
         }
     }

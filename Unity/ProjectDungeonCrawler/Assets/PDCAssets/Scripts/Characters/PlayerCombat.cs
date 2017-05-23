@@ -16,6 +16,7 @@ namespace PDC.Characters
         public List<Weapon> weapons = new List<Weapon>();
         public int availableSlots;
         public Transform weaponPos;
+        public float throwStrenght = 700;
 
         //Private variables
         Transform weaponTrans;
@@ -75,13 +76,22 @@ namespace PDC.Characters
                 {
                     equippedWeapon.Fire2Hold();
                 }
+                if (Input.GetButtonUp("Fire2"))
+                {
+                    equippedWeapon.Fire2Up();
+                }
                 if (Input.GetButton("Fire1"))
                 {
                     equippedWeapon.Fire1Hold(pc.playerCam, pc.playerLayer);
                 }
+                if (Input.GetButtonUp("Fire1"))
+                {
+                    equippedWeapon.Fire1Up();
+                }
                 if (Input.GetButtonDown("Throw"))
                 {
-                    equippedWeapon.Throw(pc.playerCam);
+                    weaponTrans = null;
+                    equippedWeapon.Throw(pc.playerCam, throwStrenght);
                     weapons[equippedWeapon.assignedSlot] = null;
                     equippedWeapon = null;
                 }
@@ -120,12 +130,13 @@ namespace PDC.Characters
         {
             if (TryAssignWeapon(weap))
             {
+                weap.isEquipped = true;
                 weap.rb.isKinematic = true;
                 weap.transform.parent = weaponPos;
                 weaponTrans = weap.transform;
                 weap.transform.localPosition = Vector3.zero;
                 weap.transform.localRotation = Quaternion.identity;
-                weap.gameObject.layer = LayerMask.NameToLayer("Equipped");
+                weap.SetLayerRecursively(weap.gameObject, "Equipped");
                 weap.physicsCol.SetActive(false);
                 if(equippedWeapon == null)
                 {
