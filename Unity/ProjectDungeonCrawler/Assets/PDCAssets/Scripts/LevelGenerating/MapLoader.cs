@@ -48,7 +48,7 @@ public class MapLoader : MonoBehaviour {
         while(i > 0)
         {
             progress++;
-            progressBar.fillAmount = progress;
+            progressBar.fillAmount = progress;  
             yield return new WaitForSeconds(loadbarFillspeed);
         }
 

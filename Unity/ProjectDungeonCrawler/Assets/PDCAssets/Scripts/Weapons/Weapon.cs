@@ -20,6 +20,7 @@ namespace PDC.Weapons
     {
         public string weaponName = "New Weapon";
         public WeaponType type;
+        public Sprite weaponIcon;
         public float damage = 20;
         public float throwDamage = 20;
         public StatusEffect[] weaponEffects;
@@ -31,8 +32,7 @@ namespace PDC.Weapons
         [HideInInspector] public Rigidbody rb;
         [HideInInspector] public Animator anim;
         public GameObject physicsCol;
-        [HideInInspector]
-        public bool canAttack = true;
+        [HideInInspector] public bool canAttack = true;
 
         public abstract void Fire1Hold(Camera playercam, LayerMask mask);
         public abstract void Fire1Up();
@@ -78,7 +78,7 @@ namespace PDC.Weapons
                     IHitable iHit = collision.transform.GetComponent<IHitable>();
                     if (iHit != null)
                     {
-                        iHit.GetHit(damage, EffectType.Normal, weaponEffects);
+                        iHit.GetHit(damage, EffectType.Normal, weaponEffects, collision.transform.position);
                         rb.velocity = Vector3.zero;
                         Vector3 playerdir = ((PlayerController.instance.transform.position - transform.position) * 100) + (Vector3.up * 200);
                         rb.AddForce(playerdir);

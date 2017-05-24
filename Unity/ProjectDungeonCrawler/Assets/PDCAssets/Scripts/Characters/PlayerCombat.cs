@@ -90,19 +90,53 @@ namespace PDC.Characters
                 }
                 if (Input.GetButtonDown("Throw"))
                 {
-                    weaponTrans = null;
-                    equippedWeapon.Throw(pc.playerCam, throwStrenght);
-                    weapons[equippedWeapon.assignedSlot] = null;
-                    equippedWeapon = null;
+                    StartCoroutine(CheckWhenThrowEnds());
                 }
             }
+
+            for (int i = 0; i < availableSlots; i++)
+            {
+                if (Input.GetButton((i + 1).ToString()))
+                {
+                    EquipWeapon(i);
+                }
+            }
+        }
+        
+        IEnumerator CheckWhenThrowEnds()
+        {
+            weaponAnim.SetTrigger("Throw");
+            yield return new WaitForEndOfFrame();
+            while (weaponAnim.GetCurrentAnimatorStateInfo(0).IsName("Throw"))
+            {
+                yield return new WaitForEndOfFrame();
+            }
+            ThrowWeapon();
+        }
+
+        void ThrowWeapon()
+        {
+            weaponTrans = null;
+            equippedWeapon.Throw(pc.playerCam, throwStrenght);
+            weapons[equippedWeapon.assignedSlot] = null;
+            equippedWeapon = null;
         }
 
         public void EquipWeapon(int weapI)
         {
-            if(weapons[weapI] != null)
+            if(equippedWeapon != null)
             {
-                equippedWeapon = weapons[weapI];
+                equippedWeapon.gameObject.SetActive(false);
+            }
+            if (weapI < weapons.Count)
+            {
+                if (weapons[weapI] != null)
+                {
+                    equippedWeapon = weapons[weapI];
+                    equippedWeapon.gameObject.SetActive(true);
+                    weaponTrans = equippedWeapon.transform;
+                    weaponAnim.SetTrigger("Equip");
+                }
             }
         }
 
@@ -133,11 +167,11 @@ namespace PDC.Characters
                 weap.isEquipped = true;
                 weap.rb.isKinematic = true;
                 weap.transform.parent = weaponPos;
-                weaponTrans = weap.transform;
                 weap.transform.localPosition = Vector3.zero;
                 weap.transform.localRotation = Quaternion.identity;
                 weap.SetLayerRecursively(weap.gameObject, "Equipped");
                 weap.physicsCol.SetActive(false);
+                weap.gameObject.SetActive(false);
                 if(equippedWeapon == null)
                 {
                     EquipWeapon(weap.assignedSlot);
