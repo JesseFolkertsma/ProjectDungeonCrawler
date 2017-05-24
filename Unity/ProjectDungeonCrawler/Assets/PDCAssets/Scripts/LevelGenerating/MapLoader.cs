@@ -12,7 +12,6 @@ public class MapLoader : MonoBehaviour {
 
     public GameObject loadScreen;
     public Image progressBar;
-    public string progression;
 
     #endregion
 
