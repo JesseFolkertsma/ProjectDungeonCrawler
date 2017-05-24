@@ -20,6 +20,7 @@ namespace PDC.Weapons
     {
         public string weaponName = "New Weapon";
         public WeaponType type;
+        public Sprite weaponIcon;
         public float damage = 20;
         public float throwDamage = 20;
         public StatusEffect[] weaponEffects;
@@ -31,8 +32,7 @@ namespace PDC.Weapons
         [HideInInspector] public Rigidbody rb;
         [HideInInspector] public Animator anim;
         public GameObject physicsCol;
-        [HideInInspector]
-        public bool canAttack = true;
+        [HideInInspector] public bool canAttack = true;
 
         public abstract void Fire1Hold(Camera playercam, LayerMask mask);
         public abstract void Fire1Up();

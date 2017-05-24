@@ -35,6 +35,7 @@ namespace PDC.StatusEffects
         public string effectName = "New Status Effect";
         public EffectType type = EffectType.Buff;
         public abstract void AddEffect(BaseCharacter character);
+        public Sprite effectIcon;
     }
 }
 
