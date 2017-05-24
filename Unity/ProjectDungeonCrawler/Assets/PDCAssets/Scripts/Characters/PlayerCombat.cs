@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PDC.Weapons;
+using PDC.UI;
 
 namespace PDC.Characters
 {
@@ -12,7 +13,6 @@ namespace PDC.Characters
         PlayerController pc;
 
         //Public variables
-        public Weapon equippedWeapon;
         public List<Weapon> weapons = new List<Weapon>();
         public int availableSlots;
         public Transform weaponPos;
@@ -20,16 +20,34 @@ namespace PDC.Characters
 
         //Private variables
         Transform weaponTrans;
+        int equippedWeapon;
 
         //Hidden public variables
         [HideInInspector]
         public Animator weaponAnim;
+
+        public Weapon EquippedWeapon
+        {
+            get
+            {
+                if (equippedWeapon < weapons.Count && equippedWeapon != -1)
+                {
+                    if (weapons[equippedWeapon] != null)
+                        return weapons[equippedWeapon];
+                }
+                return null;
+            }
+        }
 
         void Awake()
         {
             pc = GetComponent<PlayerController>();
 
             weaponAnim = weaponPos.GetComponent<Animator>();
+            if(EquippedWeapon == null)
+            {
+                equippedWeapon = -1;
+            }
         }
 
         void Update()
@@ -70,27 +88,27 @@ namespace PDC.Characters
 
         void CheckInput()
         {
-            if (equippedWeapon != null)
+            if (EquippedWeapon != null)
             {
                 if (Input.GetButton("Fire2"))
                 {
-                    equippedWeapon.Fire2Hold();
+                    RightMouse();
                 }
                 if (Input.GetButtonUp("Fire2"))
                 {
-                    equippedWeapon.Fire2Up();
+                    RightMouseUp();
                 }
                 if (Input.GetButton("Fire1"))
                 {
-                    equippedWeapon.Fire1Hold(pc.playerCam, pc.playerLayer);
+                    LeftMouse();
                 }
                 if (Input.GetButtonUp("Fire1"))
                 {
-                    equippedWeapon.Fire1Up();
+                    LeftMouseUp();
                 }
                 if (Input.GetButtonDown("Throw"))
                 {
-                    StartCoroutine(CheckWhenThrowEnds());
+                    Throw();
                 }
             }
 
@@ -101,6 +119,32 @@ namespace PDC.Characters
                     EquipWeapon(i);
                 }
             }
+        }
+
+        void LeftMouse()
+        {
+            EquippedWeapon.Fire1Hold(pc.playerCam, pc.playerLayer);
+            UIManager.instance.UpdateAmmo(weapons[equippedWeapon].ammoIcon, weapons[equippedWeapon].ammo);
+        }
+
+        void RightMouse()
+        {
+            EquippedWeapon.Fire2Hold();
+        }
+
+        void LeftMouseUp()
+        {
+            EquippedWeapon.Fire1Up();
+        }
+
+        void RightMouseUp()
+        {
+            EquippedWeapon.Fire2Up();
+        }
+
+        void Throw()
+        {
+            StartCoroutine(CheckWhenThrowEnds());
         }
         
         IEnumerator CheckWhenThrowEnds()
@@ -117,27 +161,29 @@ namespace PDC.Characters
         void ThrowWeapon()
         {
             weaponTrans = null;
-            equippedWeapon.Throw(pc.playerCam, throwStrenght);
-            weapons[equippedWeapon.assignedSlot] = null;
-            equippedWeapon = null;
+            EquippedWeapon.Throw(pc.playerCam, throwStrenght);
+            weapons[EquippedWeapon.assignedSlot] = null;
+            equippedWeapon = -1;
+            UIManager.instance.UpdateWeaponVisual(weapons, EquippedWeapon);
         }
 
         public void EquipWeapon(int weapI)
         {
-            if(equippedWeapon != null)
+            if(EquippedWeapon != null)
             {
-                equippedWeapon.gameObject.SetActive(false);
+                EquippedWeapon.gameObject.SetActive(false);
             }
             if (weapI < weapons.Count)
             {
                 if (weapons[weapI] != null)
                 {
-                    equippedWeapon = weapons[weapI];
-                    equippedWeapon.gameObject.SetActive(true);
-                    weaponTrans = equippedWeapon.transform;
+                    equippedWeapon = weapI;
+                    EquippedWeapon.gameObject.SetActive(true);
+                    weaponTrans = EquippedWeapon.transform;
                     weaponAnim.SetTrigger("Equip");
                 }
             }
+            UIManager.instance.UpdateWeaponVisual(weapons, EquippedWeapon);
         }
 
         public bool TryAssignWeapon(Weapon weap)
@@ -172,11 +218,12 @@ namespace PDC.Characters
                 weap.SetLayerRecursively(weap.gameObject, "Equipped");
                 weap.physicsCol.SetActive(false);
                 weap.gameObject.SetActive(false);
-                if(equippedWeapon == null)
+                if(EquippedWeapon == null)
                 {
                     EquipWeapon(weap.assignedSlot);
                 }
                 print("Assigned to slot: " + weap.assignedSlot);
+                UIManager.instance.UpdateWeaponVisual(weapons, EquippedWeapon);
             }
             else
             {

@@ -21,6 +21,7 @@ namespace PDC.Weapons
         public string weaponName = "New Weapon";
         public WeaponType type;
         public Sprite weaponIcon;
+        public Sprite ammoIcon;
         public float damage = 20;
         public float throwDamage = 20;
         public StatusEffect[] weaponEffects;
@@ -56,7 +57,7 @@ namespace PDC.Weapons
             rb.isKinematic = false;
             physicsCol.SetActive(true);
             rb.AddForce((playercam.transform.forward * strenght) + playercam.transform.up * (strenght / 6));
-            Invoke("UnEquip", .1f);
+            Invoke("UnEquip", .05f);
         }
 
         void UnEquip()
