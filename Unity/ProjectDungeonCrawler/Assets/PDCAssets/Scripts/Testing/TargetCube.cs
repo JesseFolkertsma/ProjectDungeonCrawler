@@ -7,7 +7,7 @@ using System;
 
 public class TargetCube : MonoBehaviour, IHitable
 {
-    public void GetHit(float damage, EffectType hitType, StatusEffect[] effects)
+    public void GetHit(float damage, EffectType hitType, StatusEffect[] effects, Vector3 shotPosition)
     {
         Destroy(gameObject);
     }

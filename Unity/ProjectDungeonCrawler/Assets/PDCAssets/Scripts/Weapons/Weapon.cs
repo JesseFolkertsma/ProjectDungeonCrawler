@@ -78,7 +78,7 @@ namespace PDC.Weapons
                     IHitable iHit = collision.transform.GetComponent<IHitable>();
                     if (iHit != null)
                     {
-                        iHit.GetHit(damage, EffectType.Normal, weaponEffects);
+                        iHit.GetHit(damage, EffectType.Normal, weaponEffects, collision.transform.position);
                         rb.velocity = Vector3.zero;
                         Vector3 playerdir = ((PlayerController.instance.transform.position - transform.position) * 100) + (Vector3.up * 200);
                         rb.AddForce(playerdir);
