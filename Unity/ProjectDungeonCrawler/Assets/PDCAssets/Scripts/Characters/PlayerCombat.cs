@@ -207,6 +207,10 @@ namespace PDC.Characters
                     weaponTrans = EquippedWeapon.transform;
                     weaponAnim.SetTrigger("Equip");
                 }
+                else
+                {
+                    equippedWeapon = -1;
+                }
             }
             if (onWeaponDataChange != null)
                 onWeaponDataChange(weapons, EquippedWeapon);

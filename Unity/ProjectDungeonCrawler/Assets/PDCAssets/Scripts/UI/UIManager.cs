@@ -51,6 +51,8 @@ namespace PDC.UI
 
             if(equipped != null)
                 UpdateAmmo(equipped);
+            else
+                canvasRef.SetAmmoVisualState(false);
         }
 
         void UpdateAmmo(Weapon equippedWeapon)

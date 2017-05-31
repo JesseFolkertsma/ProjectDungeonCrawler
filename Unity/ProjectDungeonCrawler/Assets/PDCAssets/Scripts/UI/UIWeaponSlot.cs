@@ -13,15 +13,27 @@ namespace PDC.UI
         public Image[] statusEffects;
         public RectTransform slot;
 
+        Coroutine routine;
+
         public void SetVisuals(Weapon weapon, bool equipped)
         {
             if (equipped)
             {
-                slot.localPosition = new Vector2(25, 0);
+                //slot.localPosition = new Vector2(25, 0);
+                if (routine != null)
+                {
+                    StopCoroutine(routine);
+                }
+                routine = StartCoroutine(SelectSlot(150));
             }
             else
             {
-                slot.localPosition = new Vector2(0, 0);
+                //slot.localPosition = new Vector2(0, 0);
+                if(routine != null)
+                {
+                    StopCoroutine(routine);
+                }
+                routine = StartCoroutine(DeSelectSlot(150));
             }
             if (weapon == null)
             {
@@ -43,6 +55,24 @@ namespace PDC.UI
                     statusEffects[i].gameObject.SetActive(true);
                     statusEffects[i].color = weapon.weaponEffects[i].effectColor;
                 }
+            }
+        }
+
+        IEnumerator SelectSlot(float speed)
+        {
+            while(slot.localPosition.x < 24.5)
+            {
+                slot.localPosition = Vector3.MoveTowards(slot.localPosition, new Vector2(25, 0), Time.deltaTime * speed);
+                yield return new WaitForEndOfFrame();
+            }
+        }
+
+        IEnumerator DeSelectSlot(float speed)
+        {
+            while (slot.localPosition.x > .05f)
+            {
+                slot.localPosition = Vector3.MoveTowards(slot.localPosition, new Vector2(0, 0), Time.deltaTime * speed);
+                yield return new WaitForEndOfFrame();
             }
         }
     }

@@ -67,16 +67,20 @@ namespace PDC.UI
         {
             if (weapon.ammoIcon == null)
             {
-                ammoImage.gameObject.SetActive(false);
-                ammoText.gameObject.SetActive(false);
+                SetAmmoVisualState(false);
             }
             else
             {
-                ammoImage.gameObject.SetActive(true);
-                ammoText.gameObject.SetActive(true);
+                SetAmmoVisualState(true);
                 ammoImage.sprite = weapon.ammoIcon;
                 ammoText.text = weapon.ammo.ToString();
             }
+        }
+
+        public void SetAmmoVisualState(bool state)
+        {
+            ammoImage.gameObject.SetActive(state);
+            ammoText.gameObject.SetActive(state);
         }
     }
 }
