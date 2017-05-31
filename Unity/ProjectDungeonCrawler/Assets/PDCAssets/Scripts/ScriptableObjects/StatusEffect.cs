@@ -36,6 +36,7 @@ namespace PDC.StatusEffects
         public EffectType type = EffectType.Buff;
         public abstract void AddEffect(BaseCharacter character);
         public Sprite effectIcon;
+        public Color effectColor;
     }
 }
 

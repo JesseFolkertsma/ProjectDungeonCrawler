@@ -73,7 +73,7 @@ namespace PDC.Characters
             public float changeFOVSpeed;
         }
 
-        void Awake()
+        void Start()
         {
             if (instance == null)
                 instance = this;

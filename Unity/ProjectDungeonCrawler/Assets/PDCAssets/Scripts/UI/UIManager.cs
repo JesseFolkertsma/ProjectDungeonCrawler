@@ -11,9 +11,11 @@ namespace PDC.UI
     {
         public static UIManager instance;
 
+        public CanvasReferences canvasRef;
+
         public delegate void OnWeaponVisual(List<Weapon> weapons, Weapon equipped);
         public OnWeaponVisual onWeaponVisual;
-        public delegate void OnAmmo(Sprite ammoSprite, int ammo);
+        public delegate void OnAmmo(Weapon equipped);
         public OnAmmo onAmmo;
 
         void Awake()
@@ -31,6 +33,7 @@ namespace PDC.UI
             PlayerCombat.instance.onWeaponDataChange += UpdateWeaponVisual;
             PlayerCombat.instance.onAmmoDataChange += UpdateAmmo;
             PlayerController.instance.onTakeDamage += UpdateHP;
+            canvasRef = Instantiate(canvasRef);
         }
 
         private void OnPlayerDeath()
@@ -41,18 +44,23 @@ namespace PDC.UI
 
         void UpdateWeaponVisual(List<Weapon> weapons, Weapon equipped)
         {
+            for (int i = 0; i < weapons.Count; i++)
+            {
+                canvasRef.SetWeaponSlot(i, weapons[i], (weapons[i] == equipped));
+            }
+
             if(equipped != null)
-                UpdateAmmo(equipped.weaponIcon, equipped.ammo);
+                UpdateAmmo(equipped);
         }
 
-        void UpdateAmmo(Sprite ammoSprite, int ammo)
+        void UpdateAmmo(Weapon equippedWeapon)
         {
-
+            canvasRef.SetAmmoVisuals(equippedWeapon);
         }
 
         void UpdateHP(float health, float maxHealth)
         {
-
+            canvasRef.SetHp(health, maxHealth);
         }
 
         void UpdateSouls(float souls, float maxSouls)

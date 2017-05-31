@@ -30,7 +30,7 @@ namespace PDC.Characters
         //Delegates
         public delegate void OnWeaponDataChange(List<Weapon> weapons, Weapon equipped);
         public OnWeaponDataChange onWeaponDataChange;
-        public delegate void OnAmmoDataChange(Sprite ammoSprite, int ammo);
+        public delegate void OnAmmoDataChange(Weapon equipped);
         public OnAmmoDataChange onAmmoDataChange;
 
         public Weapon EquippedWeapon
@@ -135,7 +135,7 @@ namespace PDC.Characters
         {
             EquippedWeapon.Fire1Hold(pc.playerCam, pc.playerLayer);
             if(onAmmoDataChange != null)
-                onAmmoDataChange(weapons[equippedWeapon].ammoIcon, weapons[equippedWeapon].ammo);
+                onAmmoDataChange(EquippedWeapon);
         }
 
         void RightMouse()
