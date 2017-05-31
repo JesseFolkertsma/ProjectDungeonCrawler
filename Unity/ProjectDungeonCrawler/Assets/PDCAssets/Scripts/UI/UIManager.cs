@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using PDC.Weapons;
 using PDC.StatusEffects;
+using PDC.Characters;
 
 namespace PDC.UI
 {
@@ -10,25 +11,61 @@ namespace PDC.UI
     {
         public static UIManager instance;
 
+        public CanvasReferences canvasRef;
+
+        public delegate void OnWeaponVisual(List<Weapon> weapons, Weapon equipped);
+        public OnWeaponVisual onWeaponVisual;
+        public delegate void OnAmmo(Weapon equipped);
+        public OnAmmo onAmmo;
+
         void Awake()
         {
             if (instance == null)
                 instance = this;
             else
                 Destroy(gameObject);
+            PlayerController.onSpawnEvent += OnPlayerSpawn;
+            PlayerController.onDeathEvent += OnPlayerDeath;
         }
 
-        public void UpdateWeaponVisual(List<Weapon> weapons, Weapon equipped)
+        private void OnPlayerSpawn()
         {
+            PlayerCombat.instance.onWeaponDataChange += UpdateWeaponVisual;
+            PlayerCombat.instance.onAmmoDataChange += UpdateAmmo;
+            PlayerController.instance.onTakeDamage += UpdateHP;
+            canvasRef = Instantiate(canvasRef);
+        }
+
+        private void OnPlayerDeath()
+        {
+            PlayerCombat.instance.onWeaponDataChange -= UpdateWeaponVisual;
+            PlayerCombat.instance.onAmmoDataChange -= UpdateAmmo;
+        }
+
+        void UpdateWeaponVisual(List<Weapon> weapons, Weapon equipped)
+        {
+            for (int i = 0; i < weapons.Count; i++)
+            {
+                canvasRef.SetWeaponSlot(i, weapons[i], (weapons[i] == equipped));
+            }
+
             if(equipped != null)
-                UpdateAmmo(equipped.weaponIcon, equipped.ammo);
+                UpdateAmmo(equipped);
         }
 
-        public void UpdateAmmo(Sprite ammoSprite, int ammo)
+        void UpdateAmmo(Weapon equippedWeapon)
+        {
+            canvasRef.SetAmmoVisuals(equippedWeapon);
+        }
+
+        void UpdateHP(float health, float maxHealth)
+        {
+            canvasRef.SetHp(health, maxHealth);
+        }
+
+        void UpdateSouls(float souls, float maxSouls)
         {
 
         }
-
-
     }
 }
