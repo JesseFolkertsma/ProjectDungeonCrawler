@@ -31,8 +31,6 @@ namespace PDC.Characters
 
         //Private variables
         Vector3 direction;
-        Vector3 mouseX;
-        Vector3 mouseY;
         float xRot;
         float yRot;
         float bobY;
@@ -49,6 +47,10 @@ namespace PDC.Characters
         public float xInput;
         [HideInInspector]
         public float yInput;
+
+        //Delegates
+        public delegate void OnTakeDamage(float newHP, float maxHP);
+        public OnTakeDamage onTakeDamage;
 
         [Serializable]
         public struct HeadBobVariables
@@ -89,8 +91,6 @@ namespace PDC.Characters
                 headbobVariables.fovBonus = 50;
             }
 
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
             if(onSpawnEvent != null)
                 onSpawnEvent();
         }
@@ -110,7 +110,6 @@ namespace PDC.Characters
             if (!isdead)
             {
                 Move();
-                Rotate();
             }
         }
 
@@ -122,13 +121,6 @@ namespace PDC.Characters
             Vector3 xVector = transform.right * xInput;
             Vector3 yVector = transform.forward * yInput;
             direction = (xVector + yVector).normalized;
-            #endregion
-
-            #region RotationInput
-            xRot = Input.GetAxisRaw("Mouse X");
-            yRot = Input.GetAxisRaw("Mouse Y");
-            mouseX = Vector3.up * xRot;
-            mouseY = -(Vector3.right * yRot);
             #endregion
 
             if (Input.GetButtonDown("Jump"))
@@ -238,6 +230,13 @@ namespace PDC.Characters
             throw new NotImplementedException();
         }
 
+        public override void TakeDamage(float damage, EffectType damageType)
+        {
+            base.TakeDamage(damage, damageType);
+            if (onTakeDamage != null)
+                onTakeDamage(characterStats.currentHP, characterStats.MaxHP);
+        }
+
         public override void Die()
         {
             if (!isdead)
@@ -261,22 +260,6 @@ namespace PDC.Characters
             else
             {
                 acc = Mathf.Lerp(acc, 0f, Time.fixedDeltaTime * acceleration * 2);
-            }
-        }
-
-        void Rotate()
-        {
-            if(mouseX != Vector3.zero)
-            {
-                transform.Rotate(mouseX * Time.fixedDeltaTime * mouseSensitivity);
-            }
-
-            if(camHolder != null)
-            {
-                if(mouseY != Vector3.zero)
-                {
-                    camHolder.Rotate(mouseY * Time.fixedDeltaTime * mouseSensitivity);
-                }
             }
         }
     }

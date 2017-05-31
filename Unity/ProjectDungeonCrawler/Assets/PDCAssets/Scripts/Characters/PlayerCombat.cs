@@ -10,6 +10,7 @@ namespace PDC.Characters
     [RequireComponent(typeof(PlayerController))]
     public class PlayerCombat : MonoBehaviour
     {
+        public static PlayerCombat instance;
         PlayerController pc;
 
         //Public variables
@@ -26,6 +27,12 @@ namespace PDC.Characters
         [HideInInspector]
         public Animator weaponAnim;
 
+        //Delegates
+        public delegate void OnWeaponDataChange(List<Weapon> weapons, Weapon equipped);
+        public OnWeaponDataChange onWeaponDataChange;
+        public delegate void OnAmmoDataChange(Sprite ammoSprite, int ammo);
+        public OnAmmoDataChange onAmmoDataChange;
+
         public Weapon EquippedWeapon
         {
             get
@@ -41,6 +48,9 @@ namespace PDC.Characters
 
         void Awake()
         {
+            if(instance == null)
+                instance = this;
+
             pc = GetComponent<PlayerController>();
 
             weaponAnim = weaponPos.GetComponent<Animator>();
@@ -124,7 +134,8 @@ namespace PDC.Characters
         void LeftMouse()
         {
             EquippedWeapon.Fire1Hold(pc.playerCam, pc.playerLayer);
-            UIManager.instance.UpdateAmmo(weapons[equippedWeapon].ammoIcon, weapons[equippedWeapon].ammo);
+            if(onAmmoDataChange != null)
+                onAmmoDataChange(weapons[equippedWeapon].ammoIcon, weapons[equippedWeapon].ammo);
         }
 
         void RightMouse()
@@ -147,6 +158,7 @@ namespace PDC.Characters
             StartCoroutine(CheckWhenThrowEnds());
         }
         
+        //Check when throw animation ends
         IEnumerator CheckWhenThrowEnds()
         {
             weaponAnim.SetTrigger("Throw");
@@ -160,19 +172,32 @@ namespace PDC.Characters
 
         void ThrowWeapon()
         {
+            //Reset weapon slot
             weaponTrans = null;
             EquippedWeapon.Throw(pc.playerCam, throwStrenght);
             weapons[EquippedWeapon.assignedSlot] = null;
             equippedWeapon = -1;
-            UIManager.instance.UpdateWeaponVisual(weapons, EquippedWeapon);
+
+            if(onWeaponDataChange != null)
+                onWeaponDataChange(weapons, EquippedWeapon);
         }
 
         public void EquipWeapon(int weapI)
         {
+            //Return if the slot is already the equipped slot
+            if (EquippedWeapon != null)
+            {
+                if (weapI == EquippedWeapon.assignedSlot)
+                    return;
+            }
+
+            //Disable equipped
             if(EquippedWeapon != null)
             {
                 EquippedWeapon.gameObject.SetActive(false);
             }
+
+            //Check if chosen weapon exists
             if (weapI < weapons.Count)
             {
                 if (weapons[weapI] != null)
@@ -183,9 +208,11 @@ namespace PDC.Characters
                     weaponAnim.SetTrigger("Equip");
                 }
             }
-            UIManager.instance.UpdateWeaponVisual(weapons, EquippedWeapon);
+            if (onWeaponDataChange != null)
+                onWeaponDataChange(weapons, EquippedWeapon);
         }
 
+        //Check for a free slot and return true if so
         public bool TryAssignWeapon(Weapon weap)
         {
             for (int i = 0; i < availableSlots; i++)
@@ -208,8 +235,10 @@ namespace PDC.Characters
 
         public void PickupWeapon(Weapon weap)
         {
+            //Check for free slot
             if (TryAssignWeapon(weap))
             {
+                //Setup variables
                 weap.isEquipped = true;
                 weap.rb.isKinematic = true;
                 weap.transform.parent = weaponPos;
@@ -223,11 +252,12 @@ namespace PDC.Characters
                     EquipWeapon(weap.assignedSlot);
                 }
                 print("Assigned to slot: " + weap.assignedSlot);
-                UIManager.instance.UpdateWeaponVisual(weapons, EquippedWeapon);
+                if (onWeaponDataChange != null)
+                    onWeaponDataChange(weapons, EquippedWeapon);
             }
             else
             {
-                print("CAnt pickup boii");
+                print("No available slot!");
             }
         }
     }
