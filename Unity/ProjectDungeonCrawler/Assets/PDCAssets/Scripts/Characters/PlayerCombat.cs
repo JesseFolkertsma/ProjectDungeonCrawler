@@ -155,19 +155,12 @@ namespace PDC.Characters
 
         void Throw()
         {
-            StartCoroutine(CheckWhenThrowEnds());
-        }
-        
-        //Check when throw animation ends
-        IEnumerator CheckWhenThrowEnds()
-        {
-            weaponAnim.SetTrigger("Throw");
-            yield return new WaitForEndOfFrame();
-            while (weaponAnim.GetCurrentAnimatorStateInfo(0).IsName("Throw"))
+            if (EquippedWeapon != null)
             {
-                yield return new WaitForEndOfFrame();
+                EquippedWeapon.anim.SetTrigger("Throw");
+                Weapon.OnAnimationEnd onAnimEnd = new Weapon.OnAnimationEnd(ThrowWeapon);
+                EquippedWeapon.CheckWhenAnimationEnds(EquippedWeapon.anim, "Throw", onAnimEnd);
             }
-            ThrowWeapon();
         }
 
         void ThrowWeapon()

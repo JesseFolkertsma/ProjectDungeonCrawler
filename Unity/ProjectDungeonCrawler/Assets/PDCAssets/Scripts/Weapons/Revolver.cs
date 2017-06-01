@@ -21,29 +21,32 @@ namespace PDC.Weapons
         {
             if (canAttack && ammo > 0 && !buttonDown)
             {
+                buttonDown = true;
                 cam = playercam;
                 m = mask;
-                if (anim) anim.SetTrigger("Attack");
+                if (anim != null)
+                {
+                    canAttack = false;
+                    anim.SetTrigger("Attack");
+                    Attack();
+                }
                 else Debug.LogError(gameObject.name + "'s Animator variable is not setup dipnugget!");
             }
         }
 
         public override void Attack()
         {
-            canAttack = false;
             ammo--;
-            buttonDown = true;
             ShootVisuals();
             RaycastHit hit;
             if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, range, m))
             {
-                print("I hit: " + hit.transform.name + "!");
                 IHitable iHit = hit.transform.GetComponent<IHitable>();
                 if (iHit != null)
-                {
                     iHit.GetHit(damage, EffectType.Normal, weaponEffects, cam.transform.position);
-                }
             }
+            OnAnimationEnd newDelegate = new OnAnimationEnd(AttackAnimationEnd);
+            CheckWhenAnimationEnds(anim, "Attack", newDelegate);
         }
 
         public override void Fire1Up()
