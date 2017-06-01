@@ -54,7 +54,7 @@ namespace PDC.Characters
             }
         }
 
-        void Awake()
+        void Start()
         {
             if (instance == null)
                 instance = this;
@@ -75,7 +75,7 @@ namespace PDC.Characters
 
         void Update()
         {
-            if (isdead)
+            if (!isdead)
             {
                 CheckInput();
                 WeaponEffects();

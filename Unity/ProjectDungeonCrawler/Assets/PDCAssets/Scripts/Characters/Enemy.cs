@@ -22,7 +22,7 @@ namespace PDC.Characters {
 
         public class PlayerReference
         {
-            public PlayerController playerController;
+            public PlayerCombat playerController;
             //room for other scripts
             public Transform transform;
             public Vector3 Position
@@ -40,7 +40,7 @@ namespace PDC.Characters {
                 }
             }
 
-            public PlayerReference(PlayerController _pC)
+            public PlayerReference(PlayerCombat _pC)
             {
                 playerController = _pC;
                 transform = _pC.transform;
@@ -98,8 +98,8 @@ namespace PDC.Characters {
         {
             while(!(pC != null)) //makes sure there is a playercontroller reference
             {
-                if (PlayerController.instance != null)
-                    pC = new PlayerReference(PlayerController.instance);
+                if (PlayerCombat.instance != null)
+                    pC = new PlayerReference(PlayerCombat.instance);
                 yield return null;
             }
 
