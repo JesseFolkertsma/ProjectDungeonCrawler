@@ -100,5 +100,25 @@ namespace PDC.Weapons
                 SetLayerRecursively(child.gameObject, layerName);
             }
         }
+
+        public delegate void OnAnimationEnd();
+        public void CheckWhenAnimationEnds(Animator anim, string animationName, OnAnimationEnd effectAfterEnd)
+        {
+            StartCoroutine(AnimatorCheckRoutine(anim, animationName, effectAfterEnd));
+        }
+
+        IEnumerator AnimatorCheckRoutine(Animator anim, string animationName, OnAnimationEnd effectAfterEnd)
+        {
+            while (!anim.GetCurrentAnimatorStateInfo(0).IsName(animationName))
+            {
+                yield return new WaitForEndOfFrame();
+            }
+            while (anim.GetCurrentAnimatorStateInfo(0).IsName(animationName))
+            {
+                yield return new WaitForEndOfFrame();
+            }
+            print("Animation: " + animationName + " has ended.");
+            effectAfterEnd();
+        }
     }
 }
