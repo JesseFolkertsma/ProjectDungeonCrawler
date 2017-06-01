@@ -8,7 +8,7 @@ using PDC.UI;
 namespace PDC.Characters
 {
     [RequireComponent(typeof(PlayerController))]
-    public class PlayerCombat : MonoBehaviour
+    public class PlayerCombat : BaseCharacter
     {
         public static PlayerCombat instance;
         PlayerController pc;
@@ -28,10 +28,18 @@ namespace PDC.Characters
         public Animator weaponAnim;
 
         //Delegates
+        public delegate void OnPlayerSpawn();
+        public static event OnPlayerDeath onSpawnEvent;
+        public delegate void OnPlayerDeath();
+        public static event OnPlayerDeath onDeathEvent;
         public delegate void OnWeaponDataChange(List<Weapon> weapons, Weapon equipped);
         public OnWeaponDataChange onWeaponDataChange;
         public delegate void OnAmmoDataChange(Weapon equipped);
         public OnAmmoDataChange onAmmoDataChange;
+        public delegate void OnTakeDamage(float newHP, float maxHP);
+        public OnTakeDamage onTakeDamage;
+        public delegate void OnConsumableChange();
+        public OnConsumableChange onConsumableChange;
 
         public Weapon EquippedWeapon
         {
@@ -48,8 +56,10 @@ namespace PDC.Characters
 
         void Awake()
         {
-            if(instance == null)
+            if (instance == null)
                 instance = this;
+            else
+                Destroy(gameObject);
 
             pc = GetComponent<PlayerController>();
 
@@ -58,11 +68,14 @@ namespace PDC.Characters
             {
                 equippedWeapon = -1;
             }
+
+            if (onSpawnEvent != null)
+                onSpawnEvent();
         }
 
         void Update()
         {
-            if (!pc.isdead)
+            if (isdead)
             {
                 CheckInput();
                 WeaponEffects();
@@ -159,7 +172,7 @@ namespace PDC.Characters
             {
                 EquippedWeapon.anim.SetTrigger("Throw");
                 Weapon.OnAnimationEnd onAnimEnd = new Weapon.OnAnimationEnd(ThrowWeapon);
-                EquippedWeapon.CheckWhenAnimationEnds(EquippedWeapon.anim, "Throw", onAnimEnd);
+                EquippedWeapon.CheckWhenAnimationTagEnds(EquippedWeapon.anim, "Throw", onAnimEnd);
             }
         }
 
@@ -255,6 +268,26 @@ namespace PDC.Characters
             else
             {
                 print("No available slot!");
+            }
+        }
+        
+        public override void TakeDamage(float damage, EffectType damageType)
+        {
+            base.TakeDamage(damage, damageType);
+            if (onTakeDamage != null)
+                onTakeDamage(characterStats.currentHP, characterStats.MaxHP);
+        }
+
+        public override void Die()
+        {
+            if (!isdead)
+            {
+                isdead = true;
+                pc.playerCam.transform.parent = null;
+                pc.playerCam.gameObject.AddComponent<CapsuleCollider>();
+                pc.playerCam.gameObject.AddComponent<Rigidbody>();
+                pc.playerCam.GetComponent<Rigidbody>().AddForce(transform.forward);
+                onDeathEvent();
             }
         }
     }

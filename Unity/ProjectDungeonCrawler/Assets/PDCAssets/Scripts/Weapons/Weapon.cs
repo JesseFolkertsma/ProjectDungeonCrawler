@@ -81,7 +81,7 @@ namespace PDC.Weapons
                     {
                         iHit.GetHit(damage, EffectType.Normal, weaponEffects, collision.transform.position);
                         rb.velocity = Vector3.zero;
-                        Vector3 playerdir = ((PlayerController.instance.transform.position - transform.position) * 100) + (Vector3.up * 200);
+                        Vector3 playerdir = ((PlayerCombat.instance.transform.position - transform.position) * 100) + (Vector3.up * 200);
                         rb.AddForce(playerdir);
                     }
                 }
@@ -102,22 +102,22 @@ namespace PDC.Weapons
         }
 
         public delegate void OnAnimationEnd();
-        public void CheckWhenAnimationEnds(Animator anim, string animationName, OnAnimationEnd effectAfterEnd)
+        public void CheckWhenAnimationTagEnds(Animator anim, string tagName, OnAnimationEnd effectAfterEnd)
         {
-            StartCoroutine(AnimatorCheckRoutine(anim, animationName, effectAfterEnd));
+            StartCoroutine(AnimatorCheckRoutine(anim, tagName, effectAfterEnd));
         }
 
-        IEnumerator AnimatorCheckRoutine(Animator anim, string animationName, OnAnimationEnd effectAfterEnd)
+        IEnumerator AnimatorCheckRoutine(Animator anim, string tagName, OnAnimationEnd effectAfterEnd)
         {
-            while (!anim.GetCurrentAnimatorStateInfo(0).IsName(animationName))
+            while (!anim.GetCurrentAnimatorStateInfo(0).IsTag(tagName))
             {
                 yield return new WaitForEndOfFrame();
             }
-            while (anim.GetCurrentAnimatorStateInfo(0).IsName(animationName))
+            while (anim.GetCurrentAnimatorStateInfo(0).IsTag(tagName))
             {
                 yield return new WaitForEndOfFrame();
             }
-            print("Animation: " + animationName + " has ended.");
+            print("Animation: " + tagName + " has ended.");
             effectAfterEnd();
         }
     }
