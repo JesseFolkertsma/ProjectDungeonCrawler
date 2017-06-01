@@ -5,11 +5,10 @@ using UnityEngine;
 
 namespace PDC.Characters
 {
-    public class PlayerController : BaseCharacter
+    public class PlayerController : MonoBehaviour
     {
-        public static PlayerController instance;
-
         //Public variables
+        public bool isEnabled;
         [HideInInspector]
         public Rigidbody rb;
         [HideInInspector]
@@ -24,10 +23,6 @@ namespace PDC.Characters
         public float mouseSensitivity;
         public float jumpForce;
         public AudioClip[] footSteps;
-        public delegate void OnPlayerSpawn();
-        public static event OnPlayerDeath onSpawnEvent;
-        public delegate void OnPlayerDeath();
-        public static event OnPlayerDeath onDeathEvent;
 
         //Private variables
         Vector3 direction;
@@ -48,9 +43,6 @@ namespace PDC.Characters
         [HideInInspector]
         public float yInput;
 
-        //Delegates
-        public delegate void OnTakeDamage(float newHP, float maxHP);
-        public OnTakeDamage onTakeDamage;
 
         [Serializable]
         public struct HeadBobVariables
@@ -75,11 +67,6 @@ namespace PDC.Characters
 
         void Start()
         {
-            if (instance == null)
-                instance = this;
-            else
-                Destroy(gameObject);
-
             rb = GetComponent<Rigidbody>();
             audioS = GetComponent<AudioSource>();
 
@@ -90,14 +77,11 @@ namespace PDC.Characters
                 headbobVariables.maxCameraPan = 60;
                 headbobVariables.fovBonus = 50;
             }
-
-            if(onSpawnEvent != null)
-                onSpawnEvent();
         }
 
         void Update()
         {
-            if (!isdead)
+            if (isEnabled)
             {
                 CheckInput();
                 Checks();
@@ -107,10 +91,22 @@ namespace PDC.Characters
 
         void FixedUpdate()
         {
-            if (!isdead)
+            if (isEnabled)
             {
                 Move();
             }
+        }
+
+        public void Disable()
+        {
+            isEnabled = false;
+            FindObjectOfType<ClampedCamera>().isEnabled = false;
+        }
+
+        public void Enable()
+        {
+            isEnabled = true;
+            FindObjectOfType<ClampedCamera>().isEnabled = true;
         }
 
         void CheckInput()
@@ -225,32 +221,7 @@ namespace PDC.Characters
                 rb.velocity += Vector3.up * jumpForce;
         }
 
-        public override void Attack()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void TakeDamage(float damage, EffectType damageType)
-        {
-            base.TakeDamage(damage, damageType);
-            if (onTakeDamage != null)
-                onTakeDamage(characterStats.currentHP, characterStats.MaxHP);
-        }
-
-        public override void Die()
-        {
-            if (!isdead)
-            {
-                isdead = true;
-                playerCam.transform.parent = null;
-                playerCam.gameObject.AddComponent<CapsuleCollider>();
-                playerCam.gameObject.AddComponent<Rigidbody>();
-                playerCam.GetComponent<Rigidbody>().AddForce(transform.forward);
-                onDeathEvent();
-            }
-        }
-
-        public override void Move()
+        public void Move()
         {
             if(direction != Vector3.zero)
             {

@@ -46,7 +46,7 @@ namespace PDC.Weapons
                     iHit.GetHit(damage, EffectType.Normal, weaponEffects, cam.transform.position);
             }
             OnAnimationEnd newDelegate = new OnAnimationEnd(AttackAnimationEnd);
-            CheckWhenAnimationEnds(anim, "Attack", newDelegate);
+            CheckWhenAnimationTagEnds(anim, "Attack", newDelegate);
         }
 
         public override void Fire1Up()
