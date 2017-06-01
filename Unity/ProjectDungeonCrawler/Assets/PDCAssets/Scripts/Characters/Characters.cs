@@ -70,10 +70,6 @@ namespace PDC.Characters
             }
         }
 
-        public abstract void Move();
-
-        public abstract void Attack();
-
         public abstract void Die();
     }
 

@@ -24,15 +24,15 @@ namespace PDC.UI
                 instance = this;
             else
                 Destroy(gameObject);
-            PlayerController.onSpawnEvent += OnPlayerSpawn;
-            PlayerController.onDeathEvent += OnPlayerDeath;
+            PlayerCombat.onSpawnEvent += OnPlayerSpawn;
+            PlayerCombat.onDeathEvent += OnPlayerDeath;
         }
 
         private void OnPlayerSpawn()
         {
             PlayerCombat.instance.onWeaponDataChange += UpdateWeaponVisual;
             PlayerCombat.instance.onAmmoDataChange += UpdateAmmo;
-            PlayerController.instance.onTakeDamage += UpdateHP;
+            PlayerCombat.instance.onTakeDamage += UpdateHP;
             canvasRef = Instantiate(canvasRef);
         }
 
