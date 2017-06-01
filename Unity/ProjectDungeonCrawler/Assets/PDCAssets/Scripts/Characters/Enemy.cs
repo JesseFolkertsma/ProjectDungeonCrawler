@@ -191,7 +191,7 @@ namespace PDC.Characters {
             return ret;
         }
 
-        public override void Attack()
+        public void Attack()
         {
             //shoot raycasts and get direction, and rotate that way
             PauseMovement();
@@ -204,7 +204,7 @@ namespace PDC.Characters {
             //drop items, calc which ones in enemymanager
         }
 
-        public override void Move()
+        public void Move()
         {
             navAgent.destination = pC.Position;
             status = Status.Moving;
