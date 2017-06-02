@@ -1,34 +1,41 @@
 fileFormatVersion: 2
-guid: 8e2a5c17cb1323f4c8dc44e72ace6808
-timeCreated: 1496386438
+guid: cd8d1ba650eb25142b1cf72885327a3a
+timeCreated: 1496394839
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: Barrel
-    100002: Barrel_end
-    100004: Crank
-    100006: Crank_end
-    100008: Gun
-    100010: WEP_MiniCatling
-    100012: //RootNode
-    100014: WEP_MINICatling_001
-    400000: Barrel
-    400002: Barrel_end
-    400004: Crank
-    400006: Crank_end
-    400008: Gun
-    400010: WEP_MiniCatling
-    400012: //RootNode
-    400014: WEP_MINICatling_001
-    4300000: WEP_MINICatling_001
-    7400000: WEP_MiniCatling|WEP_Idle
-    7400002: WEP_MiniCatling|WEP_MiniCatlingPickUp
-    7400004: WEP_MiniCatling|WEP_MiniCatlingRecoil
-    7400006: WEP_MiniCatling|WEP_MiniCatlingTrow
-    7400008: WEP_MiniCatling|WEP_MiniCatlingTurning
+    100000: Armature
+    100002: Cilinder
+    100004: Cilinder_end
+    100006: Gun
+    100008: Hammer
+    100010: Hammer_end
+    100012: Revolver
+    100014: //RootNode
+    400000: Armature
+    400002: Cilinder
+    400004: Cilinder_end
+    400006: Gun
+    400008: Hammer
+    400010: Hammer_end
+    400012: Revolver
+    400014: //RootNode
+    4300000: Revolver
+    7400000: Armature|Action
+    7400002: Armature|Armature|Armature|Armature|Armature|Idle|Armature|Idle|Armature
+    7400004: Armature|Armature|Armature|Armature|Armature|Revolver.001Action.001|Arma
+    7400006: Armature|Armature|Armature|Armature|Armature|Revolver.001Action|Armature
+    7400008: Armature|Armature|Armature|Armature|Armature|Revolver_Idle|Armature|Revo
+    7400010: Armature|Armature|Armature|Armature|Armature|Revolver_Shoot|Armature|Rev
+    7400012: Armature|Armature|Armature|Armature|Armature|RevolverAction|Armature|Rev
+    7400014: Armature|Armature|Armature|Armature|Armature|Shoot|Armature|Shoot|Armatu
+    7400016: Armature|WEP_Revolver_Repeater_Animations_Inspects_001
+    7400018: Armature|WEP_Revolver_Repeater_Animations_Inspects_002
+    7400020: Armature|WEP_Revolver_Repeater_Animations_Inspects_003
+    7400022: Armature|WEP_Revolver_Repeater_Animations_Inspects_004
     9500000: //RootNode
-    13700000: WEP_MINICatling_001
+    13700000: Revolver
   materials:
     importMaterials: 1
     materialName: 0
@@ -53,54 +60,10 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: WEP_MiniCatling|WEP_Idle
-      takeName: WEP_MiniCatling|WEP_MiniCatlingPickup
+      name: Armature|WEP_Revolver_Repeater_Animations_Inspects_001
+      takeName: Armature|WEP_Revolver_Repeater_Animations_Inspects_001
       firstFrame: 0
-      lastFrame: 1
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 1
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask:
-      - path: 
-        weight: 1
-      - path: WEP_MiniCatling
-        weight: 1
-      - path: WEP_MiniCatling/Gun
-        weight: 1
-      - path: WEP_MiniCatling/Gun/Barrel
-        weight: 1
-      - path: WEP_MiniCatling/Gun/Barrel/Barrel_end
-        weight: 1
-      - path: WEP_MiniCatling/Gun/Crank
-        weight: 1
-      - path: WEP_MiniCatling/Gun/Crank/Crank_end
-        weight: 1
-      - path: WEP_MINICatling_001
-        weight: 1
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: WEP_MiniCatling|WEP_MiniCatlingPickUp
-      takeName: WEP_MiniCatling|WEP_MiniCatlingPickUp
-      firstFrame: 0
-      lastFrame: 31
+      lastFrame: 10
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -123,72 +86,28 @@ ModelImporter:
       transformMask:
       - path: 
         weight: 1
-      - path: WEP_MiniCatling
+      - path: Armature
         weight: 1
-      - path: WEP_MiniCatling/Gun
+      - path: Armature/Gun
         weight: 1
-      - path: WEP_MiniCatling/Gun/Barrel
+      - path: Armature/Gun/Cilinder
         weight: 1
-      - path: WEP_MiniCatling/Gun/Barrel/Barrel_end
+      - path: Armature/Gun/Cilinder/Cilinder_end
         weight: 1
-      - path: WEP_MiniCatling/Gun/Crank
+      - path: Armature/Gun/Hammer
         weight: 1
-      - path: WEP_MiniCatling/Gun/Crank/Crank_end
+      - path: Armature/Gun/Hammer/Hammer_end
         weight: 1
-      - path: WEP_MINICatling_001
-        weight: 1
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: WEP_MiniCatling|WEP_MiniCatlingRecoil
-      takeName: WEP_MiniCatling|WEP_MiniCatlingRecoil
-      firstFrame: 0
-      lastFrame: 30
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 1
-      loopBlend: 1
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask:
-      - path: 
-        weight: 1
-      - path: WEP_MiniCatling
-        weight: 1
-      - path: WEP_MiniCatling/Gun
-        weight: 1
-      - path: WEP_MiniCatling/Gun/Barrel
-        weight: 1
-      - path: WEP_MiniCatling/Gun/Barrel/Barrel_end
-        weight: 1
-      - path: WEP_MiniCatling/Gun/Crank
-        weight: 1
-      - path: WEP_MiniCatling/Gun/Crank/Crank_end
-        weight: 1
-      - path: WEP_MINICatling_001
+      - path: Revolver
         weight: 1
       maskType: 3
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: WEP_MiniCatling|WEP_MiniCatlingTrow
-      takeName: WEP_MiniCatling|WEP_MiniCatlingTrow
-      firstFrame: 0
-      lastFrame: 5
+      name: Armature|WEP_Revolver_Repeater_Animations_Inspects_002
+      takeName: Armature|WEP_Revolver_Repeater_Animations_Inspects_001
+      firstFrame: 11
+      lastFrame: 39
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -207,46 +126,39 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events:
-      - time: 0.99441344
-        functionName: Throw
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
+      events: []
       transformMask:
       - path: 
         weight: 1
-      - path: WEP_MiniCatling
+      - path: Armature
         weight: 1
-      - path: WEP_MiniCatling/Gun
+      - path: Armature/Gun
         weight: 1
-      - path: WEP_MiniCatling/Gun/Barrel
+      - path: Armature/Gun/Cilinder
         weight: 1
-      - path: WEP_MiniCatling/Gun/Barrel/Barrel_end
+      - path: Armature/Gun/Cilinder/Cilinder_end
         weight: 1
-      - path: WEP_MiniCatling/Gun/Crank
+      - path: Armature/Gun/Hammer
         weight: 1
-      - path: WEP_MiniCatling/Gun/Crank/Crank_end
+      - path: Armature/Gun/Hammer/Hammer_end
         weight: 1
-      - path: WEP_MINICatling_001
+      - path: Revolver
         weight: 1
       maskType: 3
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: WEP_MiniCatling|WEP_MiniCatlingTurning
-      takeName: WEP_MiniCatling|WEP_MiniCatlingTurning
-      firstFrame: 0
-      lastFrame: 36
+      name: Armature|WEP_Revolver_Repeater_Animations_Inspects_003
+      takeName: Armature|WEP_Revolver_Repeater_Animations_Inspects_001
+      firstFrame: 40
+      lastFrame: 66
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -262,19 +174,63 @@ ModelImporter:
       transformMask:
       - path: 
         weight: 1
-      - path: WEP_MiniCatling
+      - path: Armature
         weight: 1
-      - path: WEP_MiniCatling/Gun
+      - path: Armature/Gun
         weight: 1
-      - path: WEP_MiniCatling/Gun/Barrel
+      - path: Armature/Gun/Cilinder
         weight: 1
-      - path: WEP_MiniCatling/Gun/Barrel/Barrel_end
+      - path: Armature/Gun/Cilinder/Cilinder_end
         weight: 1
-      - path: WEP_MiniCatling/Gun/Crank
+      - path: Armature/Gun/Hammer
         weight: 1
-      - path: WEP_MiniCatling/Gun/Crank/Crank_end
+      - path: Armature/Gun/Hammer/Hammer_end
         weight: 1
-      - path: WEP_MINICatling_001
+      - path: Revolver
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Armature|WEP_Revolver_Repeater_Animations_Inspects_004
+      takeName: Armature|WEP_Revolver_Repeater_Animations_Inspects_001
+      firstFrame: 67
+      lastFrame: 115
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Gun
+        weight: 1
+      - path: Armature/Gun/Cilinder
+        weight: 1
+      - path: Armature/Gun/Cilinder/Cilinder_end
+        weight: 1
+      - path: Armature/Gun/Hammer
+        weight: 1
+      - path: Armature/Gun/Hammer/Hammer_end
+        weight: 1
+      - path: Revolver
         weight: 1
       maskType: 3
       maskSource: {instanceID: 0}
@@ -302,7 +258,7 @@ ModelImporter:
     normalImportMode: 0
     tangentImportMode: 3
   importAnimation: 1
-  copyAvatar: 0
+  copyAvatar: 1
   humanDescription:
     serializedVersion: 2
     human: []
@@ -319,7 +275,8 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 407bf622136fd0742bae18cb119bba59,
+    type: 3}
   animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
