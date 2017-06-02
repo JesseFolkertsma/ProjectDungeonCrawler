@@ -13,6 +13,7 @@ namespace PDC.Weapons
         Spear,
         Shotgun,
         Bow,
+        Gatling,
     }
 
     [System.Serializable]
@@ -28,6 +29,8 @@ namespace PDC.Weapons
         public int maxAmmo = 8;
         public int ammo = 8;
         public bool isEquipped;
+        public Vector3 weaponHolderPositionOffset;
+        public Vector3 weaponHolderRotationOffset;
 
         [HideInInspector] public int assignedSlot;
         [HideInInspector] public Rigidbody rb;

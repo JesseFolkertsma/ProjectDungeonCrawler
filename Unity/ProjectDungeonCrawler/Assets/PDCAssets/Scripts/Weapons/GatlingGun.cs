@@ -5,33 +5,29 @@ using UnityEngine;
 
 namespace PDC.Weapons
 {
-    [System.Serializable]
-    public class Revolver : Weapon
+    public class GatlingGun : Weapon
     {
         public float range = 100;
+        [Tooltip("Rounds per second")]
+        public float fireRate = 3;
         public Transform gunEnd;
         public GameObject muzzleFlash;
         public int ammoUsePerShot = 1;
-        bool buttonDown;
 
+        float timer = 0;
         Camera cam;
         LayerMask m;
 
         public override void Fire1Hold(Camera playercam, LayerMask mask)
         {
-            if (canAttack && ammo > 0 && !buttonDown)
+            if(ammo > 0 && Time.time > timer)
             {
-                buttonDown = true;
+                timer = Time.time + 1 / fireRate;
                 cam = playercam;
                 m = mask;
-                if (anim != null)
-                {
-                    canAttack = false;
-                    anim.SetTrigger("Attack");
-                    Attack();
-                }
-                else Debug.LogError(gameObject.name + "'s Animator variable is not setup dipnugget!");
+                Attack();
             }
+            anim.SetBool("Attacking", true);
         }
 
         public override void Attack()
@@ -47,8 +43,6 @@ namespace PDC.Weapons
                     if (iHit != null)
                         iHit.GetHit(damage, EffectType.Normal, weaponEffects, cam.transform.position);
                 }
-                OnAnimationEnd newDelegate = new OnAnimationEnd(AttackAnimationEnd);
-                CheckWhenAnimationTagEnds(anim, "Attack", newDelegate);
             }
             else
             {
@@ -58,7 +52,7 @@ namespace PDC.Weapons
 
         public override void Fire1Up()
         {
-            buttonDown = false;
+            anim.SetBool("Attacking", false);
         }
 
         public override void Fire2Hold()
@@ -69,11 +63,6 @@ namespace PDC.Weapons
         public override void Fire2Up()
         {
 
-        }
-
-        public void AttackAnimationEnd()
-        {
-            canAttack = true;
         }
 
         void ShootVisuals()

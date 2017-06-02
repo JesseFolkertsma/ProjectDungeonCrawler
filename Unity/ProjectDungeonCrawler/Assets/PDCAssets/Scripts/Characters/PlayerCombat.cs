@@ -16,10 +16,11 @@ namespace PDC.Characters
         //Public variables
         public List<Weapon> weapons = new List<Weapon>();
         public int availableSlots;
-        public Transform weaponPos;
         public float throwStrenght = 700;
 
         //Private variables
+        [SerializeField] Transform weaponPos;
+        [SerializeField] Transform offSetObject;
         Transform weaponTrans;
         int equippedWeapon;
 
@@ -64,6 +65,7 @@ namespace PDC.Characters
             pc = GetComponent<PlayerController>();
 
             weaponAnim = weaponPos.GetComponent<Animator>();
+
             if(EquippedWeapon == null)
             {
                 equippedWeapon = -1;
@@ -179,13 +181,16 @@ namespace PDC.Characters
         void ThrowWeapon()
         {
             //Reset weapon slot
-            weaponTrans = null;
-            EquippedWeapon.Throw(pc.playerCam, throwStrenght);
-            weapons[EquippedWeapon.assignedSlot] = null;
-            equippedWeapon = -1;
+            if (EquippedWeapon != null)
+            {
+                weaponTrans = null;
+                EquippedWeapon.Throw(pc.playerCam, throwStrenght);
+                weapons[EquippedWeapon.assignedSlot] = null;
+                equippedWeapon = -1;
 
-            if(onWeaponDataChange != null)
-                onWeaponDataChange(weapons, EquippedWeapon);
+                if (onWeaponDataChange != null)
+                    onWeaponDataChange(weapons, EquippedWeapon);
+            }
         }
 
         public void EquipWeapon(int weapI)
@@ -251,9 +256,11 @@ namespace PDC.Characters
                 //Setup variables
                 weap.isEquipped = true;
                 weap.rb.isKinematic = true;
-                weap.transform.parent = weaponPos;
+                weap.transform.parent = offSetObject;
                 weap.transform.localPosition = Vector3.zero;
                 weap.transform.localRotation = Quaternion.identity;
+                offSetObject.localPosition = weap.weaponHolderPositionOffset;
+                offSetObject.localEulerAngles = weap.weaponHolderRotationOffset;
                 weap.SetLayerRecursively(weap.gameObject, "Equipped");
                 weap.physicsCol.SetActive(false);
                 weap.gameObject.SetActive(false);
