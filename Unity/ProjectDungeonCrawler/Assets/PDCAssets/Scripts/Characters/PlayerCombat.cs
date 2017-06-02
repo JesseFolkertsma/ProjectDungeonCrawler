@@ -192,7 +192,7 @@ namespace PDC.Characters
             if (EquippedWeapon != null)
             {
                 weaponTrans = null;
-                EquippedWeapon.ThrowWeapon(pc.playerCam, throwStrenght);
+                EquippedWeapon.ThrowWeapon(pc.playerCam, throwStrenght + throwStrenght * pc.acc);
                 weapons[EquippedWeapon.assignedSlot] = null;
                 equippedWeapon = -1;
 
@@ -227,7 +227,6 @@ namespace PDC.Characters
                     EquippedWeapon.gameObject.SetActive(true);
                     weaponTrans = EquippedWeapon.transform;
                     weapons[weapI].anim.SetTrigger("Pickup");
-                    print("PICKBOII");
                     weaponAnim.SetTrigger("Equip");
                 }
                 else
