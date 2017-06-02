@@ -28,7 +28,6 @@ namespace PDC.Weapons
                 {
                     canAttack = false;
                     anim.SetTrigger("Attack");
-                    Attack();
                 }
                 else Debug.LogError(gameObject.name + "'s Animator variable is not setup dipnugget!");
             }
@@ -76,7 +75,7 @@ namespace PDC.Weapons
             canAttack = true;
         }
 
-        void ShootVisuals()
+        public void ShootVisuals()
         {
             Instantiate(muzzleFlash, gunEnd.position, gunEnd.rotation);
         }

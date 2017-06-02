@@ -73,6 +73,14 @@ namespace PDC.Characters
 
             if (onSpawnEvent != null)
                 onSpawnEvent();
+
+            if(weapons.Count < availableSlots)
+            {
+                for (int i = weapons.Count; i < availableSlots; i++)
+                {
+                    weapons.Add(null);
+                }
+            }
         }
 
         void Update()
@@ -173,18 +181,18 @@ namespace PDC.Characters
             if (EquippedWeapon != null)
             {
                 EquippedWeapon.anim.SetTrigger("Throw");
-                Weapon.OnAnimationEnd onAnimEnd = new Weapon.OnAnimationEnd(ThrowWeapon);
-                EquippedWeapon.CheckWhenAnimationTagEnds(EquippedWeapon.anim, "Throw", onAnimEnd);
+                //Weapon.OnAnimationEnd onAnimEnd = new Weapon.OnAnimationEnd(ThrowWeapon);
+                //EquippedWeapon.CheckWhenAnimationTagEnds(EquippedWeapon.anim, "Throw", onAnimEnd);
             }
         }
 
-        void ThrowWeapon()
+        public void ThrowWeapon()
         {
             //Reset weapon slot
             if (EquippedWeapon != null)
             {
                 weaponTrans = null;
-                EquippedWeapon.Throw(pc.playerCam, throwStrenght);
+                EquippedWeapon.ThrowWeapon(pc.playerCam, throwStrenght);
                 weapons[EquippedWeapon.assignedSlot] = null;
                 equippedWeapon = -1;
 
@@ -213,9 +221,13 @@ namespace PDC.Characters
             {
                 if (weapons[weapI] != null)
                 {
+                    offSetObject.localPosition = weapons[weapI].weaponHolderPositionOffset;
+                    offSetObject.localEulerAngles = weapons[weapI].weaponHolderRotationOffset;
                     equippedWeapon = weapI;
                     EquippedWeapon.gameObject.SetActive(true);
                     weaponTrans = EquippedWeapon.transform;
+                    weapons[weapI].anim.SetTrigger("Pickup");
+                    print("PICKBOII");
                     weaponAnim.SetTrigger("Equip");
                 }
                 else
@@ -254,13 +266,12 @@ namespace PDC.Characters
             if (TryAssignWeapon(weap))
             {
                 //Setup variables
+                weap.pc = this;
                 weap.isEquipped = true;
                 weap.rb.isKinematic = true;
                 weap.transform.parent = offSetObject;
                 weap.transform.localPosition = Vector3.zero;
                 weap.transform.localRotation = Quaternion.identity;
-                offSetObject.localPosition = weap.weaponHolderPositionOffset;
-                offSetObject.localEulerAngles = weap.weaponHolderRotationOffset;
                 weap.SetLayerRecursively(weap.gameObject, "Equipped");
                 weap.physicsCol.SetActive(false);
                 weap.gameObject.SetActive(false);

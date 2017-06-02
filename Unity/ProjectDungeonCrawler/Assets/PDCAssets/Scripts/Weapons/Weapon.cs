@@ -31,12 +31,14 @@ namespace PDC.Weapons
         public bool isEquipped;
         public Vector3 weaponHolderPositionOffset;
         public Vector3 weaponHolderRotationOffset;
+        public GameObject physicsCol;
 
         [HideInInspector] public int assignedSlot;
         [HideInInspector] public Rigidbody rb;
         [HideInInspector] public Animator anim;
-        public GameObject physicsCol;
         [HideInInspector] public bool canAttack = true;
+
+        [HideInInspector] public PlayerCombat pc;
 
         public abstract void Fire1Hold(Camera playercam, LayerMask mask);
         public abstract void Fire1Up();
@@ -52,15 +54,21 @@ namespace PDC.Weapons
                 anim = GetComponent<Animator>();
         }
 
-        public void Throw(Camera playercam, float strenght)
+        public void Throw()
         {
+            pc.ThrowWeapon();
+        }
+
+        public void ThrowWeapon(Camera playercam, float strenght)
+        {
+            Invoke("UnEquip", .05f);
             SetLayerRecursively(gameObject, "Default");
             transform.position = transform.parent.position;
+            transform.rotation = transform.parent.rotation;
             transform.parent = null;
             rb.isKinematic = false;
             physicsCol.SetActive(true);
             rb.AddForce((playercam.transform.forward * strenght) + playercam.transform.up * (strenght / 6));
-            Invoke("UnEquip", .05f);
         }
 
         void UnEquip()

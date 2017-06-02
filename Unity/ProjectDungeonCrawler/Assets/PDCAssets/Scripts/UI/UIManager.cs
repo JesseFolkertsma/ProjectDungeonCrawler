@@ -34,6 +34,10 @@ namespace PDC.UI
             PlayerCombat.instance.onAmmoDataChange += UpdateAmmo;
             PlayerCombat.instance.onTakeDamage += UpdateHP;
             canvasRef = Instantiate(canvasRef);
+            for(int i = 0; i < PlayerCombat.instance.availableSlots; i++)
+            {
+                canvasRef.SpawnNewSlot();
+            }
         }
 
         private void OnPlayerDeath()
