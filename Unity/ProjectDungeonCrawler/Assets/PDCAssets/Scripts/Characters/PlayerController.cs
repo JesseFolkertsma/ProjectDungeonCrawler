@@ -26,8 +26,6 @@ namespace PDC.Characters
 
         //Private variables
         Vector3 direction;
-        float xRot;
-        float yRot;
         float bobY;
         float bobX;
         float moveValue;

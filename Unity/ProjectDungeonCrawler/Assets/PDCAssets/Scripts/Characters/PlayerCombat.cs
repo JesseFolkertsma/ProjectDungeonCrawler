@@ -102,12 +102,13 @@ namespace PDC.Characters
         {
             if (weaponTrans)
             {
-                Vector3 newPos = new Vector3(pc.xInput / 7, -pc.rb.velocity.y / 20, 0);
+                Vector3 sway = new Vector3(-(Mathf.Clamp(Input.GetAxisRaw("Mouse X"), -1, 1) + pc.xInput) / 14, -pc.rb.velocity.y / 20, 0);
+                Vector3 newPos = EquippedWeapon.weaponHolderPositionOffset + sway;
                 if (newPos.y > .1f)
                     newPos.y = .1f;
                 else if (newPos.y < -.1f)
                     newPos.y = -.1f;
-                weaponTrans.localPosition = Vector3.Lerp(weaponTrans.localPosition, newPos, Time.deltaTime * 2);
+                offSetObject.localPosition = Vector3.Lerp(offSetObject.localPosition, newPos, Time.deltaTime * 2);
             }
         }
 
