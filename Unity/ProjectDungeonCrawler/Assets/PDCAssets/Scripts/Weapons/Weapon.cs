@@ -66,7 +66,7 @@ namespace PDC.Weapons
             pc.ThrowWeapon();
         }
 
-        public void ThrowWeapon(Camera playercam, float strenght)
+        public virtual void ThrowWeapon(Camera playercam, float strenght)
         {
             Invoke("UnEquip", .05f);
             SetLayerRecursively(gameObject, "Default");
@@ -93,6 +93,11 @@ namespace PDC.Weapons
                     print("Getting pickedup boiii");
                 }
             }
+        }
+
+        public virtual void OnPickup()
+        {
+
         }
 
         private void OnCollisionEnter(Collision collision)
