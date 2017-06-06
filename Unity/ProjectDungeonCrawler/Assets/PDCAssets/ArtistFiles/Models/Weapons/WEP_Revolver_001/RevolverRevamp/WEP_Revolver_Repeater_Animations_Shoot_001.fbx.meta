@@ -29,7 +29,7 @@ ModelImporter:
     7400008: Armature|Armature|Armature|Armature|Armature|Revolver_Idle|Armature|Revo
     7400010: Armature|Armature|Armature|Armature|Armature|Revolver_Shoot|Armature|Rev
     7400012: Armature|Armature|Armature|Armature|Armature|RevolverAction|Armature|Rev
-    7400014: Armature|Armature|Armature|Armature|Armature|Shoot|Armature|Shoot|Armatu
+    7400014: Armature|WEP_Revolver_Repeater_Standard_DryFire_001
     7400016: Armature|WEP_Revolver_Repeater_Standard_Shoot_001
     9500000: //RootNode
     13700000: Revolver
@@ -131,6 +131,58 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature
+        weight: 1
+      - path: Armature/Gun
+        weight: 1
+      - path: Armature/Gun/Cilinder
+        weight: 1
+      - path: Armature/Gun/Cilinder/Cilinder_end
+        weight: 1
+      - path: Armature/Gun/Hammer
+        weight: 1
+      - path: Armature/Gun/Hammer/Hammer_end
+        weight: 1
+      - path: Revolver
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Armature|WEP_Revolver_Repeater_Standard_DryFire_001
+      takeName: Armature|WEP_Revolver_Repeater_Standard_Shoot_001
+      firstFrame: 0.5
+      lastFrame: 4.9
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: 0.013979415
+        functionName: PlaySound
+        data: 
+        objectReferenceParameter: {fileID: 8300000, guid: 694d6af4264c0e542b078412aa12b229,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1

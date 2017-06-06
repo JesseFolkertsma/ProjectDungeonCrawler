@@ -35,7 +35,7 @@ namespace PDC.UI
                 }
                 routine = StartCoroutine(DeSelectSlot(150));
             }
-            if (weapon == null)
+            if (weapon.GetType() == typeof(EmptyWeapon))
             {
                 weaponImage.gameObject.SetActive(false);
                 foreach (Image i in statusEffects)
@@ -47,6 +47,7 @@ namespace PDC.UI
             {
                 weaponImage.gameObject.SetActive(true);
                 weaponImage.sprite = weapon.weaponIcon;
+
                 for (int i = 0; i < weapon.weaponEffects.Length; i++)
                 {
                     if (i > statusEffects.Length)
