@@ -65,15 +65,16 @@ namespace PDC.UI
 
         public void SetAmmoVisuals(Weapon weapon)
         {
-            if (weapon.ammoIcon == null)
+            RangedGun gun = weapon as RangedGun;
+            if(gun != null)
             {
-                SetAmmoVisualState(false);
+                SetAmmoVisualState(true);
+                ammoImage.sprite = gun.ammoIcon;
+                ammoText.text = gun.ammo.ToString();
             }
             else
             {
-                SetAmmoVisualState(true);
-                ammoImage.sprite = weapon.ammoIcon;
-                ammoText.text = weapon.ammo.ToString();
+                SetAmmoVisualState(false);
             }
         }
 

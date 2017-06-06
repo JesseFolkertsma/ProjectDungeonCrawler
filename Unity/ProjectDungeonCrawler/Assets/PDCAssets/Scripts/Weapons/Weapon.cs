@@ -24,15 +24,11 @@ namespace PDC.Weapons
         public string weaponName = "New Weapon";
         public WeaponType type;
         public Sprite weaponIcon;
-        public Sprite ammoIcon;
 
         [Header("Weapon stats")]
         public float damage = 20;
         public float throwDamage = 20;
         public StatusEffect[] weaponEffects;
-        public int maxAmmo = 8;
-        public int ammo = 8;
-        public Vector2 minMaxAmmoReturnOnBounce;
         public GameObject physicsCol;
 
         [Header("Tweaks")]
@@ -114,13 +110,9 @@ namespace PDC.Weapons
             }
         }
 
-        void ThrowHitEnemy(IHitable iHit, Vector3 hitPos)
+        public virtual void ThrowHitEnemy(IHitable iHit, Vector3 hitPos)
         {
             iHit.GetHit(damage, EffectType.Normal, weaponEffects, hitPos);
-            int ammoReturn = (int)UnityEngine.Random.Range(minMaxAmmoReturnOnBounce.x, minMaxAmmoReturnOnBounce.y);
-            ammo += ammoReturn;
-            if (ammo > maxAmmo)
-                ammo = maxAmmo;
             rb.velocity = Vector3.zero;
             Vector3 playerdir = ((PlayerCombat.instance.transform.position - transform.position) * 100) + (Vector3.up * 200);
             rb.AddForce(playerdir);
@@ -169,8 +161,15 @@ namespace PDC.Weapons
         public Transform gunEnd;
         public GameObject muzzleFlash;
         public AudioClip dryfireSound;
+        public Sprite ammoIcon;
         public int ammoUsePerShot = 1;
-        
+        public int maxAmmo = 8;
+        public int ammo = 8;
+        public Vector2 minMaxAmmoReturnOnBounce;
+
+        public GameObject bulletEjectPosition;
+        public GameObject bulletEjectEffect;
+
         [HideInInspector] public Camera cam;
         [HideInInspector] public LayerMask m;
 
@@ -205,7 +204,17 @@ namespace PDC.Weapons
 
         public virtual void ShootVisuals()
         {
-            Instantiate(muzzleFlash, gunEnd.position, gunEnd.rotation);
+            if(muzzleFlash != null)
+                Instantiate(muzzleFlash, gunEnd.position, gunEnd.rotation);
+        }
+
+        public override void ThrowHitEnemy(IHitable iHit, Vector3 hitPos)
+        {
+            base.ThrowHitEnemy(iHit, hitPos);
+            int ammoReturn = (int)UnityEngine.Random.Range(minMaxAmmoReturnOnBounce.x, minMaxAmmoReturnOnBounce.y);
+            ammo += ammoReturn;
+            if (ammo > maxAmmo)
+                ammo = maxAmmo;
         }
     }
 }
