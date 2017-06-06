@@ -167,8 +167,9 @@ namespace PDC.Weapons
         public int ammo = 8;
         public Vector2 minMaxAmmoReturnOnBounce;
 
-        public GameObject bulletEjectPosition;
+        public Transform bulletEjectPosition;
         public GameObject bulletEjectEffect;
+        public float ejectForce;
 
         [HideInInspector] public Camera cam;
         [HideInInspector] public LayerMask m;
@@ -206,6 +207,12 @@ namespace PDC.Weapons
         {
             if(muzzleFlash != null)
                 Instantiate(muzzleFlash, gunEnd.position, gunEnd.rotation);
+
+            if(bulletEjectEffect != null)
+            {
+                GameObject go = Instantiate(bulletEjectEffect, bulletEjectPosition.position, Quaternion.LookRotation(bulletEjectPosition.right));
+                go.GetComponent<Rigidbody>().AddForce(bulletEjectPosition.forward * ejectForce);
+            }
         }
 
         public override void ThrowHitEnemy(IHitable iHit, Vector3 hitPos)

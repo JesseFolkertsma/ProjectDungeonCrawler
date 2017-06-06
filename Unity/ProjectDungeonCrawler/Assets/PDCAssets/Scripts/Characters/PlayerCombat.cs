@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using PDC.Weapons;
 using PDC.UI;
+using PDC.Consumables;
 
 namespace PDC.Characters
 {
@@ -16,6 +17,7 @@ namespace PDC.Characters
         //Public variables
         public List<Weapon> weapons = new List<Weapon>();
         public int availableSlots;
+        public List<Consumable> consumables;
         public float throwStrenght = 700;
 
         //Private variables
@@ -23,6 +25,7 @@ namespace PDC.Characters
         [SerializeField] Transform offSetObject;
         Transform weaponTrans;
         int equippedWeapon;
+        int selectedConsumable;
 
         //Hidden public variables
         [HideInInspector]
@@ -37,9 +40,9 @@ namespace PDC.Characters
         public OnWeaponDataChange onWeaponDataChange;
         public delegate void OnAmmoDataChange(Weapon equipped);
         public OnAmmoDataChange onAmmoDataChange;
-        public delegate void OnTakeDamage(float newHP, float maxHP);
-        public OnTakeDamage onTakeDamage;
-        public delegate void OnConsumableChange();
+        public delegate void OnHPChange(float newHP, float maxHP);
+        public OnHPChange onHPChange;
+        public delegate void OnConsumableChange(List<Consumable> consumables, int selectedConsumable, bool playAnimation);
         public OnConsumableChange onConsumableChange;
 
         public Weapon EquippedWeapon
@@ -169,6 +172,17 @@ namespace PDC.Characters
                     EquipWeapon(i);
                 }
             }
+
+            //Consumables inputs
+            if (Input.GetButtonDown("Consume"))
+            {
+                Consume();
+            }
+
+            if (Input.GetButtonDown("Next consumable"))
+            {
+                NextConsumable();
+            }
         }
 
         void LeftMouse()
@@ -197,6 +211,25 @@ namespace PDC.Characters
         {
             if (EquippedWeapon.GetType() != typeof(EmptyWeapon))
                 EquippedWeapon.anim.SetTrigger("Throw");
+        }
+
+        void Consume()
+        {
+            print("CONSUMING THE SOUL OF: " + consumables[selectedConsumable].name);
+            consumables[selectedConsumable].Use(this);
+
+            if (onConsumableChange != null)
+                onConsumableChange(consumables, selectedConsumable, false);
+        }
+
+        void NextConsumable()
+        {
+            selectedConsumable++;
+            if (selectedConsumable > consumables.Count)
+                selectedConsumable = 0;
+
+            if (onConsumableChange != null)
+                onConsumableChange(consumables, selectedConsumable, true);
         }
 
         public void ThrowWeapon()
@@ -312,8 +345,15 @@ namespace PDC.Characters
         public override void TakeDamage(float damage, EffectType damageType)
         {
             base.TakeDamage(damage, damageType);
-            if (onTakeDamage != null)
-                onTakeDamage(characterStats.currentHP, characterStats.MaxHP);
+            if (onHPChange != null)
+                onHPChange(characterStats.currentHP, characterStats.MaxHP);
+        }
+
+        public override void Heal(float hp)
+        {
+            base.Heal(hp);
+            if (onHPChange != null)
+                onHPChange(characterStats.currentHP, characterStats.MaxHP);
         }
 
         public override void Die()

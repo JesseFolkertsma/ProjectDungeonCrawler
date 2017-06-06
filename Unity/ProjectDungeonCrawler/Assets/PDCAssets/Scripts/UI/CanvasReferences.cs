@@ -28,7 +28,7 @@ namespace PDC.UI
             if(currentHP < 0)
                 hpImage.fillAmount = 0;
             else
-                hpImage.fillAmount = maxHp / currentHP;
+                hpImage.fillAmount = currentHP / maxHp;
         }
 
         public void SetCaveProgression(float percentage)

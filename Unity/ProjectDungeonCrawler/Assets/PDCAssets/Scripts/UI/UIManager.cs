@@ -32,7 +32,7 @@ namespace PDC.UI
         {
             PlayerCombat.instance.onWeaponDataChange += UpdateWeaponVisual;
             PlayerCombat.instance.onAmmoDataChange += UpdateAmmo;
-            PlayerCombat.instance.onTakeDamage += UpdateHP;
+            PlayerCombat.instance.onHPChange += UpdateHP;
             canvasRef = Instantiate(canvasRef);
             for(int i = 0; i < PlayerCombat.instance.availableSlots; i++)
             {
