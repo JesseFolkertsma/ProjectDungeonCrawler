@@ -11,6 +11,6 @@ public class GiveForceWhenHit : MonoBehaviour, IHitable
     public void GetHit(float damage, EffectType hitType, StatusEffect[] effects, Vector3 shotPosition)
     {
         Vector3 direction = (transform.position - shotPosition).normalized;
-        GetComponent<Rigidbody>().AddForce(direction * 250 * damage);
+        GetComponent<Rigidbody>().AddForce(direction * 250 * 20);
     }
 }
