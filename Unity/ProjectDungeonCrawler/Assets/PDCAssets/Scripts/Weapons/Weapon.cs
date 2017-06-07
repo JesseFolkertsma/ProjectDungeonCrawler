@@ -65,7 +65,7 @@ namespace PDC.Weapons
         public virtual void ThrowWeapon(Camera playercam, float strenght)
         {
             Invoke("UnEquip", .05f);
-            SetLayerRecursively(gameObject, "Default");
+            SetLayerRecursively(gameObject, "Weapon");
             transform.position = transform.parent.position;
             transform.rotation = transform.parent.rotation;
             transform.parent = null;
@@ -130,26 +130,6 @@ namespace PDC.Weapons
                 SetLayerRecursively(child.gameObject, layerName);
             }
         }
-
-        public delegate void OnAnimationEnd();
-        public void CheckWhenAnimationTagEnds(Animator anim, string tagName, OnAnimationEnd effectAfterEnd)
-        {
-            StartCoroutine(AnimatorCheckRoutine(anim, tagName, effectAfterEnd));
-        }
-
-        IEnumerator AnimatorCheckRoutine(Animator anim, string tagName, OnAnimationEnd effectAfterEnd)
-        {
-            while (!anim.GetCurrentAnimatorStateInfo(0).IsTag(tagName))
-            {
-                yield return new WaitForEndOfFrame();
-            }
-            while (anim.GetCurrentAnimatorStateInfo(0).IsTag(tagName))
-            {
-                yield return new WaitForEndOfFrame();
-            }
-            print("Animation: " + tagName + " has ended.");
-            effectAfterEnd();
-        }
     }
 
     [System.Serializable]
@@ -169,7 +149,7 @@ namespace PDC.Weapons
 
         public Transform bulletEjectPosition;
         public GameObject bulletEjectEffect;
-        public float ejectForce;
+        public float ejectForce = 100;
 
         [HideInInspector] public Camera cam;
         [HideInInspector] public LayerMask m;

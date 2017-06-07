@@ -213,29 +213,10 @@ namespace PDC.Characters
                 EquippedWeapon.anim.SetTrigger("Throw");
         }
 
-        void Consume()
-        {
-            print("CONSUMING THE SOUL OF: " + consumables[selectedConsumable].name);
-            consumables[selectedConsumable].Use(this);
-
-            if (onConsumableChange != null)
-                onConsumableChange(consumables, selectedConsumable, false);
-        }
-
-        void NextConsumable()
-        {
-            selectedConsumable++;
-            if (selectedConsumable > consumables.Count)
-                selectedConsumable = 0;
-
-            if (onConsumableChange != null)
-                onConsumableChange(consumables, selectedConsumable, true);
-        }
-
         public void ThrowWeapon()
         {
             //Reset weapon slot
-            EquippedWeapon.ThrowWeapon(pc.playerCam, throwStrenght + throwStrenght * pc.acc);
+            EquippedWeapon.ThrowWeapon(pc.playerCam, throwStrenght);
             if (EquippedWeapon.GetType() != typeof(EmptyWeapon))
             {
                 weaponTrans = null;
@@ -269,6 +250,25 @@ namespace PDC.Characters
 
             if (onWeaponDataChange != null)
                 onWeaponDataChange(weapons, EquippedWeapon);
+        }
+
+        void Consume()
+        {
+            print("CONSUMING THE SOUL OF: " + consumables[selectedConsumable].name);
+            consumables[selectedConsumable].Use(this);
+
+            if (onConsumableChange != null)
+                onConsumableChange(consumables, selectedConsumable, false);
+        }
+
+        void NextConsumable()
+        {
+            selectedConsumable++;
+            if (selectedConsumable > consumables.Count - 1)
+                selectedConsumable = 0;
+
+            if (onConsumableChange != null)
+                onConsumableChange(consumables, selectedConsumable, true);
         }
 
         //Check for a free slot and return true if so
@@ -365,6 +365,7 @@ namespace PDC.Characters
                 pc.playerCam.gameObject.AddComponent<CapsuleCollider>();
                 pc.playerCam.gameObject.AddComponent<Rigidbody>();
                 pc.playerCam.GetComponent<Rigidbody>().AddForce(transform.forward);
+                EquippedWeapon.gameObject.SetActive(false);
                 onDeathEvent();
             }
         }
