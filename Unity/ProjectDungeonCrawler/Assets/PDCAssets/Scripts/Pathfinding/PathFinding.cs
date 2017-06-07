@@ -28,6 +28,10 @@ public class PathFinding : MonoBehaviour {
 
     public delegate void _Repaint();
     public static _Repaint repaint;
+    [SerializeField]
+    private int edgeBakeAmount;
+    [SerializeField]
+    private int calculationsPerFrame;
 
     private void Awake()
     {
@@ -69,13 +73,27 @@ public class PathFinding : MonoBehaviour {
         SetMidsAndBoundary(); //this is the node where this transform now is, neccessity for getnodefromvector
         #endregion
 
-        BakePreparedScene(); //now bake all objects in the 3d array
+        StartCoroutine(BakePreparedScene()); //now bake all objects in the 3d array
     }
 
-    private void BakePreparedScene()
+    List<List<Node>> bakedObjects;
+    private IEnumerator BakePreparedScene()
     {
+        bakedObjects = new List<List<Node>>();
+        int calc = 0;
+        List<Node> possibleBake;
         foreach (GameObject bakeObject in bakeable)
-            BakeObject(bakeObject, BakeType.Object);
+        {
+            possibleBake = BakeObject(bakeObject, BakeType.Object);
+            if (possibleBake != null)
+                bakedObjects.Add(possibleBake);
+            calc++;
+            if(calc >= calculationsPerFrame)
+            {
+                calc = 0;
+                yield return null;
+            }
+        }
     }
 
     public enum BakeType {Object, Enemy, Movable, Walkable }
@@ -108,7 +126,6 @@ public class PathFinding : MonoBehaviour {
             return null;
         }
 
-        
         #region Old Code
         for (int x = midNode.x - halfX; x <= halfX + midNode.x; x++)
             for (int y = midNode.y - halfY; y <= halfY + midNode.y + 1; y++)
@@ -143,10 +160,20 @@ public class PathFinding : MonoBehaviour {
                         break;
                     }
                 }
-        
+
         #endregion
-        
         return ret;
+    }
+
+    private bool CheckOutOfBounds(int x, int y, int z)
+    {
+        if (x <= 0 || x >= grid.GetLength(0) - 1)
+            return true;
+        if (x <= 0 || y >= grid.GetLength(1) - 1)
+            return true;
+        if (z <= 0 || z >= grid.GetLength(2) - 1)
+            return true;
+        return false;
     }
 
     private List<Coroutine> realtimeBake = new List<Coroutine>();

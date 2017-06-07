@@ -132,7 +132,7 @@ namespace PDC.Characters {
                         Attack();
                     else
                     {
-                        //Move(); //because it also calculates new player position
+                        Move(pC.Position); //because it also calculates new player position
                     }
                     yield return new WaitForSeconds(updateTime);
                 }
@@ -151,7 +151,7 @@ namespace PDC.Characters {
                 if (playerDistance <= enemy.engagementRange)
                     if (CheckIfSeePlayer())
                     {
-                        //Move();
+                        Move(pC.Position);
                     }
                 yield return new WaitForSeconds(updateTime);
             }
