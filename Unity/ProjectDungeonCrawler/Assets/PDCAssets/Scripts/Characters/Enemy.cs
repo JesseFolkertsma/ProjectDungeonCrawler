@@ -16,7 +16,7 @@ namespace PDC.Characters {
         }
         public EnemyStats enemyStats;
         protected static PlayerReference pC = null;
-        protected NavMeshAgent navAgent;
+        protected MoveManager navAgent;
         public enum Status {Idle, Attacking, Moving}
         public Status status = Status.Idle;
 
@@ -90,8 +90,7 @@ namespace PDC.Characters {
 
         private void SetupNavMesh()
         {
-            navAgent = GetComponent<NavMeshAgent>();
-            navAgent.speed = characterStats.movementSpeed;
+            navAgent = GetComponent<MoveManager>();
         }
 
         protected IEnumerator SearchForPlayer()
@@ -132,7 +131,9 @@ namespace PDC.Characters {
                         //check if able to attack
                         Attack();
                     else
-                        Move(); //because it also calculates new player position
+                    {
+                        Move(pC.Position); //because it also calculates new player position
+                    }
                     yield return new WaitForSeconds(updateTime);
                 }
 
@@ -149,8 +150,9 @@ namespace PDC.Characters {
                 PauseMovement();
                 if (playerDistance <= enemy.engagementRange)
                     if (CheckIfSeePlayer())
-                        Move();
-
+                    {
+                        Move(pC.Position);
+                    }
                 yield return new WaitForSeconds(updateTime);
             }
         }
@@ -204,15 +206,33 @@ namespace PDC.Characters {
             //drop items, calc which ones in enemymanager
         }
 
-        public void Move()
+        public void Move(Vector3 target)
         {
-            navAgent.destination = pC.Position;
+            navAgent.MoveTowards(target, _Move);
             status = Status.Moving;
+        }
+
+        public void _Move(List<Vector3> path)
+        {
+            _path = path;
+            moving = StartCoroutine(MoveCoroutine());
+        }
+
+        private Coroutine moving;
+        private List<Vector3> _path;
+        private IEnumerator MoveCoroutine()
+        {
+            //follow path and avoid stuff on the way
+            //it only calculates the path once, so thats a thing if objects change
+            //you might want to recalculate the path each x seconds
+            //when moving it will hump the adjecent walls, this is a thing
+            yield break;
         }
 
         protected virtual void PauseMovement()
         {
-            navAgent.Stop();
+            if (moving != null)
+                StopCoroutine(moving);
             status = Status.Idle;
         }
     }

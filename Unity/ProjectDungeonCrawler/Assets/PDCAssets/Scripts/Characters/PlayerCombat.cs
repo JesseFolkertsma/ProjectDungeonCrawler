@@ -5,6 +5,7 @@ using UnityEngine;
 using PDC.Weapons;
 using PDC.UI;
 using PDC.Consumables;
+using PDC.StatusEffects;
 
 namespace PDC.Characters
 {
@@ -44,6 +45,8 @@ namespace PDC.Characters
         public OnHPChange onHPChange;
         public delegate void OnConsumableChange(List<Consumable> consumables, int selectedConsumable, bool playAnimation);
         public OnConsumableChange onConsumableChange;
+        public delegate void OnGiveStatusEffect(OngoingEffect effect);
+        public OnGiveStatusEffect onGiveStatusEffect;
 
         public Weapon EquippedWeapon
         {
@@ -341,7 +344,14 @@ namespace PDC.Characters
             weapons[slotToRemove] = null;
             PickupWeapon(EmptyWeapon.GetNew());
         }
-        
+
+        public override void GiveStatusEffect(OngoingEffect effect)
+        {
+            base.GiveStatusEffect(effect);
+            if (onGiveStatusEffect != null)
+                onGiveStatusEffect(effect);
+        }
+
         public override void TakeDamage(float damage, EffectType damageType)
         {
             base.TakeDamage(damage, damageType);

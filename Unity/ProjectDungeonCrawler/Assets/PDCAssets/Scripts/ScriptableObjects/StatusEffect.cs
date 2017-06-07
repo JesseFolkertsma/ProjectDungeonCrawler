@@ -22,11 +22,13 @@ namespace PDC.StatusEffects
         public EffectType effectType;
         public IEnumerator effect;
         public Coroutine routine;
+        public StatusEffect effectData;
 
-        public OngoingEffect(EffectType type, IEnumerator eff)
+        public OngoingEffect(EffectType type, IEnumerator eff, StatusEffect eData)
         {
             effectType = type;
             effect = eff;
+            effectData = eData;
         }
     }
 
@@ -36,6 +38,7 @@ namespace PDC.StatusEffects
         public abstract void AddEffect(BaseCharacter character);
         public Sprite effectIcon;
         public Color effectColor;
+        public float effectDuration = 5;
     }
 }
 

@@ -10,11 +10,10 @@ namespace PDC.StatusEffects
     {
         public float tickRate = 1;
         public float damagePerTick = 3;
-        public float effectDuration = 5;
 
         public override void AddEffect(BaseCharacter character)
         {
-            character.GiveStatusEffect(new OngoingEffect(type, Poison(character, Time.time)));
+            character.GiveStatusEffect(new OngoingEffect(type, Poison(character, Time.time), this));
         }
 
         IEnumerator Poison(BaseCharacter character, float startTime)

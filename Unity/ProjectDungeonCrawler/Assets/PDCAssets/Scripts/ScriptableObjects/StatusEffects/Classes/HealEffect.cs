@@ -12,17 +12,16 @@ namespace PDC.StatusEffects
         public float healPerTick = 3;
         [Header("Only use varables below if 'Instant' is unchecked")]
         public float tickRate = 1;
-        public float effectDuration = 5;
 
         public override void AddEffect(BaseCharacter character)
         {
             if (instant)
             {
-                character.characterStats.currentHP += healPerTick;
+                character.Heal(healPerTick);
             }
             else
             {
-                character.GiveStatusEffect(new OngoingEffect(type, Heal(character, Time.time)));
+                character.GiveStatusEffect(new OngoingEffect(type, Heal(character, Time.time), this));
             }
         }
 

@@ -31,21 +31,25 @@ namespace PDC.UI
 
         private void OnPlayerSpawn()
         {
-            PlayerCombat.instance.onWeaponDataChange += UpdateWeaponVisual;
-            PlayerCombat.instance.onAmmoDataChange += UpdateAmmo;
-            PlayerCombat.instance.onConsumableChange += UpdateConsumable;
-            PlayerCombat.instance.onHPChange += UpdateHP;
             canvasRef = Instantiate(canvasRef);
-            for(int i = 0; i < PlayerCombat.instance.availableSlots; i++)
+            for (int i = 0; i < PlayerCombat.instance.availableSlots; i++)
             {
                 canvasRef.SpawnNewSlot();
             }
+            PlayerCombat.instance.onWeaponDataChange += UpdateWeaponVisual;
+            PlayerCombat.instance.onAmmoDataChange += canvasRef.SetAmmoVisuals;
+            PlayerCombat.instance.onConsumableChange += UpdateConsumable;
+            PlayerCombat.instance.onHPChange += canvasRef.SetHp;
+            PlayerCombat.instance.onGiveStatusEffect += canvasRef.AddStatusEffect;
         }
 
         private void OnPlayerDeath()
         {
             PlayerCombat.instance.onWeaponDataChange -= UpdateWeaponVisual;
-            PlayerCombat.instance.onAmmoDataChange -= UpdateAmmo;
+            PlayerCombat.instance.onAmmoDataChange -= canvasRef.SetAmmoVisuals;
+            PlayerCombat.instance.onConsumableChange -= UpdateConsumable;
+            PlayerCombat.instance.onHPChange -= canvasRef.SetHp;
+            PlayerCombat.instance.onGiveStatusEffect -= canvasRef.AddStatusEffect;
         }
 
         void UpdateWeaponVisual(List<Weapon> weapons, Weapon equipped)
@@ -56,7 +60,7 @@ namespace PDC.UI
             }
 
             if(equipped != null)
-                UpdateAmmo(equipped);
+                canvasRef.SetAmmoVisuals(equipped);
             else
                 canvasRef.SetAmmoVisualState(false);
         }
@@ -69,14 +73,9 @@ namespace PDC.UI
                 canvasRef.SetConsumableVisual(consumables[selected].icon);
         }
 
-        void UpdateAmmo(Weapon equippedWeapon)
+        void AddStatusEffect(OngoingEffect effect)
         {
-            canvasRef.SetAmmoVisuals(equippedWeapon);
-        }
 
-        void UpdateHP(float health, float maxHealth)
-        {
-            canvasRef.SetHp(health, maxHealth);
         }
 
         void UpdateSouls(float souls, float maxSouls)
