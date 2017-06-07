@@ -36,8 +36,8 @@ namespace PDC.Weapons
         public override void DryFire()
         {
             base.DryFire();
-            OnAnimationEnd newDelegate = new OnAnimationEnd(AttackAnimationEnd);
-            CheckWhenAnimationTagEnds(anim, "Attack", newDelegate);
+            GameManager.OnAnimationEnd newDelegate = new GameManager.OnAnimationEnd(AttackAnimationEnd);
+            GameManager.instance.CheckWhenAnimationTagEnds(anim, "Attack", newDelegate);
         }
 
         public override void Attack()
@@ -47,8 +47,8 @@ namespace PDC.Weapons
                 ammo--;
                 ShootVisuals();
                 DamageRaycast();
-                OnAnimationEnd newDelegate = new OnAnimationEnd(AttackAnimationEnd);
-                CheckWhenAnimationTagEnds(anim, "Attack", newDelegate);
+                GameManager.OnAnimationEnd newDelegate = new GameManager.OnAnimationEnd(AttackAnimationEnd);
+                GameManager.instance.CheckWhenAnimationTagEnds(anim, "Attack", newDelegate);
             }
             else
             {

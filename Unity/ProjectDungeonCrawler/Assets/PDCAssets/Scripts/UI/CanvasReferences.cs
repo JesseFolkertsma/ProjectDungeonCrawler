@@ -18,6 +18,8 @@ namespace PDC.UI
         [SerializeField] Text ammoText;
         [SerializeField] Transform weaponSlotHolder;
         [SerializeField] List<UIWeaponSlot> weaponSlots = new List<UIWeaponSlot>();
+        [SerializeField] Image consumableImage;
+        [SerializeField] Animator consumableAnim;
 
         [Header("Standalone Objects")]
         [SerializeField] GameObject newQuestObject;
@@ -28,7 +30,7 @@ namespace PDC.UI
             if(currentHP < 0)
                 hpImage.fillAmount = 0;
             else
-                hpImage.fillAmount = maxHp / currentHP;
+                hpImage.fillAmount = currentHP / maxHp;
         }
 
         public void SetCaveProgression(float percentage)
@@ -76,6 +78,33 @@ namespace PDC.UI
             {
                 SetAmmoVisualState(false);
             }
+        }
+
+        public void PlayerConsumableAnimation(Sprite newSprite)
+        {
+            afterAnimationSprite = newSprite;
+            consumableAnim.SetTrigger("Swap");
+            GameManager.OnAnimationEnd newDelegate = new GameManager.OnAnimationEnd(SetSpriteAfterAnimation);
+            GameManager.instance.CheckWhenAnimationTagEnds(consumableAnim, "Swap", newDelegate);
+        }
+
+        public void SetConsumableVisual(Sprite sprite)
+        {
+            if (sprite != null)
+            {
+                consumableImage.gameObject.SetActive(true);
+                consumableImage.sprite = sprite;
+            }
+            else
+            {
+                consumableImage.gameObject.SetActive(false);
+            }
+        }
+
+        Sprite afterAnimationSprite;
+        void SetSpriteAfterAnimation()
+        {
+            SetConsumableVisual(afterAnimationSprite);
         }
 
         public void SetAmmoVisualState(bool state)
