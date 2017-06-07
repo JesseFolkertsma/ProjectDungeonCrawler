@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using PDC.Weapons;
+using PDC.StatusEffects;
 
 namespace PDC.UI
 {
@@ -20,10 +21,12 @@ namespace PDC.UI
         [SerializeField] List<UIWeaponSlot> weaponSlots = new List<UIWeaponSlot>();
         [SerializeField] Image consumableImage;
         [SerializeField] Animator consumableAnim;
+        [SerializeField] Transform statusEffectsHolder;
 
         [Header("Standalone Objects")]
         [SerializeField] GameObject newQuestObject;
         [SerializeField] GameObject newWeaponSlot;
+        [SerializeField] GameObject newStatusEffect;
 
         public void SetHp(float currentHP, float maxHp)
         {
@@ -111,6 +114,13 @@ namespace PDC.UI
         {
             ammoImage.gameObject.SetActive(state);
             ammoText.gameObject.SetActive(state);
+        }
+
+        public void AddStatusEffect(OngoingEffect effect)
+        {
+            print(effect.effectType.ToString());
+            GameObject go = Instantiate(newStatusEffect, statusEffectsHolder);
+            go.GetComponent<StatusEffectIcon>().SetupIcon(effect.effectData);
         }
     }
 }
