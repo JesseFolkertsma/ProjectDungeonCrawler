@@ -84,15 +84,13 @@ public class PathFinding : MonoBehaviour {
         List<Node> ret = new List<Node>();
         //get size collider
         Collider c = bakeable.GetComponent<Collider>();
-        if(!(c != null))
-        {
-            Debug.Log("I can't bake an object without a collider, can I?");
+        if (!(c != null))
             return null;
-        }
+
         Vector3 size = c.bounds.size;
 
         //get mid size bakeable
-        Node midNode = GetNodeFromVector(bakeable.transform.position);
+        Node midNode = GetNodeFromVector(c.bounds.center);
 
         int _x = (int)(size.x / widthSizeNode);
         int _y = (int)(size.y / heightSizeNode);
@@ -101,7 +99,7 @@ public class PathFinding : MonoBehaviour {
         int halfY = _y / 2;
         int halfZ = _z / 2;
         
-        RaycastHit[] hits;
+        Collider[] hits;
         Node node;
 
         if (!(midNode != null))
@@ -112,8 +110,8 @@ public class PathFinding : MonoBehaviour {
 
         
         #region Old Code
-        for (int x = midNode.x - halfX; x <= halfX + midNode.x; x++) //dit is dus verkeerd, somehow
-            for (int y = midNode.y - halfY; y <= halfY + midNode.y + 1; y++) //eentje hoger erbij doen
+        for (int x = midNode.x - halfX; x <= halfX + midNode.x; x++)
+            for (int y = midNode.y - halfY; y <= halfY + midNode.y + 1; y++)
                 for (int z = midNode.z - halfZ; z <= halfZ + midNode.z; z++)
                 {
                     //check if in bounds
@@ -129,32 +127,19 @@ public class PathFinding : MonoBehaviour {
                         continue;
 
                     Vector3 midPos = GetVectorFromNode(grid[x, y, z]);
-                    hits = Physics.RaycastAll(midPos, Vector3.down, heightSizeNode);
+                    hits = Physics.OverlapSphere(midPos, heightSizeNode / 4);
                     if (visualizeRaycasts)
                     {
                         Color v = hits.Length > 0 ? Color.red : Color.grey;
                         Debug.DrawRay(midPos, Vector3.down, v, 1);
                     }
-
-                    foreach (RaycastHit hit in hits)
+                    foreach (Collider hit in hits)
                     {
                         if (bakeable != hit.transform.gameObject)
                             continue;
-
                         node.bakeType = type;
                         node.filled = true;
                         ret.Add(node);
-                        for(int i = 0; i < _y; i++)
-                        {
-                            if (y - i < 0)
-                                break;
-                            if (y - i < midNode.y - halfY)
-                                break;
-                            node = grid[x, y - i, z];
-                            node.bakeType = type;
-                            node.filled = true;
-                            ret.Add(node);
-                        }              
                         break;
                     }
                 }
@@ -209,7 +194,7 @@ public class PathFinding : MonoBehaviour {
         boundary.z -= widthSize * widthSizeNode / 2;
         return boundary;
     }
-
+    //<3
     public Vector3 GetVectorFromNode(Node node)
     {
         //calc from boundary
@@ -243,9 +228,9 @@ public class PathFinding : MonoBehaviour {
     {
         Vector3 difference = pos - transform.position;
 
-        int x = midW + (int)(difference.x / widthSizeNode);
-        int y = midH + (int)(difference.y / heightSizeNode);
-        int z = midW + (int)(difference.z / widthSizeNode);
+        int x = midW + Mathf.FloorToInt(difference.x / widthSizeNode);
+        int y = midH + Mathf.FloorToInt(difference.y / heightSizeNode);
+        int z = midW + Mathf.FloorToInt(difference.z / widthSizeNode);
 
         //debug checks, it makes sure to return null when outside the grid
         if (x >= grid.GetLength(0) || x < 0)
