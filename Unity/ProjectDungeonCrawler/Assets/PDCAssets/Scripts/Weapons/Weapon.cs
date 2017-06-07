@@ -65,7 +65,7 @@ namespace PDC.Weapons
         public virtual void ThrowWeapon(Camera playercam, float strenght)
         {
             Invoke("UnEquip", .05f);
-            SetLayerRecursively(gameObject, "Default");
+            SetLayerRecursively(gameObject, "Weapon");
             transform.position = transform.parent.position;
             transform.rotation = transform.parent.rotation;
             transform.parent = null;
@@ -130,26 +130,6 @@ namespace PDC.Weapons
                 SetLayerRecursively(child.gameObject, layerName);
             }
         }
-
-        public delegate void OnAnimationEnd();
-        public void CheckWhenAnimationTagEnds(Animator anim, string tagName, OnAnimationEnd effectAfterEnd)
-        {
-            StartCoroutine(AnimatorCheckRoutine(anim, tagName, effectAfterEnd));
-        }
-
-        IEnumerator AnimatorCheckRoutine(Animator anim, string tagName, OnAnimationEnd effectAfterEnd)
-        {
-            while (!anim.GetCurrentAnimatorStateInfo(0).IsTag(tagName))
-            {
-                yield return new WaitForEndOfFrame();
-            }
-            while (anim.GetCurrentAnimatorStateInfo(0).IsTag(tagName))
-            {
-                yield return new WaitForEndOfFrame();
-            }
-            print("Animation: " + tagName + " has ended.");
-            effectAfterEnd();
-        }
     }
 
     [System.Serializable]
@@ -167,8 +147,9 @@ namespace PDC.Weapons
         public int ammo = 8;
         public Vector2 minMaxAmmoReturnOnBounce;
 
-        public GameObject bulletEjectPosition;
+        public Transform bulletEjectPosition;
         public GameObject bulletEjectEffect;
+        public float ejectForce = 100;
 
         [HideInInspector] public Camera cam;
         [HideInInspector] public LayerMask m;
@@ -206,6 +187,12 @@ namespace PDC.Weapons
         {
             if(muzzleFlash != null)
                 Instantiate(muzzleFlash, gunEnd.position, gunEnd.rotation);
+
+            if(bulletEjectEffect != null)
+            {
+                GameObject go = Instantiate(bulletEjectEffect, bulletEjectPosition.position, Quaternion.LookRotation(bulletEjectPosition.right));
+                go.GetComponent<Rigidbody>().AddForce(bulletEjectPosition.forward * ejectForce);
+            }
         }
 
         public override void ThrowHitEnemy(IHitable iHit, Vector3 hitPos)

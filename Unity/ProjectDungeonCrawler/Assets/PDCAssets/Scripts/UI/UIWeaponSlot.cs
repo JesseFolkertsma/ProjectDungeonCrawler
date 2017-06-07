@@ -61,9 +61,9 @@ namespace PDC.UI
 
         IEnumerator SelectSlot(float speed)
         {
-            while(slot.localPosition.x < 24.5)
+            while(slot.localPosition.x < 25.5)
             {
-                slot.localPosition = Vector3.MoveTowards(slot.localPosition, new Vector2(25, 0), Time.deltaTime * speed);
+                slot.localPosition = Vector3.MoveTowards(slot.localPosition, new Vector2(26, 0), Time.deltaTime * speed);
                 yield return new WaitForEndOfFrame();
             }
         }
