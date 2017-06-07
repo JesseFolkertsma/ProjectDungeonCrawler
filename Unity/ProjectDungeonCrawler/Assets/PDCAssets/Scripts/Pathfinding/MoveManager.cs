@@ -106,6 +106,7 @@ public class MoveManager : MonoBehaviour {
                     start = p.grid[start.x, start.y - 1, start.z];
                 else break;
             }
+            
             if (start.filled)
                 open.Add(new Node(start));
             else
@@ -126,6 +127,7 @@ public class MoveManager : MonoBehaviour {
                     destination = p.grid[destination.x, destination.y - 1, destination.z];
                 else break;
             }
+            print(destination.x + " " + destination.y + " " + destination.z + " " + destination.bakeType + " " + destination.filled);
             if (!destination.filled)
             {
                 Debug.Log("There is nothing walkable around the destination.");

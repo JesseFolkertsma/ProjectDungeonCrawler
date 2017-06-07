@@ -15,6 +15,7 @@ namespace PDC.Weapons
         Shotgun,
         Bow,
         Gatling,
+        Axe,
     }
 
     [System.Serializable]

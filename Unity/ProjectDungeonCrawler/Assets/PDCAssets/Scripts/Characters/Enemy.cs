@@ -6,7 +6,7 @@ using System;
 using UnityEngine.AI;
 
 namespace PDC.Characters {
-    [RequireComponent(typeof(NavMeshAgent))]
+    [RequireComponent(typeof(MoveManager))]
     public class Enemy : BaseCharacter
     {
         [Serializable]
@@ -47,7 +47,7 @@ namespace PDC.Characters {
             }
         }
 
-        [SerializeField, Tooltip("Used for scanning of player")]
+        [SerializeField, Tooltip("Used for scanning player")]
         private float heightChar, widthChar;
         protected List<Vector3> GetMultiPlayerPos()
         {
@@ -208,6 +208,7 @@ namespace PDC.Characters {
 
         public void Move(Vector3 target)
         {
+
             navAgent.MoveTowards(target, _Move);
             status = Status.Moving;
         }
@@ -215,6 +216,8 @@ namespace PDC.Characters {
         public void _Move(List<Vector3> path)
         {
             _path = path;
+            if (moving != null)
+                StopCoroutine(moving);
             moving = StartCoroutine(MoveCoroutine());
         }
 
@@ -226,6 +229,8 @@ namespace PDC.Characters {
             //it only calculates the path once, so thats a thing if objects change
             //you might want to recalculate the path each x seconds
             //when moving it will hump the adjecent walls, this is a thing
+
+            //finally end moving
             yield break;
         }
 
