@@ -10,7 +10,7 @@ public class MoveManager : MonoBehaviour {
     private Pathfinding_Bakeable bake;
     private PathFinding p;
     [SerializeField]
-    private int maxNodesBetweenGroundAndTarget = 5;
+    private int maxNodesBetweenGroundAndTarget = 5, maxNodesBetweenGroundAndTargetReverse;
     [SerializeField]
     private bool _2d;
     [SerializeField]
@@ -22,14 +22,22 @@ public class MoveManager : MonoBehaviour {
     {
         p = PathFinding.self;
         bake = GetComponent<Pathfinding_Bakeable>();
+
+        //array information
+        lengthX = p.grid.GetLength(0) - 1;
+        lengthY = p.grid.GetLength(1) - 1;
+        lengthZ = p.grid.GetLength(2) - 1;
     }
 
+    private Coroutine calculate;
 	public bool MoveTowards(Vector3 position, Callable callable)
     {
         if (!(PathFinding.self != null))
             return false;
-        StopAllCoroutines();
-        StartCoroutine(CalculatePath(position, callable));
+        if (calculate != null)
+            return true;
+
+        calculate = StartCoroutine(CalculatePath(position, callable));
         return true;
     }
 
@@ -82,11 +90,6 @@ public class MoveManager : MonoBehaviour {
     {
         PathFinding.Node destination = p.GetNodeFromVector(position);
 
-        //array information
-        lengthX = p.grid.GetLength(0) - 1;
-        lengthY = p.grid.GetLength(1) - 1;
-        lengthZ = p.grid.GetLength(2) - 1;
-
         //pathfinding tools
         open = new List<Node>();
         closed = new List<PathFinding.Node>();
@@ -94,46 +97,53 @@ public class MoveManager : MonoBehaviour {
         Pathfinding_Visualizer pV = PathFinding.visualizer;
 
         PathFinding.Node start = p.GetNodeFromVector(transform.position);
+        PathFinding.Node reference = start;
+
         int nodesBetween = 0;
+        int y;
         if (start != null)
         {
             while(nodesBetween < maxNodesBetweenGroundAndTarget)
             {
-                if (start.filled && start.bakeType == PathFinding.BakeType.Object)
-                    break;
+                y = reference.y - nodesBetween;
+                if (!(y > 0 && y < p.grid.GetLength(1)))
+                {
+                    nodesBetween++;
+                    continue;
+                }
+                reference = p.grid[start.x, y, start.z];
                 nodesBetween++;
-                if (start.y > 0)
-                    start = p.grid[start.x, start.y - 1, start.z];
-                else break;
+                if (reference.filled && reference.bakeType == PathFinding.BakeType.Object)
+                    break;
             }
             
             if (start.filled)
-                open.Add(new Node(start));
+                open.Add(new Node(reference));
             else
                 Debug.Log("There is nothing walkable around the start point.");
         }
         else
             Debug.Log("Currently not in a walkable area, unable to create a path.");
 
-        nodesBetween = 0;
-        if(destination != null)
+        reference = destination;
+        nodesBetween = -maxNodesBetweenGroundAndTargetReverse;
+        y = 0;
+        if (destination != null)
         {
             while (nodesBetween < maxNodesBetweenGroundAndTarget)
             {
-                if (destination.filled && destination.bakeType == PathFinding.BakeType.Object)
-                    break;
+                y = reference.y - nodesBetween;
+                if (!(y > 0 && y < p.grid.GetLength(1)))
+                {
+                    nodesBetween++;
+                    continue;
+                }
+                reference = p.grid[start.x, y, start.z];
                 nodesBetween++;
-                if (destination.y > 0)
-                    destination = p.grid[destination.x, destination.y - 1, destination.z];
-                else break;
+                if (reference.filled && reference.bakeType == PathFinding.BakeType.Object)
+                    break;
             }
-            print(destination.x + " " + destination.y + " " + destination.z + " " + destination.bakeType + " " + destination.filled);
-            if (!destination.filled)
-            {
-                Debug.Log("There is nothing walkable around the destination.");
-                open.Clear();
-            }
-        } 
+        }
 
         //cost calculation 
         if(start != null)
@@ -141,73 +151,74 @@ public class MoveManager : MonoBehaviour {
         if(destination != null)
             dest = new Vector3(destination.x, destination.y, destination.z);
 
-        int checks = 0;
-        while (open.Count > 0) //hij gaat nu via het gevulde een pad zoeken ipv bovenop het pad
-        {
-            open.Sort();
-            PathFinding.Node node;
-            if (p.visualize)
-                if (open.Count > 0)
+        int checks = -maxNodesBetweenGroundAndTargetReverse;
+        if(destination != null)
+            while (open.Count > 0) //hij gaat nu via het gevulde een pad zoeken ipv bovenop het pad
+            {
+                open.Sort();
+                PathFinding.Node node;
+                if (p.visualize)
+                    if (open.Count > 0)
+                    {
+                        node = open[0].node;
+                        //in dit geval weet je al dat +1 bestaat omdat dat een check gaat worden
+                        pV.ChangeColorGridPart(p.grid[node.x, node.y + 1, node.z], Color.green);
+                    }
+
+                checks++;
+                if(checks >= checksPerFrame)
                 {
-                    node = open[0].node;
-                    //in dit geval weet je al dat +1 bestaat omdat dat een check gaat worden
-                    pV.ChangeColorGridPart(p.grid[node.x, node.y + 1, node.z], Color.green);
+                    checks = 0;
+                    yield return null;
                 }
 
-            checks++;
-            if(checks >= checksPerFrame)
-            {
-                checks = 0;
-                yield return null;
-            }
-
-            adjecentNodes = new List<Node>();
+                adjecentNodes = new List<Node>();
             
-            nodeToCheck = open[0];
-            n = nodeToCheck.node;
+                nodeToCheck = open[0];
+                n = nodeToCheck.node;
 
-            //check if destination
-            if (Vector3.Distance(dest, new Vector3(n.x, n.y, n.z)) <= stoppingNodeDistance)
-                break;
+                //check if destination
+                if (Vector3.Distance(dest, new Vector3(n.x, n.y, n.z)) <= stoppingNodeDistance)
+                    break;
 
-            open.RemoveAt(0);
-            closed.Add(nodeToCheck.node);
+                open.RemoveAt(0);
+                closed.Add(nodeToCheck.node);
 
-            //front
-            PrepareNode(n.x, n.y, n.z + 1);
-            //back
-            PrepareNode(n.x, n.y, n.z - 1);
-            //right
-            PrepareNode(n.x + 1, n.y, n.z);
-            //left
-            PrepareNode(n.x - 1, n.y, n.z);
+                //front
+                PrepareNode(n.x, n.y, n.z + 1);
+                //back
+                PrepareNode(n.x, n.y, n.z - 1);
+                //right
+                PrepareNode(n.x + 1, n.y, n.z);
+                //left
+                PrepareNode(n.x - 1, n.y, n.z);
 
-            if (!_2d)
-            {
-                //top checks
-                PrepareNode(n.x, n.y + 1, n.z + 1);
-                PrepareNode(n.x + 1, n.y + 1, n.z + 1);
-                PrepareNode(n.x + 1, n.y + 1, n.z);
-                PrepareNode(n.x + 1, n.y + 1, n.z - 1);
-                PrepareNode(n.x, n.y + 1, n.z - 1);
-                PrepareNode(n.x - 1, n.y + 1, n.z - 1);
-                PrepareNode(n.x - 1, n.y + 1, n.z);
-                PrepareNode(n.x - 1, n.y + 1, n.z + 1);
+                if (!_2d)
+                {
+                    //top checks
+                    PrepareNode(n.x, n.y + 1, n.z + 1);
+                    PrepareNode(n.x + 1, n.y + 1, n.z + 1);
+                    PrepareNode(n.x + 1, n.y + 1, n.z);
+                    PrepareNode(n.x + 1, n.y + 1, n.z - 1);
+                    PrepareNode(n.x, n.y + 1, n.z - 1);
+                    PrepareNode(n.x - 1, n.y + 1, n.z - 1);
+                    PrepareNode(n.x - 1, n.y + 1, n.z);
+                    PrepareNode(n.x - 1, n.y + 1, n.z + 1);
 
-                //bottom checks
-                PrepareNode(n.x, n.y - 1, n.z + 1);
-                PrepareNode(n.x + 1, n.y - 1, n.z + 1);
-                PrepareNode(n.x + 1, n.y - 1, n.z);
-                PrepareNode(n.x + 1, n.y - 1, n.z - 1);
-                PrepareNode(n.x, n.y - 1, n.z - 1);
-                PrepareNode(n.x - 1, n.y - 1, n.z - 1);
-                PrepareNode(n.x - 1, n.y - 1, n.z);
-                PrepareNode(n.x - 1, n.y - 1, n.z + 1);
+                    //bottom checks
+                    PrepareNode(n.x, n.y - 1, n.z + 1);
+                    PrepareNode(n.x + 1, n.y - 1, n.z + 1);
+                    PrepareNode(n.x + 1, n.y - 1, n.z);
+                    PrepareNode(n.x + 1, n.y - 1, n.z - 1);
+                    PrepareNode(n.x, n.y - 1, n.z - 1);
+                    PrepareNode(n.x - 1, n.y - 1, n.z - 1);
+                    PrepareNode(n.x - 1, n.y - 1, n.z);
+                    PrepareNode(n.x - 1, n.y - 1, n.z + 1);
+                }
+
+                foreach (Node _node in adjecentNodes)
+                    open.Add(_node);
             }
-
-            foreach (Node _node in adjecentNodes)
-                open.Add(_node);
-        }
 
         //check if path has been found
         //if curnode != null
@@ -231,7 +242,7 @@ public class MoveManager : MonoBehaviour {
             }
             _path.Add(p.GetVectorFromNode(curNode.node));
         }
-
+        calculate = null;
         if(_path.Count == 0)
             Debug.Log("No path could be found.");
         if(callable != null)
