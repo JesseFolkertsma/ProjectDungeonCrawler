@@ -252,8 +252,6 @@ namespace PDC.Characters {
             List<Vector3> rest = _path;
             status = Status.Moving;
             Vector3 destination;
-            if(rest.Count > 0)
-                print(rest[rest.Count - 1]);
             while(rest.Count > 0)
             {
                 destination = rest[rest.Count - 1];
