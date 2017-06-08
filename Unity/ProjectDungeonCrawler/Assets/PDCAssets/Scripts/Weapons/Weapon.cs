@@ -19,6 +19,9 @@ namespace PDC.Weapons
     }
 
     [System.Serializable]
+    [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(AudioSource))]
+    [RequireComponent(typeof(Animator))]
     public abstract class Weapon : MonoBehaviour
     {
         [Header("Weapon game data")]
@@ -40,6 +43,7 @@ namespace PDC.Weapons
         [HideInInspector] public int assignedSlot;
         [HideInInspector] public Rigidbody rb;
         [HideInInspector] public Animator anim;
+        [HideInInspector] public AudioSource audioS;
         [HideInInspector] public bool canAttack = true;
 
         [HideInInspector] public PlayerCombat pc;
@@ -52,10 +56,16 @@ namespace PDC.Weapons
 
         private void Awake()
         {
+            OnStart();
+        }
+
+        public virtual void OnStart()
+        {
             canAttack = true;
             rb = GetComponent<Rigidbody>();
-            if(GetComponent<Animator>() != null)
+            if (GetComponent<Animator>() != null)
                 anim = GetComponent<Animator>();
+            audioS = GetComponent<AudioSource>();
         }
 
         public void Throw()
@@ -123,7 +133,8 @@ namespace PDC.Weapons
         {
             if (go == null) return;
 
-            go.layer = LayerMask.NameToLayer(layerName);
+            if(go.layer != LayerMask.NameToLayer("Hitbox"))
+                go.layer = LayerMask.NameToLayer(layerName);
 
             foreach (Transform child in go.transform)
             {
@@ -154,14 +165,7 @@ namespace PDC.Weapons
 
         [HideInInspector] public Camera cam;
         [HideInInspector] public LayerMask m;
-
-        AudioSource audioS;
-
-        private void Start()
-        {
-            audioS = GetComponent<AudioSource>();
-        }
-
+        
         public void DamageRaycast()
         {
             RaycastHit hit;

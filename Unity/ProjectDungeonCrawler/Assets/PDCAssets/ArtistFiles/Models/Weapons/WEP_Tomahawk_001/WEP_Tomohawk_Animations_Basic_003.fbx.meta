@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 844df31d7017e434eb977c44d7bd8515
-timeCreated: 1496828871
+guid: e794feade6d511940a9eeb13aa4c8749
+timeCreated: 1496910628
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -20,11 +20,10 @@ ModelImporter:
     7400002: Armature.001|WEP_Tomohawk_Animations_002
     7400004: Armature.001|WEP_Tomohawk_Animations_002.001
     7400006: Armature.001|WEP_Tomohawk_Animations_Draw_001
-    7400008: Armature.001|WEP_Tomohawk_Animations_Hitnew_001
-    7400010: Armature.001|WEP_Tomohawk_Animations_Hitnew_001.001
-    7400012: Armature.001|WEP_Tomohawk_Animations_Hitnew_002
-    7400014: Armature.001|WEP_Tomohawk_Animations_Thrownew_001
-    7400016: Armature.001|WEP_Tomohawk_Animations_Thrownew_002
+    7400008: Armature.001|WEP_Tomohawk_Animations_Hit_001
+    7400010: Armature.001|WEP_Tomohawk_Animations_Hit_001.001
+    7400012: Armature.001|WEP_Tomohawk_Animations_Hit_002
+    7400014: Armature.001|WEP_Tomohawk_Animations_Throw_001
     9500000: //RootNode
     13700000: WEP_Temah_001
   materials:
@@ -51,10 +50,10 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: Armature.001|WEP_Tomohawk_Animations_Hitnew_001
+      name: Armature.001|WEP_Tomohawk_Animations_Hit_001
       takeName: Armature.001|WEP_Tomohawk_Animations_Hit_001
       firstFrame: 0
-      lastFrame: 80
+      lastFrame: 70
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -74,21 +73,21 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.40740743
+      - time: 0.3925926
         functionName: EnableHitbox
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.4493827
+      - time: 0.5308642
         functionName: DisableHitbox
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.45679012
+      - time: 0.55308646
         functionName: WaitForFollowup
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -110,10 +109,10 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature.001|WEP_Tomohawk_Animations_Hitnew_002
+      name: Armature.001|WEP_Tomohawk_Animations_Hit_002
       takeName: Armature.001|WEP_Tomohawk_Animations_Hit_002
       firstFrame: 0
-      lastFrame: 66
+      lastFrame: 70
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -133,112 +132,22 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.20493826
+      - time: 0.19753087
         functionName: EnableHitbox
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.31851852
+      - time: 0.2888889
         functionName: DisableHitbox
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.33580247
+      - time: 0.30123457
         functionName: WaitForFollowup
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      transformMask:
-      - path: 
-        weight: 1
-      - path: Armature.001
-        weight: 1
-      - path: Armature.001/WEP_Tomohawk_Handle
-        weight: 1
-      - path: Armature.001/WEP_Tomohawk_Handle/WEP_Tomohawk_Handle_end
-        weight: 1
-      - path: WEP_Temah_001
-        weight: 1
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: Armature.001|WEP_Tomohawk_Animations_Thrownew_001
-      takeName: Armature.001|WEP_Tomohawk_Animations_Throw_001
-      firstFrame: 0
-      lastFrame: 30
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events:
-      - time: 0.9975309
-        functionName: Throw
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      transformMask:
-      - path: 
-        weight: 1
-      - path: Armature.001
-        weight: 1
-      - path: Armature.001/WEP_Tomohawk_Handle
-        weight: 1
-      - path: Armature.001/WEP_Tomohawk_Handle/WEP_Tomohawk_Handle_end
-        weight: 1
-      - path: WEP_Temah_001
-        weight: 1
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: Armature.001|WEP_Tomohawk_Animations_Thrownew_002
-      takeName: Armature.001|WEP_Tomohawk_Animations_Throw_002
-      firstFrame: 0
-      lastFrame: 30
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events:
-      - time: 0.9925926
-        functionName: Throw
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -281,7 +190,7 @@ ModelImporter:
     normalImportMode: 0
     tangentImportMode: 3
   importAnimation: 1
-  copyAvatar: 0
+  copyAvatar: 1
   humanDescription:
     serializedVersion: 2
     human: []
@@ -298,7 +207,7 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 35675db422723864e961119624631aa5,
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 844df31d7017e434eb977c44d7bd8515,
     type: 3}
   animationType: 2
   humanoidOversampling: 1
