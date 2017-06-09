@@ -79,6 +79,8 @@ public class MoveManager : MonoBehaviour {
     private List<Node> open;
     private List<PathFinding.Node> closed;
     private int lengthX, lengthY, lengthZ;
+    [SerializeField, Tooltip("Wil stop pathfinding when this amount of nodes is checked.")]
+    private int maxNodesCheckable = 200;
 
     //bugs
     //when out of bounds, will travel to last known destination
@@ -151,19 +153,25 @@ public class MoveManager : MonoBehaviour {
         if(destination != null)
             dest = new Vector3(destination.x, destination.y, destination.z);
 
-        int checks = -maxNodesBetweenGroundAndTargetReverse;
-        if(destination != null) //dit lijkt niet te werken
-            while (open.Count > 0) //hij gaat nu via het gevulde een pad zoeken ipv bovenop het pad
+        //main loop
+        int checks = 0;
+        if(destination != null)
+            while (open.Count > 0 && closed.Count < maxNodesCheckable) //hij gaat nu via het gevulde een pad zoeken ipv bovenop het pad
             {
                 open.Sort();
                 PathFinding.Node node;
+                node = open[0].node;
+                if(closed.Contains(node))
+                {
+                    open.RemoveAt(0);
+                    continue;
+                }
+
                 if (p.visualize)
-                    if (open.Count > 0)
-                    {
-                        node = open[0].node;
-                        //in dit geval weet je al dat +1 bestaat omdat dat een check gaat worden
-                        pV.ChangeColorGridPart(p.grid[node.x, node.y + 1, node.z], Color.green);
-                    }
+                {
+                    //in dit geval weet je al dat +1 bestaat omdat dat een check gaat worden
+                    pV.ChangeColorGridPart(p.grid[node.x, node.y + 1, node.z], Color.green);
+                }
 
                 checks++;
                 if(checks >= checksPerFrame)
