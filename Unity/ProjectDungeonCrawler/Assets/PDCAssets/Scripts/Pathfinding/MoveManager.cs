@@ -152,7 +152,7 @@ public class MoveManager : MonoBehaviour {
             dest = new Vector3(destination.x, destination.y, destination.z);
 
         int checks = -maxNodesBetweenGroundAndTargetReverse;
-        if(destination != null)
+        if(destination != null) //dit lijkt niet te werken
             while (open.Count > 0) //hij gaat nu via het gevulde een pad zoeken ipv bovenop het pad
             {
                 open.Sort();
