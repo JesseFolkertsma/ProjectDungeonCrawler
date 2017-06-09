@@ -143,7 +143,7 @@ public class PathFinding : MonoBehaviour {
                         continue;
 
                     Vector3 midPos = GetVectorFromNode(grid[x, y, z]);
-                    hits = Physics.OverlapSphere(midPos, heightSizeNode / 4);
+                    hits = Physics.OverlapSphere(midPos, heightSizeNode);
                     if (visualizeRaycasts)
                     {
                         Color v = hits.Length > 0 ? Color.red : Color.grey;
