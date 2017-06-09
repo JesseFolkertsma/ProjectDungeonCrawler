@@ -11,16 +11,4 @@ namespace PDC.Consumables
         public Sprite icon;
         public abstract bool Use(PlayerCombat pc);
     }
-
-    [CreateAssetMenu(menuName = "PDC/Consumables/ConsumablePotion")]
-    public class ConsumablePotion : Consumable
-    {
-        public StatusEffect effect;
-
-        public override bool Use(PlayerCombat pc)
-        {
-            effect.AddEffect(pc);
-            return true;
-        }
-    }
 }
