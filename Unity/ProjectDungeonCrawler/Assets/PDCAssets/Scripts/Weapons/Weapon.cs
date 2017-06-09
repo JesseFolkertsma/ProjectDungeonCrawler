@@ -177,9 +177,12 @@ namespace PDC.Weapons
             RaycastHit hit;
             if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, range, m))
             {
-                IHitable iHit = hit.transform.GetComponent<IHitable>();
-                if (iHit != null)
-                    iHit.GetHit(damage, EffectType.Normal, weaponEffects, cam.transform.position);
+                IHitable[] iHits = hit.transform.GetComponents<IHitable>();
+                if (iHits != null)
+                {
+                    foreach (IHitable h in iHits)
+                        h.GetHit(damage, EffectType.Normal, weaponEffects, cam.transform.position);
+                }
             }
         }
 

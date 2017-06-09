@@ -60,8 +60,11 @@ namespace PDC.Weapons
                         RaycastHit rHit;
                         if (Physics.Raycast(cam.transform.position, enemyDir, out rHit, range, lMask))
                         {
-                            if(rHit.collider == col)
-                                iHit.GetHit(damage, EffectType.Normal, weaponEffects, cam.transform.position);
+                            if (rHit.collider == col)
+                            {
+                                foreach (IHitable h in col.GetComponents<IHitable>())
+                                    h.GetHit(damage, EffectType.Normal, weaponEffects, cam.transform.position);
+                            }
                         }
                     }
                 }
