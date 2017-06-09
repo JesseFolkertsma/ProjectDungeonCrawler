@@ -152,9 +152,8 @@ public class MoveManager : MonoBehaviour {
             origin = new Vector3(start.x, start.y, start.z);
         if(destination != null)
             dest = new Vector3(destination.x, destination.y, destination.z);
-
-        //main loop
         int checks = 0;
+        //main loop
         if(destination != null)
             while (open.Count > 0 && closed.Count < maxNodesCheckable) //hij gaat nu via het gevulde een pad zoeken ipv bovenop het pad
             {

@@ -34,6 +34,8 @@ public class PathFinding : MonoBehaviour {
 
     private void Awake()
     {
+        //initialize reference to self
+        self = this;
         visualizer = GetComponent<Pathfinding_Visualizer>();
         Bake();
     }
@@ -48,8 +50,6 @@ public class PathFinding : MonoBehaviour {
     {
         StopAllCoroutines();
         #region Prepare Bake
-        //initialize reference to self
-        self = this;
 
         //initialize grid
         grid = new Node[widthSize, heightSize, widthSize];
@@ -89,6 +89,7 @@ public class PathFinding : MonoBehaviour {
             calc++;
             if(calc >= calculationsPerFrame)
             {
+                GC.Collect();
                 calc = 0;
                 yield return null;
             }
