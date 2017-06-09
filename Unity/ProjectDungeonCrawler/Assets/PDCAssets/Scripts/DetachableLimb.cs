@@ -11,6 +11,14 @@ public class DetachableLimb : MonoBehaviour, IHitable{
     bool isDetached = false;
     CharacterJoint joint;
 
+    public Vector3 ObjectCenter
+    {
+        get
+        {
+            return transform.position;
+        }
+    }
+
     private void Awake()
     {
         joint = GetComponent<CharacterJoint>();
