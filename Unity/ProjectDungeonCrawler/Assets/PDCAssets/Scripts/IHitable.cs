@@ -8,5 +8,6 @@ namespace PDC
     public interface IHitable
     {
         void GetHit(float damage, EffectType hitType, StatusEffect[] effects, Vector3 shotPosition);
+        Vector3 ObjectCenter { get; }
     }
 }
