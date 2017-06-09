@@ -9,6 +9,8 @@ namespace PDC.Characters {
     [RequireComponent(typeof(MoveManager))]
     public class Enemy : BaseCharacter
     {
+        private Rigidbody rb;
+
         [Serializable]
         public class EnemyStats
         {
@@ -19,6 +21,11 @@ namespace PDC.Characters {
         protected MoveManager navAgent;
         public enum Status {Idle, Attacking, Moving}
         public Status status = Status.Idle;
+        [SerializeField]
+        private float recalculatePathTime = 1;
+        [SerializeField]
+        private int nodeStoppingDistance = 3;
+        private float widthNode;
 
         public class PlayerReference
         {
@@ -84,8 +91,14 @@ namespace PDC.Characters {
 
         protected virtual void Awake()
         {
+            rb = GetComponent<Rigidbody>();
             SetupNavMesh();
             StartCoroutine(SearchForPlayer());
+        }
+
+        private void Start()
+        {
+            widthNode = PathFinding.self.widthSizeNode;
         }
 
         private void SetupNavMesh()
@@ -134,7 +147,8 @@ namespace PDC.Characters {
                     {
                         Move(pC.Position); //because it also calculates new player position
                     }
-                    yield return new WaitForSeconds(updateTime);
+
+                    yield return new WaitForSeconds(recalculatePathTime * GetRefreshPercentage());
                 }
 
                 //while attacking
@@ -162,10 +176,15 @@ namespace PDC.Characters {
         {
             //calculate new updatetime
             //ienumerator that balances checks per second on distance to player
-            float percentage = Mathf.InverseLerp(enemy.fastDis, enemy.slowDis, GetPlayerDistance()); //seems like calculation is off
+            updateTime = Mathf.Lerp(enemy.fastUpdate, enemy.slowUpdate, GetRefreshPercentage());
+        }
+
+        private float GetRefreshPercentage()
+        {
+            float percentage = Mathf.InverseLerp(enemy.fastDis, enemy.slowDis, GetPlayerDistance());
             if (percentage > 100)
                 percentage = 100;
-            updateTime = Mathf.Lerp(enemy.fastUpdate, enemy.slowUpdate, percentage);
+            return percentage;
         }
 
         protected float GetPlayerDistance()
@@ -208,14 +227,18 @@ namespace PDC.Characters {
 
         public void Move(Vector3 target)
         {
-
             navAgent.MoveTowards(target, _Move);
             status = Status.Moving;
         }
 
         public void _Move(List<Vector3> path)
         {
+            if (!(path != null))
+                return;
+            if (path.Count == 0)
+                return;
             _path = path;
+
             if (moving != null)
                 StopCoroutine(moving);
             moving = StartCoroutine(MoveCoroutine());
@@ -223,14 +246,32 @@ namespace PDC.Characters {
 
         private Coroutine moving;
         private List<Vector3> _path;
+        private Vector3 direction;
         private IEnumerator MoveCoroutine()
         {
-            //follow path and avoid stuff on the way
-            //it only calculates the path once, so thats a thing if objects change
-            //you might want to recalculate the path each x seconds
-            //when moving it will hump the adjecent walls, this is a thing
+            List<Vector3> rest = _path;
+            status = Status.Moving;
+            Vector3 destination;
+            while(rest.Count > 0)
+            {
+                destination = rest[rest.Count - 1];
+                while (Vector3.Distance(transform.position, rest[0]) < Vector3.Distance(destination, rest[0]) + nodeStoppingDistance * widthNode)
+                {
+                    rest.Remove(destination);
+                    if (rest.Count == 0)
+                        break;
 
-            //finally end moving
+                    destination = rest[rest.Count - 1];
+                }
+                
+                direction = (transform.position - destination).normalized;
+                rb.MovePosition(transform.position - direction * Time.deltaTime * characterStats.movementSpeed);
+                yield return null;
+            }
+
+            //finally end moving and set status to idle
+            status = Status.Idle;
+
             yield break;
         }
 

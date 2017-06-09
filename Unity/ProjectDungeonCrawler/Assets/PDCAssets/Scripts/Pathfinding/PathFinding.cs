@@ -18,8 +18,7 @@ public class PathFinding : MonoBehaviour {
     public float widthSizeNode, heightSizeNode;
 
     public Node[,,] grid; //moet dit wel omzetten in custom class met lists van list, sinds geen serializing
-    [HideInInspector]
-    public List<GameObject> bakeable;
+    public static List<GameObject> bakeable;
 
     public bool visualize = true;
     public bool visualizeNodes = false;
@@ -76,7 +75,7 @@ public class PathFinding : MonoBehaviour {
         StartCoroutine(BakePreparedScene()); //now bake all objects in the 3d array
     }
 
-    List<List<Node>> bakedObjects;
+    private List<List<Node>> bakedObjects;
     private IEnumerator BakePreparedScene()
     {
         bakedObjects = new List<List<Node>>();
