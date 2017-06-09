@@ -8,15 +8,18 @@ namespace PDC.Weapons
     public class MeleeWeapon : Weapon
     {
         [Header("MeleeWeapon variables")]
-        public Hitbox hitbox;
+        public float range = 5f;
 
         bool mouseDown = false;
         bool waitingForInput = false;
 
-        public override void OnStart()
+        Camera cam;
+        LayerMask lMask;
+        MeleeAttackData attackData;
+
+        public void SetupAttackData(MeleeAttackData data)
         {
-            base.OnStart();
-            hitbox.SetupHitbox(this);
+            attackData = data;
         }
 
         public override void Attack()
@@ -25,6 +28,44 @@ namespace PDC.Weapons
             anim.SetTrigger("Attack");
             GameManager.OnAnimationEnd newDelegate = new GameManager.OnAnimationEnd(AttackAnimationEnd);
             GameManager.instance.CheckWhenAnimationTagEnds(anim, "Attack", newDelegate);
+        }
+
+        public void AttackBox()
+        {
+            print("Box");
+            Vector3 boxPos = cam.transform.position + (cam.transform.forward * (range / 2));
+            Vector3 boxSize = new Vector3(0, 0, range);
+            if(attackData.attackType == AttackType.Horizontal)
+            {
+                boxSize.x = 3;
+                boxSize.y = attackData.attackWidthOrHeight;
+            }
+            else
+            {
+                boxSize.x = attackData.attackWidthOrHeight;
+                boxSize.y = 3;
+            }
+            Collider[] hits = Physics.OverlapBox(boxPos, boxSize / 2 , cam.transform.rotation, lMask);
+            foreach(Collider col in hits)
+            {
+                print("I hit: "  + col.name);
+                IHitable iHit = col.GetComponent<IHitable>();
+                if (iHit != null)
+                {
+                    Vector3 enemyDir = (iHit.ObjectCenter - cam.transform.position).normalized;
+                    print(Vector3.Angle(enemyDir, cam.transform.forward));
+                    if(Vector3.Angle(enemyDir, (cam.transform.forward + attackData.angleDirectionOffset).normalized) < attackData.hitAngle)
+                    {
+                        print(col.name + " is in Angle!");
+                        RaycastHit rHit;
+                        if (Physics.Raycast(cam.transform.position, enemyDir, out rHit, range, lMask))
+                        {
+                            if(rHit.collider == col)
+                                iHit.GetHit(damage, EffectType.Normal, weaponEffects, cam.transform.position);
+                        }
+                    }
+                }
+            }
         }
 
         public void FollowUpAttack()
@@ -37,7 +78,9 @@ namespace PDC.Weapons
         {
             if (!mouseDown)
             {
-                mouseDown = true;
+                cam = playercam;
+                lMask = mask;
+                //mouseDown = true;
                 if (canAttack)
                 {
                     Attack();
@@ -74,24 +117,6 @@ namespace PDC.Weapons
         {
             print("wait");
             waitingForInput = true;
-        }
-
-        public void EnableHitbox()
-        {
-            print("Enable");
-            hitbox.Enable();
-        }
-
-        public void DisableHitbox()
-        {
-            print("Disable");
-            hitbox.Disable();
-            hitbox.ClearHits();
-        }
-
-        public virtual void HitboxHit(IHitable hit)
-        {
-            hit.GetHit(damage, EffectType.Normal, weaponEffects, transform.position);
         }
     }
 }

@@ -13,4 +13,12 @@ public class GiveForceWhenHit : MonoBehaviour, IHitable
         Vector3 direction = (transform.position - shotPosition).normalized;
         GetComponent<Rigidbody>().AddForce(direction * 250 * 20);
     }
+
+    public Vector3 ObjectCenter
+    {
+        get
+        {
+            return transform.position;
+        }
+    }
 }

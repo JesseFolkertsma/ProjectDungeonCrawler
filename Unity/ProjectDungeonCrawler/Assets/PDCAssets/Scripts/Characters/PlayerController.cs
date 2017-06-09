@@ -30,6 +30,7 @@ namespace PDC.Characters
         float bobX;
         float moveValue;
         bool bobUp;
+        bool obstacle;
 
         //Hidden public variables
         [HideInInspector]
@@ -133,6 +134,18 @@ namespace PDC.Characters
             {
                 grounded = false;
             }
+
+            if(direction != Vector3.zero)
+            {
+                if(Physics.Raycast(transform.position + Vector3.up, direction, .3f, playerLayer))
+                {
+                    obstacle = true;
+                }
+                else
+                {
+                    obstacle = false;
+                }
+            }
         }
         
         void CameraEffects()
@@ -221,7 +234,7 @@ namespace PDC.Characters
 
         public void Move()
         {
-            if(direction != Vector3.zero)
+            if(direction != Vector3.zero && !obstacle)
             {
                 acc = Mathf.Lerp(acc, movementModifier, Time.fixedDeltaTime * acceleration);
                 rb.MovePosition(rb.position + (direction * Time.fixedDeltaTime * movementSpeed * acc));

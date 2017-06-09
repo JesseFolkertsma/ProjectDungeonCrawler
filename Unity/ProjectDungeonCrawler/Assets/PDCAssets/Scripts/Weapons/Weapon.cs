@@ -142,6 +142,12 @@ namespace PDC.Weapons
                 SetLayerRecursively(child.gameObject, layerName);
             }
         }
+
+        public void PlaySound(AudioClip sound)
+        {
+            audioS.clip = sound;
+            audioS.Play();
+        }
     }
 
     [System.Serializable]
@@ -180,12 +186,6 @@ namespace PDC.Weapons
         public virtual void DryFire()
         {
             anim.SetTrigger("DryFire");
-        }
-
-        public void PlaySound(AudioClip sound)
-        {
-            audioS.clip = sound;
-            audioS.Play();
         }
 
         public virtual void ShootVisuals()
