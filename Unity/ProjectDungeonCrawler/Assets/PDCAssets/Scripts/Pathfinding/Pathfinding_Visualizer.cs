@@ -37,6 +37,7 @@ public class Pathfinding_Visualizer : MonoBehaviour {
 
     public void Repaint()
     {
+
         if (!(pathfinding != null))
             return;
         if (!pathfinding.visualize)
@@ -193,6 +194,8 @@ public class Pathfinding_Visualizer : MonoBehaviour {
 
     public void UpdateGrid()
     {
+        if(!PathFinding.pathfindable)
+            return;
         if (!(pathfinding != null))
             return;
         if (!pathfinding.visualize)

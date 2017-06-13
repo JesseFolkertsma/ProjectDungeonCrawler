@@ -115,6 +115,9 @@ namespace PDC.Characters {
                 yield return null;
             }
 
+            while (!PathFinding.pathfindable)
+                yield return null;
+
             StartIdle();
         }
 
@@ -252,26 +255,29 @@ namespace PDC.Characters {
             List<Vector3> rest = _path;
             status = Status.Moving;
             Vector3 destination;
-            while(rest.Count > 0)
+
+            while (rest.Count > 0)
             {
                 destination = rest[rest.Count - 1];
                 while (Vector3.Distance(transform.position, rest[0]) < Vector3.Distance(destination, rest[0]) + nodeStoppingDistance * widthNode)
                 {
                     rest.Remove(destination);
                     if (rest.Count == 0)
-                        break;
+                    {
+                        status = Status.Idle;
+                        yield break;
+                    }
 
                     destination = rest[rest.Count - 1];
                 }
                 
                 direction = (transform.position - destination).normalized;
                 rb.MovePosition(transform.position - direction * Time.deltaTime * characterStats.movementSpeed);
-                yield return null;
+                yield return new WaitForSeconds(Time.deltaTime);
             }
 
             //finally end moving and set status to idle
             status = Status.Idle;
-
             yield break;
         }
 

@@ -20,8 +20,16 @@ public class MoveManager : MonoBehaviour {
 
     private void Start()
     {
+        StartCoroutine(WaitForPathfindable());
+    }
+
+    private IEnumerator WaitForPathfindable()
+    {
         p = PathFinding.self;
         bake = GetComponent<Pathfinding_Bakeable>();
+
+        while (!PathFinding.pathfindable)
+            yield return null;
 
         //array information
         lengthX = p.grid.GetLength(0) - 1;
@@ -153,6 +161,7 @@ public class MoveManager : MonoBehaviour {
         if(destination != null)
             dest = new Vector3(destination.x, destination.y, destination.z);
         int checks = 0;
+
         //main loop
         if(destination != null)
             while (open.Count > 0 && closed.Count < maxNodesCheckable) //hij gaat nu via het gevulde een pad zoeken ipv bovenop het pad
@@ -243,7 +252,8 @@ public class MoveManager : MonoBehaviour {
                 //convert
                 pos = p.GetVectorFromNode(curNode.node);
                 pos.y += p.heightSizeNode;
-                pV.ChangeColorGridPart(curNode.node, Color.red);
+                if(p.visualize)
+                    pV.ChangeColorGridPart(curNode.node, Color.red);
                 _path.Add(pos);
                 curNode = curNode.parent;
             }
@@ -252,6 +262,7 @@ public class MoveManager : MonoBehaviour {
         calculate = null;
         if(_path.Count == 0)
             Debug.Log("No path could be found.");
+
         if(callable != null)
             callable(_path);
     }

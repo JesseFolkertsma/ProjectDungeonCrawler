@@ -30,36 +30,56 @@ public class PathFinding : MonoBehaviour {
     [SerializeField]
     private int edgeBakeAmount;
     [SerializeField]
-    private int calculationsPerFrame;
+    private int calculationsPerFrame = 8, initializesPerFrame = 20000;
+    public Transform bak;
+    public static bool pathfindable = false;
 
     private void Awake()
     {
         //initialize reference to self
         self = this;
         visualizer = GetComponent<Pathfinding_Visualizer>();
-        Bake();
+        grid = new Node[widthSize, heightSize, widthSize];
     }
 
     private void Update()
     {
         if (repaint != null)
             repaint();
+
+        if (Input.GetButtonDown("Fire1"))
+            StartBake(bak);
     }
 
-    public void Bake() //1 grote fout: de bake bugt de fuck out als de objecten aan de bovenkant komen
+    public void StartBake(Transform center)
     {
-        StopAllCoroutines();
-        #region Prepare Bake
+        StartCoroutine(Bake(center));
+    }
 
+    private Coroutine bake;
+    public IEnumerator Bake(Transform center) //1 grote fout: de bake bugt de fuck out als de objecten aan de bovenkant komen
+    {
+        if(bake != null)
+            StopCoroutine(bake);
+        #region Prepare Bake
+        int calc = 0;
         //initialize grid
-        grid = new Node[widthSize, heightSize, widthSize];
         for (int x = 0; x < widthSize; x++)
             for (int y = 0; y < heightSize; y++)
                 for (int z = 0; z < widthSize; z++)
+                {
+                    calc++;
                     grid[x, y, z] = new Node(x, y, z);
+                    if(calc > initializesPerFrame)
+                    {
+                        calc = 0;
+                        yield return null;
+                    }
+                }
 
         //reset pathfindable
         bakeable = new List<GameObject>();
+        pathfindable = true;
 
         //get all gameobjects
         GameObject[] all = FindObjectsOfType(typeof(GameObject)) as GameObject[];
@@ -72,22 +92,48 @@ public class PathFinding : MonoBehaviour {
         SetMidsAndBoundary(); //this is the node where this transform now is, neccessity for getnodefromvector
         #endregion
 
-        StartCoroutine(BakePreparedScene()); //now bake all objects in the 3d array
+        bake = StartCoroutine(BakePreparedScene(center)); //now bake all objects in the 3d array
     }
 
     private List<List<Node>> bakedObjects;
-    private IEnumerator BakePreparedScene()
+    private IEnumerator BakePreparedScene(Transform center)
     {
         bakedObjects = new List<List<Node>>();
         int calc = 0;
         List<Node> possibleBake;
-        foreach (GameObject bakeObject in bakeable)
+        List<GameObject> toBake = bakeable; //contantly remove from this list
+
+        while(toBake.Count > 0)
         {
-            possibleBake = BakeObject(bakeObject, BakeType.Object);
+            //get cheapest
+            GameObject closest = null;
+            float dis = 0;
+            foreach (GameObject obj in toBake)
+            {
+                float distance = Vector3.Distance(obj.transform.position, center.position);
+                //remove from tobake
+                if(!(closest != null))
+                {
+                    closest = obj;
+                    dis = distance;
+                    continue;
+                }
+
+                if (distance > dis)
+                    continue;
+
+                dis = distance;
+                closest = obj;
+            }  
+
+            possibleBake = BakeObject(closest, BakeType.Object);
+            toBake.Remove(closest);
+
             if (possibleBake != null)
                 bakedObjects.Add(possibleBake);
+
             calc++;
-            if(calc >= calculationsPerFrame)
+            if (calc >= calculationsPerFrame)
             {
                 GC.Collect();
                 calc = 0;
@@ -140,11 +186,11 @@ public class PathFinding : MonoBehaviour {
                         continue;
 
                     node = grid[x, y, z];
-                    if (node.filled)
+                    if (node.filled && node.bakeType == BakeType.Object)
                         continue;
 
                     Vector3 midPos = GetVectorFromNode(grid[x, y, z]);
-                    hits = Physics.OverlapSphere(midPos, heightSizeNode);
+                    hits = Physics.OverlapSphere(midPos, heightSizeNode / 2); //in het midden schieten, niet in de hoek
                     if (visualizeRaycasts)
                     {
                         Color v = hits.Length > 0 ? Color.red : Color.grey;
@@ -184,6 +230,9 @@ public class PathFinding : MonoBehaviour {
 
     private IEnumerator _BakeObjectRealTime(Pathfinding_Bakeable bakeable)
     {
+        while (!pathfindable)
+            yield return null;
+
         GameObject g = bakeable.gameObject;
         bakeable.myNodes = BakeObject(g, bakeable.bakeType);
 
@@ -193,7 +242,8 @@ public class PathFinding : MonoBehaviour {
             bakeable.oldNodes = bakeable.myNodes;
             if(bakeable.oldNodes != null)
                 foreach(Node oldNode in bakeable.oldNodes)
-                    oldNode.filled = false;
+                    if(oldNode.bakeType != BakeType.Object)
+                        oldNode.filled = false;
             bakeable.myNodes = BakeObject(g, bakeable.bakeType);
             yield return new WaitForSeconds(bakeable.refreshSpeed);
         }
