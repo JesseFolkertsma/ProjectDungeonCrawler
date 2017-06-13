@@ -86,7 +86,7 @@ namespace PDC.Characters
     {
         [SerializeField]
         float maxHP = 100;
-        public float currentHP;
+        public float currentHP = 100;
         [SerializeField]
         float maxSouls = 100;
         public float currentSouls;

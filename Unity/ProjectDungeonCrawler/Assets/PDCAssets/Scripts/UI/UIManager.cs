@@ -13,6 +13,7 @@ namespace PDC.UI
         public static UIManager instance;
 
         public CanvasReferences canvasRef;
+        CanvasReferences spawnedCanvas;
 
         public delegate void OnWeaponVisual(List<Weapon> weapons, Weapon equipped);
         public OnWeaponVisual onWeaponVisual;
@@ -31,56 +32,57 @@ namespace PDC.UI
 
         private void OnPlayerSpawn()
         {
-            canvasRef = Instantiate(canvasRef);
+            spawnedCanvas = Instantiate(canvasRef);
             for (int i = 0; i < PlayerCombat.instance.availableSlots; i++)
             {
-                canvasRef.SpawnNewSlot();
+                spawnedCanvas.SpawnNewSlot();
             }
             PlayerCombat.instance.onWeaponDataChange += UpdateWeaponVisual;
-            PlayerCombat.instance.onAmmoDataChange += canvasRef.SetAmmoVisuals;
+            PlayerCombat.instance.onAmmoDataChange += spawnedCanvas.SetAmmoVisuals;
             PlayerCombat.instance.onConsumableChange += UpdateConsumable;
-            PlayerCombat.instance.onHPChange += canvasRef.SetHp;
-            PlayerCombat.instance.onGiveStatusEffect += canvasRef.AddStatusEffect;
+            PlayerCombat.instance.onHPChange += spawnedCanvas.SetHp;
+            PlayerCombat.instance.onGiveStatusEffect += spawnedCanvas.AddStatusEffect;
+            SetupUI(PlayerCombat.instance);
         }
 
         private void OnPlayerDeath()
         {
             PlayerCombat.instance.onWeaponDataChange -= UpdateWeaponVisual;
-            PlayerCombat.instance.onAmmoDataChange -= canvasRef.SetAmmoVisuals;
+            PlayerCombat.instance.onAmmoDataChange -= spawnedCanvas.SetAmmoVisuals;
             PlayerCombat.instance.onConsumableChange -= UpdateConsumable;
-            PlayerCombat.instance.onHPChange -= canvasRef.SetHp;
-            PlayerCombat.instance.onGiveStatusEffect -= canvasRef.AddStatusEffect;
+            PlayerCombat.instance.onHPChange -= spawnedCanvas.SetHp;
+            PlayerCombat.instance.onGiveStatusEffect -= spawnedCanvas.AddStatusEffect;
+        }
+
+        void SetupUI(PlayerCombat pc)
+        {
+            UpdateWeaponVisual(pc.weapons, pc.EquippedWeapon);
+            UpdateConsumable(pc.consumables, 0, false);
+            spawnedCanvas.SetHp(pc.characterStats.currentHP, pc.characterStats.MaxHP);
         }
 
         void UpdateWeaponVisual(List<Weapon> weapons, Weapon equipped)
         {
             for (int i = 0; i < weapons.Count; i++)
             {
-                canvasRef.SetWeaponSlot(i, weapons[i], (weapons[i] == equipped));
+                spawnedCanvas.SetWeaponSlot(i, weapons[i], (weapons[i] == equipped));
             }
 
             if(equipped != null)
-                canvasRef.SetAmmoVisuals(equipped);
+                spawnedCanvas.SetAmmoVisuals(equipped);
             else
-                canvasRef.SetAmmoVisualState(false);
+                spawnedCanvas.SetAmmoVisualState(false);
         }
 
         void UpdateConsumable(List<Consumable> consumables, int selected, bool playAnimation)
         {
-            if (playAnimation)
-                canvasRef.PlayerConsumableAnimation(consumables[selected].icon);
-            else
-                canvasRef.SetConsumableVisual(consumables[selected].icon);
-        }
-
-        void AddStatusEffect(OngoingEffect effect)
-        {
-
-        }
-
-        void UpdateSouls(float souls, float maxSouls)
-        {
-
+            if (consumables.Count > 0)
+            {
+                if (playAnimation)
+                    spawnedCanvas.PlayerConsumableAnimation(consumables[selected].icon);
+                else
+                    spawnedCanvas.SetConsumableVisual(consumables[selected].icon);
+            }
         }
     }
 }
