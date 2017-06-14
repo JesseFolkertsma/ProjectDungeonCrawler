@@ -91,12 +91,19 @@ namespace PDC.UI
             GameManager.instance.CheckWhenAnimationTagEnds(consumableAnim, "Swap", newDelegate);
         }
 
-        public void SetConsumableVisual(Sprite sprite)
+        public void SetConsumableVisual(List<Consumables.Consumable> consumables, int selected)
         {
-            if (sprite != null)
+            if (consumables.Count > 0)
             {
-                consumableImage.gameObject.SetActive(true);
-                consumableImage.sprite = sprite;
+                if (consumables[selected].icon != null)
+                {
+                    consumableImage.gameObject.SetActive(true);
+                    consumableImage.sprite = consumables[selected].icon;
+                }
+                else
+                {
+                    consumableImage.gameObject.SetActive(false);
+                }
             }
             else
             {
@@ -104,10 +111,15 @@ namespace PDC.UI
             }
         }
 
+        public void SetConsumableSprite(Sprite sprite)
+        {
+            consumableImage.sprite = sprite;
+        }
+
         Sprite afterAnimationSprite;
         void SetSpriteAfterAnimation()
         {
-            SetConsumableVisual(afterAnimationSprite);
+            SetConsumableSprite(afterAnimationSprite);
         }
 
         public void SetAmmoVisualState(bool state)
