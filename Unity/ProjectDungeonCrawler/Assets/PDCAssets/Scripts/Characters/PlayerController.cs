@@ -137,7 +137,7 @@ namespace PDC.Characters
 
             if(direction != Vector3.zero)
             {
-                if(Physics.Raycast(transform.position + Vector3.up, direction, .3f, playerLayer))
+                if(Physics.Raycast(transform.position + Vector3.up, direction, .3f, playerLayer) || Physics.Raycast(transform.position + Vector3.up /2, direction, .3f, playerLayer))
                 {
                     obstacle = true;
                 }

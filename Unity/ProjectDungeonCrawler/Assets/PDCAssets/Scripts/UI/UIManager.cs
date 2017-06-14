@@ -81,7 +81,11 @@ namespace PDC.UI
                 if (playAnimation)
                     spawnedCanvas.PlayerConsumableAnimation(consumables[selected].icon);
                 else
-                    spawnedCanvas.SetConsumableVisual(consumables[selected].icon);
+                    spawnedCanvas.SetConsumableVisual(consumables, selected);
+            }
+            else
+            {
+                spawnedCanvas.SetConsumableVisual(consumables, selected);
             }
         }
     }
