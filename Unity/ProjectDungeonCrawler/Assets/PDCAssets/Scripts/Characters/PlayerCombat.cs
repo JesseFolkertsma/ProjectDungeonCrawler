@@ -27,6 +27,7 @@ namespace PDC.Characters
         Transform weaponTrans;
         int equippedWeapon;
         int selectedConsumable;
+        bool setup = false;
 
         //Hidden public variables
         [HideInInspector]
@@ -61,7 +62,7 @@ namespace PDC.Characters
             }
         }
 
-        void Start()
+        void Awake()
         {
             if (instance == null)
                 instance = this;
@@ -71,19 +72,22 @@ namespace PDC.Characters
             pc = GetComponent<PlayerController>();
 
             weaponAnim = weaponPos.GetComponent<Animator>();
-
-            if (onSpawnEvent != null)
-                onSpawnEvent();
             
+            GameManager.instance.LoadGameData();
             for (int i = 0; i < availableSlots; i++)
             {
                 PickupWeapon(EmptyWeapon.GetNew());
             }
+
+            if (onSpawnEvent != null)
+                onSpawnEvent();
+
+            setup = true;
         }
 
         void Update()
         {
-            if (!isdead)
+            if (!isdead && setup)
             {
                 CheckInput();
                 WeaponEffects();
@@ -120,6 +124,17 @@ namespace PDC.Characters
 
         void CheckInput()
         {
+            if (Input.GetButtonDown("Save"))
+            {
+                GameManager.instance.GatherGameData();
+            }
+            if (Input.GetButtonDown("MainMenu"))
+            {
+                onDeathEvent();
+                UnityEngine.SceneManagement.SceneManager.LoadScene("TestMain");
+            }
+
+            
             if (EquippedWeapon.GetType() != typeof(EmptyWeapon))
             {
                 if (Input.GetButton("Fire2"))
@@ -177,14 +192,17 @@ namespace PDC.Characters
             }
 
             //Consumables inputs
-            if (Input.GetButtonDown("Consume"))
+            if (consumables.Count > 0)
             {
-                Consume();
-            }
+                if (Input.GetButtonDown("Consume"))
+                {
+                    Consume();
+                }
 
-            if (Input.GetButtonDown("Next consumable"))
-            {
-                NextConsumable();
+                if (Input.GetButtonDown("Next consumable"))
+                {
+                    NextConsumable();
+                }
             }
         }
 
@@ -255,13 +273,27 @@ namespace PDC.Characters
                 onWeaponDataChange(weapons, EquippedWeapon);
         }
 
+        public void PickupConsumable(Consumable cons)
+        {
+            consumables.Add(cons);
+            if (onConsumableChange != null)
+                onConsumableChange(consumables, selectedConsumable, false);
+        }
+
+        public void RemoveConsumable(Consumable cons)
+        {
+            if(consumables.Contains(cons))
+                consumables.Remove(cons);
+            if (onConsumableChange != null)
+                onConsumableChange(consumables, selectedConsumable, false);
+        }
+
         void Consume()
         {
             print("CONSUMING THE SOUL OF: " + consumables[selectedConsumable].name);
             consumables[selectedConsumable].Use(this);
+            RemoveConsumable(consumables[selectedConsumable]);
 
-            if (onConsumableChange != null)
-                onConsumableChange(consumables, selectedConsumable, false);
         }
 
         void NextConsumable()
