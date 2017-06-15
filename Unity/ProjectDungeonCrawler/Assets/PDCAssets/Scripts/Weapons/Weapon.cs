@@ -26,6 +26,7 @@ namespace PDC.Weapons
     {
         [Header("Weapon game data")]
         public string weaponName = "New Weapon";
+        public int weaponID;
         public WeaponType type;
         public Sprite weaponIcon;
 

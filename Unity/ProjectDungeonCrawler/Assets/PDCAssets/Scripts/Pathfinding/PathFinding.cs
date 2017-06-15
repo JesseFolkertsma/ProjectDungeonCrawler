@@ -31,8 +31,11 @@ public class PathFinding : MonoBehaviour {
     private int edgeBakeAmount;
     [SerializeField]
     private int calculationsPerFrame = 8, initializesPerFrame = 20000;
-    public Transform bak;
     public static bool pathfindable = false;
+    [HideInInspector]
+    public Transform center; //priorites baking of areas around this object
+    [SerializeField]
+    private float positionUpdateFrequency = 3;
 
     private void Awake()
     {
@@ -42,22 +45,78 @@ public class PathFinding : MonoBehaviour {
         grid = new Node[widthSize, heightSize, widthSize];
     }
 
+    private void Start()
+    {
+        StartCoroutine(UpdatePosition());
+    }
+
     private void Update()
     {
         if (repaint != null)
             repaint();
-
-        if (Input.GetButtonDown("Fire1"))
-            StartBake(bak);
     }
 
-    public void StartBake(Transform center)
+    //current room
+    private GameObject curRoom = null;
+    public IEnumerator UpdatePosition()
     {
-        StartCoroutine(Bake(center));
+        PDC.Generating.MapVisualizer mV = PDC.Generating.MapVisualizer.self;
+
+        if(!(mV != null))
+        {
+            Debug.Log("Map Visualizer does not excist in this scene. Aborting.");
+            yield break;
+        }
+
+        while (!(center != null))
+            yield return null;
+
+        while (true)
+        {
+            bool changed = false;
+
+            //check all room positions
+            foreach (GameObject room in mV.spawnedRooms) {
+
+                //check if not null
+                if(!(curRoom != null))
+                {
+                    curRoom = room;
+                    changed = true;
+                    continue;
+                }
+
+                //check if same room
+                if (room == curRoom)
+                    continue;
+
+                //check if further than other room
+                if (Vector3.Distance(curRoom.transform.position, center.position) >
+                    Vector3.Distance(room.transform.position, center.position))
+                {
+                    curRoom = room;
+                    changed = true;
+                }
+            }
+
+            if(curRoom != null)
+            {
+                //rebake
+                if(changed)
+                    StartBake();
+            }
+
+            yield return new WaitForSeconds(positionUpdateFrequency);
+        }
+    }
+
+    public void StartBake()
+    {
+        StartCoroutine(Bake());
     }
 
     private Coroutine bake;
-    public IEnumerator Bake(Transform center) //1 grote fout: de bake bugt de fuck out als de objecten aan de bovenkant komen
+    public IEnumerator Bake() //1 grote fout: de bake bugt de fuck out als de objecten aan de bovenkant komen
     {
         if(bake != null)
             StopCoroutine(bake);
@@ -76,6 +135,9 @@ public class PathFinding : MonoBehaviour {
                         yield return null;
                     }
                 }
+
+        //move to closest
+        transform.position = curRoom.transform.position;
 
         //reset pathfindable
         bakeable = new List<GameObject>();

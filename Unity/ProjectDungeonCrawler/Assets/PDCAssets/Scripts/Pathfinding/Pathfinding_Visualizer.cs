@@ -37,7 +37,6 @@ public class Pathfinding_Visualizer : MonoBehaviour {
 
     public void Repaint()
     {
-
         if (!(pathfinding != null))
             return;
         if (!pathfinding.visualize)
@@ -202,6 +201,7 @@ public class Pathfinding_Visualizer : MonoBehaviour {
             return;
         if (!showBake)
             return;
+
         //calculate corners
         CalcCorners();
         #region Play Time

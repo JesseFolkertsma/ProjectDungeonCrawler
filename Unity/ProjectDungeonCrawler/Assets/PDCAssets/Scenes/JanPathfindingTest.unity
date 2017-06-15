@@ -108,11 +108,6 @@ NavMeshSettings:
     tileSize: 256
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
---- !u!4 &342574922 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 4635257869354638, guid: 0085af4a580137d48813c66bc45354e9,
-    type: 2}
-  m_PrefabInternal: {fileID: 737777134}
 --- !u!1 &574119010
 GameObject:
   m_ObjectHideFlags: 0
@@ -1091,7 +1086,8 @@ MonoBehaviour:
   edgeBakeAmount: 1
   calculationsPerFrame: 8
   initializesPerFrame: 200000
-  bak: {fileID: 342574922}
+  center: {fileID: 0}
+  positionUpdateFrequency: 3
 --- !u!114 &1536796672
 MonoBehaviour:
   m_ObjectHideFlags: 0
