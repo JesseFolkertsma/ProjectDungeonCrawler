@@ -10,9 +10,14 @@ public class Pathfinding_Bakeable : MonoBehaviour {
     public List<PathFinding.Node> myNodes = new List<PathFinding.Node>();
     [HideInInspector]
     public List<PathFinding.Node> oldNodes = new List<PathFinding.Node>();
+    [SerializeField]
+    private bool bake = true;
 
     private void Start()
     {
+        if (!bake)
+            return;
+
         if(bakeType == PathFinding.BakeType.Object)
         {
             Debug.Log("Object baking is not supported. Change baketype to something else.");

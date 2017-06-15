@@ -9,6 +9,8 @@ namespace PDC
     {
         public class MapVisualizer : MonoBehaviour
         {
+            public static MapVisualizer self;
+
             [SerializeField]
             private float roomWidth;
             [SerializeField]
@@ -26,18 +28,26 @@ namespace PDC
             [SerializeField]
             private List<Enemy> enemies = new List<Enemy>();
 
+            [HideInInspector]
+            public List<GameObject> spawnedRooms = new List<GameObject>();
+
             private MapLoader loader;
 
             #region Quest Info
 
+            [HideInInspector]
             public int enemyValue;
 
             #endregion
 
+            private void Awake()
+            {
+                self = this;
+                loader = GetComponent<MapLoader>();
+            }
+
             public void SpawnRooms(MapGenerator.Node[,,] level, MapGenerator.Node entrance, MapGenerator.Node exit, List<TagManager.TagType> tags)
             {
-                loader = GetComponent<MapLoader>();
-
                 if(densityInteriorMax < densityInteriorMin)
                 {
                     Debug.Log("The max Interior density is lower than it's minimal counterpart!");
@@ -82,6 +92,8 @@ namespace PDC
                             GameObject room = Instantiate(n.room.room, pos, Quaternion.identity);
                             room.transform.eulerAngles = new Vector3(0, (float)n.room.rotation, 0);
 
+                            spawnedRooms.Add(room);
+
                             //set interior
                             RoomInterior rI = room.GetComponent<RoomInterior>();
                             if(!(rI != null))
@@ -123,17 +135,24 @@ namespace PDC
                             }
 
                             //spawn player
-                            if(n == entrance)
+                            if (n == entrance)
                             {
+                                if (rI.spawnPositions.Count == 0)
+                                {
+                                    Debug.Log("No spawn point for player, smartass");
+                                    yield break;
+                                }
+
                                 int p = mG.random.Next(0, rI.spawnPositions.Count - 1);
                                 Transform t = rI.spawnPositions[p].spawnPosition;
-                                Instantiate(player, t.position, t.rotation);
+                                GameObject pl = Instantiate(player, t.position, t.rotation);
+                                PathFinding.self.center = pl.transform;
                                 yield return null;
                                 continue;
                             }
 
                             //spawn enemies
-                            if(enemies.Count == 0)
+                            if (enemies.Count == 0)
                             {
                                 Debug.Log("There are no enemies to be spawned!");
                                 continue;
@@ -156,13 +175,13 @@ namespace PDC
                                 Debug.Log("There are no normal enemies! / the difficulty doesn't match the available enemies!");
                                 continue;
                             }
-
+                            
                             if(rI.spawnPositions.Count == 0)
                             {
                                 Debug.Log("There are no spawn positions in this room");
                                 yield break;
                             }
-
+                            
                             int e = mG.random.Next(densityEnemyMin, densityEnemyMax);
                             int _e = 0;
                             List<int> positions = new List<int>();

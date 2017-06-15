@@ -193,12 +193,15 @@ public class Pathfinding_Visualizer : MonoBehaviour {
 
     public void UpdateGrid()
     {
+        if(!PathFinding.pathfindable)
+            return;
         if (!(pathfinding != null))
             return;
         if (!pathfinding.visualize)
             return;
         if (!showBake)
             return;
+
         //calculate corners
         CalcCorners();
         #region Play Time

@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4853364768565530}
   - component: {fileID: 114774333204864758}
   - component: {fileID: 114577385424905436}
-  - component: {fileID: 114280694920690702}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -42,6 +41,8 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+<<<<<<< HEAD
+=======
 --- !u!114 &114280694920690702
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -69,6 +70,7 @@ MonoBehaviour:
   - id: 4
     weaponPrefab: {fileID: 1527718447822810, guid: 7304c5377236be64ba2d18b5caf0274e,
       type: 2}
+>>>>>>> origin/master
 --- !u!114 &114577385424905436
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -93,13 +95,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acbcc0c74ff95da448a4bf6d9eab6ee2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameData:
-    playerStats:
-      maxHP: 100
-      currentHP: 100
-      maxSouls: 100
-      currentSouls: 0
-      armorRating: 0
-      movementSpeed: 0
-    playerWeapons: 
-    playerConsumables: []

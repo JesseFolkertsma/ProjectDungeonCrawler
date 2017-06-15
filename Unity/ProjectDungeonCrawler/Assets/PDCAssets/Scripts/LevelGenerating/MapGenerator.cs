@@ -12,7 +12,7 @@ namespace PDC
         public class MapGenerator : MonoBehaviour
         {
             #region Mapdata Settings
-
+            
             private int widthMin, widthMax;
             private List<TagManager.TagType> tags;
             public enum MapType {Two_Dimensional, Three_Dimensional }
@@ -107,7 +107,6 @@ namespace PDC
 
             private IEnumerator Initializing()
             {
-
                 if (!MapData.initialized)
                 {
                     Debug.Log("No Map Data has been initialized! How can this script know which tags to use and what size " +
@@ -129,8 +128,6 @@ namespace PDC
                     Debug.Log("The max width is lower than the min width!");
                     yield break;
                 }
-
-                
 
                 yield return null;
                 
@@ -279,8 +276,9 @@ namespace PDC
                 }
                 else
                     exit = path[path.Count - 1];
-
+                
                 loader.SetProgress(MapLoader.Progress.Creating_Main_Path);
+
                 //function: create branches
                 while (path.Count > 0) //use same list in a different way, always get bottom of the list (0)
                 {
@@ -373,21 +371,30 @@ namespace PDC
                 }
 
                 loader.SetProgress(MapLoader.Progress.Branching_Main_Path);
-
+                
                 //find exit
                 if (mapType == MapType.Two_Dimensional) {
+                    List<Node> allRooms = new List<Node>();
+                    foreach (Node n in level)
+                        if (n.initialized)
+                            allRooms.Add(n);
+
                     bool exitFound = false;
+                    
                     while (!exitFound)
                     {
-                        int x = random.Next(0, size - 1);
-                        int z = random.Next(0, size - 1);
-                        exit = level[x, ySize - 1, z];
+                        if (allRooms.Count == 0)
+                            break;
+                        int u = random.Next(0, allRooms.Count - 1);
+                        exit = allRooms[u];
+                        allRooms.RemoveAt(u);
+
                         if (exit.initialized)
                             if (exit != entrance)
                                 exitFound = true;
                     }
                 }
-
+                
                 visualizer.SpawnRooms(level, entrance, exit, tags);
             }
 

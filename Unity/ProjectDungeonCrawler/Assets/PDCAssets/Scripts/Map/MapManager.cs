@@ -4,11 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MapManager : MonoBehaviour {
+public class MapManager : MonoBehaviour
+{
 
     #region Normal Functions
 
-    public int resolutionX = 256, resolutionY = 144;
+    [SerializeField]
+    public Transform player;
+
+    [SerializeField]
+    private int resolutionX = 256, resolutionY = 144;
 
     private void Awake()
     {
@@ -18,15 +23,27 @@ public class MapManager : MonoBehaviour {
     public void PressMap()
     {
         //convert mousepos to pixel position
-        Vector2 mousePos = Input.mousePosition;
-        float x = mousePos.x / resolutionX;
-        float y = mousePos.y / resolutionY;
+        GetMapMovement(ConvertMapToNode(Input.mousePosition));
+    }
+
+    private Node ConvertMapToNode(Vector2 vec)
+    {
+        float x = vec.x / resolutionX;
+        float y = vec.y / resolutionY;
 
         //calculate percentage into grid
-        x = Mathf.Lerp(0, grid.GetLength(0), x);
-        y = Mathf.Lerp(0, grid.GetLength(1), y);
+        x = Mathf.Lerp(0, grid.GetLength(0), x) - 1;
+        y = Mathf.Lerp(0, grid.GetLength(1), y) - 1;
 
-        print(grid[(int)x,(int)y].terrain);
+        return grid[(int)x, (int)y];
+    }
+
+    private Vector2 ConvertNodeToMap(Node node)
+    {
+        float x = (float)Screen.width / resolutionX;
+        float y = (float)Screen.height / resolutionY;
+
+        return new Vector2(x * node.x, y * node.y);
     }
 
     #endregion
@@ -36,7 +53,7 @@ public class MapManager : MonoBehaviour {
     //map node system
     private Node[,] grid;
 
-    public enum TerrainType {Road = 1, Walkable = 3, Difficult = 8, Unwalkable }
+    public enum TerrainType { Road = 1, Walkable = 3, Difficult = 8, Unwalkable }
     [Serializable]
     private class Node
     {
@@ -51,7 +68,31 @@ public class MapManager : MonoBehaviour {
         }
     }
 
-    [SerializeField, Tooltip("Green: Road, White: Walkable, Grey: Difficult, Black: Unwalkable."), 
+    private class NodeCom : IComparable<NodeCom>
+    {
+        public Node node;
+        public NodeCom parentNode;
+        public int value;
+
+        public int CompareTo(NodeCom other)
+        {
+            if (other == null)
+                return 1;
+
+            return value - other.value;
+        }
+
+        public NodeCom(Node node, NodeCom parentNode)
+        {
+            this.node = node;
+            this.parentNode = parentNode;
+            value = (int)node.terrain;
+            if (parentNode != null)
+                value += (int)parentNode.node.terrain;
+        }
+    }
+
+    [SerializeField, Tooltip("Green: Road, White: Walkable, Grey: Difficult, Black: Unwalkable."),
         Header("Also enable Read/Write in the Texture's import settings.")]
     private Texture2D mapSkeleton;
     [Tooltip("Size of texture grid"), SerializeField]
@@ -88,6 +129,102 @@ public class MapManager : MonoBehaviour {
 
                 grid[_x, _y] = new Node(_x, _y, terrain);
             }
+    }
+
+    #endregion
+
+    #region Map Movement
+
+    private void GetMapMovement(Node goal)
+    {
+        if (getMapMovement != null)
+            StopCoroutine(getMapMovement);
+
+        getMapMovement = StartCoroutine(_GetMapMovement(goal));
+    }
+
+    private Coroutine getMapMovement;
+    public int calculationsPerFrame = 35;
+    private List<NodeCom> open;
+    private List<Node> closed;
+    NodeCom curNode;
+    private IEnumerator _GetMapMovement(Node goal)
+    {
+        open = new List<NodeCom>();
+        closed = new List<Node>();
+
+        //add start node
+        open.Add(new NodeCom(ConvertMapToNode(player.position), null));
+
+        int calc = 0;
+        curNode = null;
+        int x, y;
+        while (open.Count > 0)
+        {
+            calc++;
+            open.Sort();
+
+            //remove from open and add to closed
+            curNode = open[0];
+
+            //if goal has been reached
+            if (curNode.node == goal)
+                break;
+
+            open.RemoveAt(0);
+            closed.Add(curNode.node);
+
+            //shortcuts
+            x = curNode.node.x;
+            y = curNode.node.y;
+
+            //check adjecent
+            CheckNode(x + 1, y);
+            CheckNode(x - 1, y);
+            CheckNode(x, y + 1);
+            CheckNode(x, y - 1);
+
+            //optimization
+            if (calc > calculationsPerFrame)
+            {
+                calc = 0;
+                yield return null;
+            }
+        }
+
+        if (curNode.node != goal)
+            yield break;
+
+        List<Vector2> path = new List<Vector2>();
+
+        while (curNode != null)
+        {
+            path.Add(ConvertNodeToMap(curNode.node));
+            curNode = curNode.parentNode;
+        }
+
+        Debug.Log(path.Count);
+    }
+
+    private void CheckNode(int x, int y)
+    {
+        //check if out of bounds
+        if (x < 0 || x > resolutionX - 1)
+            return;
+        if (y < 0 || y > resolutionY - 1)
+            return;
+
+        Node node = grid[x, y];
+
+        //check if open and closed contains this
+        if (closed.Contains(node)) //no work eh?
+            return;
+        foreach (NodeCom nC in open) //es tu no work
+            if (nC.node == node)
+                return;
+
+        //add to open
+        open.Add(new NodeCom(node, curNode));
     }
 
     #endregion
