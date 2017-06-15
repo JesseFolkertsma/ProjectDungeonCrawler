@@ -8,8 +8,6 @@ public class Pathfinding_Bakeable : MonoBehaviour {
     public PathFinding.BakeType bakeType;
     [HideInInspector]
     public List<PathFinding.Node> myNodes = new List<PathFinding.Node>();
-    [HideInInspector]
-    public List<PathFinding.Node> oldNodes = new List<PathFinding.Node>();
     [SerializeField]
     private bool bake = true;
 

@@ -207,6 +207,8 @@ public class PathFinding : MonoBehaviour {
         {
             currentlyBakingObject = false;
             yield return null;
+            if (type != BakeType.Object)
+                EndRealtimeBakeFrame(bakeable, ret);
             yield break;
         }
 
@@ -230,6 +232,8 @@ public class PathFinding : MonoBehaviour {
             //Debug.Log(bakeable.name + " not scanned, the center has to be in the bakeable area.");
             currentlyBakingObject = false;
             yield return null;
+            if (type != BakeType.Object)
+                EndRealtimeBakeFrame(bakeable, ret);
             yield break;
         }
 
@@ -278,6 +282,19 @@ public class PathFinding : MonoBehaviour {
 
         #endregion
         currentlyBakingObject = false;
+        if(type != BakeType.Object)
+            EndRealtimeBakeFrame(bakeable, ret);
+    }
+
+    private void EndRealtimeBakeFrame(GameObject bakeable, List<Node> nodes)
+    {
+        foreach (BakeProcess bP in realtimeBake)
+            if (bP.obj == bakeable)
+            {
+                bP.busy = false;
+                bP.bakeable.myNodes = nodes;
+                break;
+            }
     }
 
     private bool CheckOutOfBounds(int x, int y, int z)
@@ -291,32 +308,48 @@ public class PathFinding : MonoBehaviour {
         return false;
     }
 
-    private List<Coroutine> realtimeBake = new List<Coroutine>();
+    private List<BakeProcess> realtimeBake = new List<BakeProcess>();
+    private class BakeProcess
+    {
+        public GameObject obj;
+        public Pathfinding_Bakeable bakeable;
+        public bool busy;
+
+        public BakeProcess(Pathfinding_Bakeable bakeable)
+        {
+            this.bakeable = bakeable;
+            obj = bakeable.gameObject;
+        }
+    }
     public void BakeObjectRealTime(Pathfinding_Bakeable bakeable)
     {
-        realtimeBake.Add(StartCoroutine(_BakeObjectRealTime(bakeable)));
+        BakeProcess bP = new BakeProcess(bakeable);
+        realtimeBake.Add(bP);
+        StartCoroutine(_BakeObjectRealTime(bP));
     }
 
-    private IEnumerator _BakeObjectRealTime(Pathfinding_Bakeable bakeable)
+    private IEnumerator _BakeObjectRealTime(BakeProcess process)
     {
         while (!pathfindable)
             yield return null;
-        /*
-        GameObject g = bakeable.gameObject;
-        bakeable.myNodes = BakeObject(g, bakeable.bakeType);
+        
+        GameObject g = process.obj;
 
         while (true)
         {
-            //reset old nodes
-            bakeable.oldNodes = bakeable.myNodes;
-            if(bakeable.oldNodes != null)
-                foreach(Node oldNode in bakeable.oldNodes)
-                    if(oldNode.bakeType != BakeType.Object)
-                        oldNode.filled = false;
-            bakeable.myNodes = BakeObject(g, bakeable.bakeType);
-            yield return new WaitForSeconds(bakeable.refreshSpeed);
-        }
-        */
+            //bake again
+            process.busy = true;
+
+            foreach (Node node in process.bakeable.myNodes)
+                node.filled = false;
+
+            StartCoroutine(BakeObject(g, process.bakeable.bakeType));
+
+            while (process.busy)
+                yield return null;
+
+            yield return new WaitForSeconds(process.bakeable.refreshSpeed);
+        }     
     }
 
     //set mids to calculate from
