@@ -319,18 +319,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bbdd8a622fc3654387445f4b22729c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  widthSize: 100
-  heightSize: 50
-  widthSizeNode: 0.25
-  heightSizeNode: 0.25
+  widthSize: 250
+  heightSize: 100
+  widthSizeNode: 0.5
+  heightSizeNode: 0.5
   visualize: 1
   visualizeNodes: 0
   visualizeRaycasts: 0
   edgeBakeAmount: 0
-  calculationsPerFrame: 8
+  calculationsPerFrame: 1
   initializesPerFrame: 20000
   center: {fileID: 0}
   positionUpdateFrequency: 3
+  curRoom: {fileID: 0}
 --- !u!114 &761871901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -342,16 +343,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9adda0a615c4544bbe5464145312f2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftBotBack: {x: -12.5, y: -6.25, z: -12.5}
-  rightBotBack: {x: 12.5, y: -6.25, z: -12.5}
-  leftBotFront: {x: -12.5, y: -6.25, z: 12.5}
-  rightBotFront: {x: 12.5, y: -6.25, z: 12.5}
-  leftTopBack: {x: -12.5, y: 6.25, z: -12.5}
-  rightTopBack: {x: 12.5, y: 6.25, z: -12.5}
-  leftTopFront: {x: -12.5, y: 6.25, z: 12.5}
-  rightTopFront: {x: 12.5, y: 6.25, z: 12.5}
-  fullX: 25
-  fullY: 12.5
+  leftBotBack: {x: -62.5, y: -25, z: -62.5}
+  rightBotBack: {x: 62.5, y: -25, z: -62.5}
+  leftBotFront: {x: -62.5, y: -25, z: 62.5}
+  rightBotFront: {x: 62.5, y: -25, z: 62.5}
+  leftTopBack: {x: -62.5, y: 25, z: -62.5}
+  rightTopBack: {x: 62.5, y: 25, z: -62.5}
+  leftTopFront: {x: -62.5, y: 25, z: 62.5}
+  rightTopFront: {x: 62.5, y: 25, z: 62.5}
+  fullX: 125
+  fullY: 50
   durationPathVisualization: 0.2
   showBake: 1
 --- !u!4 &761871902
@@ -603,7 +604,7 @@ MonoBehaviour:
   size: 0
   ySize: 0
   rooms:
-  - room: {fileID: 1524161895419398, guid: 5d26e3bdaa1e1734db2d6a417a8deea3, type: 2}
+  - room: {fileID: 1274212222158976, guid: 1f280eeff57328d47b85ed4d2092c7e8, type: 2}
     converter: 2
     top: 0
     down: 0
@@ -612,7 +613,7 @@ MonoBehaviour:
     front: 0
     back: 0
     rotation: 0
-  - room: {fileID: 1524161895419398, guid: 5d26e3bdaa1e1734db2d6a417a8deea3, type: 2}
+  - room: {fileID: 1274212222158976, guid: 1f280eeff57328d47b85ed4d2092c7e8, type: 2}
     converter: 2
     top: 0
     down: 0
@@ -621,7 +622,7 @@ MonoBehaviour:
     front: 1
     back: 0
     rotation: 0
-  - room: {fileID: 1524161895419398, guid: 5d26e3bdaa1e1734db2d6a417a8deea3, type: 2}
+  - room: {fileID: 1274212222158976, guid: 1f280eeff57328d47b85ed4d2092c7e8, type: 2}
     converter: 2
     top: 0
     down: 0
@@ -630,7 +631,7 @@ MonoBehaviour:
     front: 1
     back: 0
     rotation: 0
-  - room: {fileID: 1524161895419398, guid: 5d26e3bdaa1e1734db2d6a417a8deea3, type: 2}
+  - room: {fileID: 1274212222158976, guid: 1f280eeff57328d47b85ed4d2092c7e8, type: 2}
     converter: 2
     top: 0
     down: 0
@@ -650,8 +651,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61ed40bd816acf5499b7281f4e490a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomWidth: 3
-  roomHeight: 3
+  roomWidth: 70
+  roomHeight: 30
   densityInteriorMin: 0
   densityInteriorMax: 3
   densityEnemyMin: 0

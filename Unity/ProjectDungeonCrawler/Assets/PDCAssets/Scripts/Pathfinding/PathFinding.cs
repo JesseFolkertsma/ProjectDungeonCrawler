@@ -30,7 +30,7 @@ public class PathFinding : MonoBehaviour {
     [SerializeField]
     private int edgeBakeAmount;
     [SerializeField]
-    private int calculationsPerFrame = 8, initializesPerFrame = 20000;
+    private int calculationsPerFrame = 100, objectsPerFrame = 8, initializesPerFrame = 20000;
     public static bool pathfindable = false;
     [HideInInspector]
     public Transform center; //priorites baking of areas around this object
@@ -57,7 +57,7 @@ public class PathFinding : MonoBehaviour {
     }
 
     //current room
-    private GameObject curRoom = null;
+    public GameObject curRoom = null;
     public IEnumerator UpdatePosition()
     {
         PDC.Generating.MapVisualizer mV = PDC.Generating.MapVisualizer.self;
@@ -195,9 +195,8 @@ public class PathFinding : MonoBehaviour {
                 bakedObjects.Add(possibleBake);
 
             calc++;
-            if (calc >= calculationsPerFrame)
+            if (calc >= objectsPerFrame)
             {
-                GC.Collect();
                 calc = 0;
                 yield return null;
             }
