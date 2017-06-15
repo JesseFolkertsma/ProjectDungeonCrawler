@@ -157,6 +157,8 @@ namespace PDC.Characters
                 {
                     Throw();
                 }
+                if (onAmmoDataChange != null)
+                    onAmmoDataChange(EquippedWeapon);
             }
 
             //Check scrollwheel input
@@ -209,8 +211,6 @@ namespace PDC.Characters
         void LeftMouse()
         {
             EquippedWeapon.Fire1Hold(pc.playerCam, pc.playerLayer);
-            if(onAmmoDataChange != null)
-                onAmmoDataChange(EquippedWeapon);
         }
 
         void RightMouse()
@@ -293,7 +293,6 @@ namespace PDC.Characters
             print("CONSUMING THE SOUL OF: " + consumables[selectedConsumable].name);
             consumables[selectedConsumable].Use(this);
             RemoveConsumable(consumables[selectedConsumable]);
-
         }
 
         void NextConsumable()

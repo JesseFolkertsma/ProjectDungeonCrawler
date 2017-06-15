@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4685231281483272}
   - component: {fileID: 33765612627211450}
   - component: {fileID: 23033699054712124}
-  - component: {fileID: 64643840134364282}
+  - component: {fileID: 65837561913492830}
   m_Layer: 0
   m_Name: MODAS_Tomb_Platform2
   m_TagString: Untagged
@@ -36,7 +36,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1372395227166654}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6, y: 0.24999942, z: 13.2}
+  m_LocalPosition: {x: -4.64, y: -4.695, z: 15.090214}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -55,7 +55,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: -833498119, guid: 146f08cc479ef29408d163cfc49c6ab8, type: 3}
+  - {fileID: 1702138185, guid: 914c1a68ca063b045b06074aa584e1f5, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -81,8 +81,8 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1372395227166654}
   m_Mesh: {fileID: 4300032, guid: 3acf827c93ac26943b2f0b2b79508956, type: 3}
---- !u!64 &64643840134364282
-MeshCollider:
+--- !u!65 &65837561913492830
+BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -91,7 +91,5 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Convex: 0
-  m_InflateMesh: 0
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300032, guid: 3acf827c93ac26943b2f0b2b79508956, type: 3}
+  m_Size: {x: 5.113523, y: 0.50000083, z: 5.198271}
+  m_Center: {x: -0.0023941994, y: 0.000000014901161, z: -0.041375995}
