@@ -30,7 +30,7 @@ public class PathFinding : MonoBehaviour {
     [SerializeField]
     private int edgeBakeAmount;
     [SerializeField]
-    private int calculationsPerFrame = 100, objectsPerFrame = 8, initializesPerFrame = 20000;
+    private int calculationsPerFrame = 100, initializesPerFrame = 20000;
     public static bool pathfindable = false;
     [HideInInspector]
     public Transform center; //priorites baking of areas around this object
@@ -157,12 +157,10 @@ public class PathFinding : MonoBehaviour {
         bake = StartCoroutine(BakePreparedScene(center)); //now bake all objects in the 3d array
     }
 
+    private bool currentlyBakingObject = false;
     private List<List<Node>> bakedObjects;
     private IEnumerator BakePreparedScene(Transform center)
     {
-        bakedObjects = new List<List<Node>>();
-        int calc = 0;
-        List<Node> possibleBake;
         List<GameObject> toBake = bakeable; //contantly remove from this list
 
         while(toBake.Count > 0)
@@ -188,29 +186,29 @@ public class PathFinding : MonoBehaviour {
                 closest = obj;
             }  
 
-            possibleBake = BakeObject(closest, BakeType.Object);
+            StartCoroutine(BakeObject(closest, BakeType.Object));
             toBake.Remove(closest);
 
-            if (possibleBake != null)
-                bakedObjects.Add(possibleBake);
-
-            calc++;
-            if (calc >= objectsPerFrame)
-            {
-                calc = 0;
+            while (currentlyBakingObject)
                 yield return null;
-            }
         }
     }
 
     public enum BakeType {Object, Enemy, Movable, Walkable }
-    private List<Node> BakeObject(GameObject bakeable, BakeType type) //hier zit HET PROBLEEM
+    private IEnumerator BakeObject(GameObject bakeable, BakeType type) //hier zit HET PROBLEEM
     {
+        if (type == BakeType.Object)
+            currentlyBakingObject = true;
+
         List<Node> ret = new List<Node>();
         //get size collider
         Collider c = bakeable.GetComponent<Collider>();
         if (!(c != null))
-            return null;
+        {
+            currentlyBakingObject = false;
+            yield return null;
+            yield break;
+        }
 
         Vector3 size = c.bounds.size;
 
@@ -229,15 +227,18 @@ public class PathFinding : MonoBehaviour {
 
         if (!(midNode != null))
         {
-            Debug.Log(bakeable.name + " not scanned, the center has to be in the bakeable area.");
-            return null;
+            //Debug.Log(bakeable.name + " not scanned, the center has to be in the bakeable area.");
+            currentlyBakingObject = false;
+            yield return null;
+            yield break;
         }
 
+        int calc = 0;
         #region Old Code
         for (int x = midNode.x - halfX; x <= halfX + midNode.x; x++)
             for (int y = midNode.y - halfY; y <= halfY + midNode.y + 1; y++)
                 for (int z = midNode.z - halfZ; z <= halfZ + midNode.z; z++)
-                {
+                {                 
                     //check if in bounds
                     if (x < 0 || x >= grid.GetLength(0))
                         continue;
@@ -249,6 +250,13 @@ public class PathFinding : MonoBehaviour {
                     node = grid[x, y, z];
                     if (node.filled && node.bakeType == BakeType.Object)
                         continue;
+
+                    calc++;
+                    if (calc > calculationsPerFrame)
+                    {
+                        calc = 0;
+                        yield return null;
+                    }
 
                     Vector3 midPos = GetVectorFromNode(grid[x, y, z]);
                     hits = Physics.OverlapSphere(midPos, heightSizeNode / 2); //in het midden schieten, niet in de hoek
@@ -269,7 +277,7 @@ public class PathFinding : MonoBehaviour {
                 }
 
         #endregion
-        return ret;
+        currentlyBakingObject = false;
     }
 
     private bool CheckOutOfBounds(int x, int y, int z)
@@ -293,7 +301,7 @@ public class PathFinding : MonoBehaviour {
     {
         while (!pathfindable)
             yield return null;
-
+        /*
         GameObject g = bakeable.gameObject;
         bakeable.myNodes = BakeObject(g, bakeable.bakeType);
 
@@ -308,6 +316,7 @@ public class PathFinding : MonoBehaviour {
             bakeable.myNodes = BakeObject(g, bakeable.bakeType);
             yield return new WaitForSeconds(bakeable.refreshSpeed);
         }
+        */
     }
 
     //set mids to calculate from
