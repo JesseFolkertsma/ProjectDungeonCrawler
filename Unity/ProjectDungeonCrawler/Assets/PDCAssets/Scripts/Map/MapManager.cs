@@ -26,10 +26,10 @@ public class MapManager : MonoBehaviour
         GetMapMovement(ConvertMapToNode(Input.mousePosition));
     }
 
-    private Node ConvertMapToNode(Vector2 vec)
+    private Node ConvertMapToNode(Vector2 vec) //dit werkt niet
     {
-        float x = vec.x / resolutionX;
-        float y = vec.y / resolutionY;
+        float x = resolutionX / vec.x;
+        float y = resolutionY / vec.y;
 
         //calculate percentage into grid
         x = Mathf.Lerp(0, grid.GetLength(0), x) - 1;
@@ -87,8 +87,6 @@ public class MapManager : MonoBehaviour
             this.node = node;
             this.parentNode = parentNode;
             value = (int)node.terrain;
-            if (parentNode != null)
-                value += (int)parentNode.node.terrain;
         }
     }
 
@@ -147,14 +145,17 @@ public class MapManager : MonoBehaviour
     public int calculationsPerFrame = 35;
     private List<NodeCom> open;
     private List<Node> closed;
-    NodeCom curNode;
+    NodeCom curNode, startNode;
+    private Vector3 endPos;
     private IEnumerator _GetMapMovement(Node goal)
     {
         open = new List<NodeCom>();
         closed = new List<Node>();
 
         //add start node
-        open.Add(new NodeCom(ConvertMapToNode(player.position), null));
+        startNode = new NodeCom(ConvertMapToNode(player.position), null);
+        open.Add(startNode);
+        endPos = ConvertNodeToMap(goal);
 
         int calc = 0;
         curNode = null;
@@ -166,7 +167,6 @@ public class MapManager : MonoBehaviour
 
             //remove from open and add to closed
             curNode = open[0];
-
             //if goal has been reached
             if (curNode.node == goal)
                 break;
@@ -203,7 +203,7 @@ public class MapManager : MonoBehaviour
             curNode = curNode.parentNode;
         }
 
-        Debug.Log(path.Count);
+        player.GetComponent<MapPlayer>().Move(path);
     }
 
     private void CheckNode(int x, int y)
@@ -224,7 +224,12 @@ public class MapManager : MonoBehaviour
                 return;
 
         //add to open
-        open.Add(new NodeCom(node, curNode));
+        NodeCom _n = new NodeCom(node, curNode);
+        Vector2 myPos = ConvertNodeToMap(_n.node);
+        _n.value += (int)Vector2.Distance(myPos, player.position);
+        _n.value += (int)Vector2.Distance(myPos, endPos);
+
+        open.Add(_n);
     }
 
     #endregion
