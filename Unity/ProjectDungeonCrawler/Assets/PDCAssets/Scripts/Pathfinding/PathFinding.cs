@@ -45,6 +45,23 @@ public class PathFinding : MonoBehaviour {
         grid = new Node[widthSize, heightSize, widthSize];
     }
 
+    private bool setupDone;
+    public void SetupBakeable()
+    {
+        //reset pathfindable
+        bakeable = new List<GameObject>();
+
+        //get all gameobjects
+        GameObject[] all = FindObjectsOfType(typeof(GameObject)) as GameObject[];
+        foreach (GameObject possibleBakeObj in all)
+        {
+            if (possibleBakeObj.isStatic)
+                bakeable.Add(possibleBakeObj);
+        }
+
+        setupDone = true;
+    }
+
     private void Start()
     {
         StartCoroutine(UpdatePosition());
@@ -57,6 +74,7 @@ public class PathFinding : MonoBehaviour {
     }
 
     //current room
+    [HideInInspector]
     public GameObject curRoom = null;
     public IEnumerator UpdatePosition()
     {
@@ -67,6 +85,9 @@ public class PathFinding : MonoBehaviour {
             Debug.Log("Map Visualizer does not excist in this scene. Aborting.");
             yield break;
         }
+
+        while (!setupDone)
+            yield return null;
 
         while (!(center != null))
             yield return null;
@@ -112,14 +133,21 @@ public class PathFinding : MonoBehaviour {
 
     public void StartBake()
     {
-        StartCoroutine(Bake());
+        if (bake != null)
+            StopCoroutine(bake);
+
+        if (checkBake != null)
+            StopCoroutine(checkBake);
+
+        if (objectBake != null)
+            StopCoroutine(objectBake);
+
+        bake = StartCoroutine(Bake());
     }
 
-    private Coroutine bake;
+    private Coroutine bake, checkBake, objectBake;
     public IEnumerator Bake() //1 grote fout: de bake bugt de fuck out als de objecten aan de bovenkant komen
     {
-        if(bake != null)
-            StopCoroutine(bake);
         #region Prepare Bake
         int calc = 0;
         //initialize grid
@@ -136,40 +164,41 @@ public class PathFinding : MonoBehaviour {
                     }
                 }
 
-        //move to closest
-        transform.position = curRoom.transform.position;
-
-        //reset pathfindable
-        bakeable = new List<GameObject>();
         pathfindable = true;
 
-        //get all gameobjects
-        GameObject[] all = FindObjectsOfType(typeof(GameObject)) as GameObject[];
-        foreach (GameObject possibleBakeObj in all)
-        {
-            if (possibleBakeObj.isStatic)
-                bakeable.Add(possibleBakeObj);
-        }
+        //move to closest
+        transform.position = curRoom.transform.position;
 
         SetMidsAndBoundary(); //this is the node where this transform now is, neccessity for getnodefromvector
         #endregion
 
-        bake = StartCoroutine(BakePreparedScene(center)); //now bake all objects in the 3d array
+        checkBake = StartCoroutine(BakePreparedScene(center)); //now bake all objects in the 3d array
     }
 
-    private bool currentlyBakingObject = false;
+    private int currentlyBakingObject = 0;
     private List<List<Node>> bakedObjects;
     private IEnumerator BakePreparedScene(Transform center) 
     {
         List<GameObject> toBake = bakeable; //contantly remove from this list
 
+        int calc = 0;
         while(toBake.Count > 0)
         {
+            while (currentlyBakingObject > 0)
+                yield return null;
+
             //get cheapest
             GameObject closest = null;
             float dis = 0;
             foreach (GameObject obj in toBake)
             {
+                calc++;
+                if(calc > calculationsPerFrame)
+                {
+                    calc = 0;
+                    yield return null;
+                }
+
                 float distance = Vector3.Distance(obj.transform.position, center.position);
                 //remove from tobake
                 if(!(closest != null))
@@ -184,29 +213,24 @@ public class PathFinding : MonoBehaviour {
 
                 dis = distance;
                 closest = obj;
-            }  
+            }
 
-            StartCoroutine(BakeObject(closest, BakeType.Object));
+            currentlyBakingObject++;
+            objectBake = StartCoroutine(BakeObject(closest, BakeType.Object));
             toBake.Remove(closest);
-
-            while (currentlyBakingObject)
-                yield return null;
         }
     }
 
     public enum BakeType {Object, Enemy, Movable, Walkable }
     private IEnumerator BakeObject(GameObject bakeable, BakeType type) //hier zit HET PROBLEEM
     {
-        if (type == BakeType.Object)
-            currentlyBakingObject = true;
-
         List<Node> ret = new List<Node>();
         //get size collider
         Collider c = bakeable.GetComponent<Collider>();
         if (!(c != null))
         {
-            currentlyBakingObject = false;
-            yield return null;
+            if (type == BakeType.Object)
+                currentlyBakingObject--;
             if (type != BakeType.Object)
                 EndRealtimeBakeFrame(bakeable, ret);
             yield break;
@@ -230,8 +254,8 @@ public class PathFinding : MonoBehaviour {
         if (!(midNode != null))
         {
             //Debug.Log(bakeable.name + " not scanned, the center has to be in the bakeable area.");
-            currentlyBakingObject = false;
-            yield return null;
+            if(type == BakeType.Object)
+                currentlyBakingObject--;
             if (type != BakeType.Object)
                 EndRealtimeBakeFrame(bakeable, ret);
             yield break;
@@ -296,8 +320,10 @@ public class PathFinding : MonoBehaviour {
                 }
 
         #endregion
-        currentlyBakingObject = false;
-        if(type != BakeType.Object)
+
+        if (type == BakeType.Object)
+            currentlyBakingObject--;
+        if (type != BakeType.Object)
             EndRealtimeBakeFrame(bakeable, ret);
     }
 
