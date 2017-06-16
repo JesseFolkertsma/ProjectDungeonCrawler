@@ -6,7 +6,7 @@ using UnityEngine;
 namespace PDC.Weapons
 {
     [System.Serializable]
-    public class Revolver : RangedGun
+    public class SemiAutomaticGun : RangedGun
     {
         bool buttonDown;
 

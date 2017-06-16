@@ -11,7 +11,7 @@ public class TargetCube : MonoBehaviour, IHitable
     public void GetHit(float damage, EffectType hitType, StatusEffect[] effects, Vector3 shotPosition)
     {
         hp -= damage;
-        //if(hp < 1)
+        if(hp < 1)
             Destroy(gameObject);
     }
 
