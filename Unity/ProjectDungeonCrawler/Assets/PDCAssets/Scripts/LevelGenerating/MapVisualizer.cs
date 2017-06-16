@@ -216,6 +216,7 @@ namespace PDC
                         }
 
                 loader.SetProgress(MapLoader.Progress.Placing_Rooms);
+                PathFinding.self.SetupBakeable();
             }
 
             [Serializable]
