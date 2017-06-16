@@ -184,6 +184,8 @@ namespace PDC.Weapons
                     foreach (IHitable h in iHits)
                         h.GetHit(damage, EffectType.Normal, weaponEffects, cam.transform.position);
                 }
+
+                GameManager.instance.SpawnDecal(hit.transform.tag, hit.point, Quaternion.LookRotation(hit.normal), hit.transform);
             }
         }
 

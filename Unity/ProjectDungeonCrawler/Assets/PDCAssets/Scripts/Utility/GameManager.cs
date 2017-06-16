@@ -10,6 +10,11 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public GameData gameData;
 
+    public GameObject untaggedHitdecal;
+    public GameObject woodHitdecal;
+    public GameObject stoneHitdecal;
+    public GameObject fleshHitdecal;
+
     private void Awake()
     {
         if(instance == null)
@@ -50,6 +55,43 @@ public class GameManager : MonoBehaviour
                 PlayerCombat.instance.PickupWeapon(newWepComp);
             }
         }
+    }
+
+    /// <summary>
+    /// Spawn Decal for given tag at given position and rotation
+    /// </summary>
+    /// <param name="tag">Tag of object hit</param>
+    /// <param name="position">Decal position</param>
+    /// <param name="rotation">Decal rotation</param>
+    /// <returns></returns>
+    public GameObject SpawnDecal(string tag, Vector3 position, Quaternion rotation)
+    {
+        switch (tag)
+        {
+            case "Untagged":
+                return Instantiate(untaggedHitdecal, position, rotation);
+            case "Wood":
+                return Instantiate(woodHitdecal, position, rotation);
+            case "Stone":
+                return Instantiate(stoneHitdecal, position, rotation);
+            case "Flesh":
+                return Instantiate(fleshHitdecal, position, rotation);
+        }
+        return Instantiate(untaggedHitdecal, position, rotation);
+    }
+
+    /// <summary>
+    /// Spawn Decal for given tag with position, rotation and parent
+    /// </summary>
+    /// <param name="tag">Tag of object hit</param>
+    /// <param name="position">Decal position</param>
+    /// <param name="rotation">Decal rotation</param>
+    /// <param name="parent">Decal parent</param>
+    public GameObject SpawnDecal(string tag, Vector3 position, Quaternion rotation, Transform parent)
+    {
+        GameObject go = SpawnDecal(tag, position, rotation);
+        go.transform.parent = parent;
+        return go;
     }
 
     public delegate void OnAnimationEnd();

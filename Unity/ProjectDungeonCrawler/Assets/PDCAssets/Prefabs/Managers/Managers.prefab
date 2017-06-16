@@ -1,0 +1,113 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1189862588492784}
+  m_IsPrefabParent: 1
+--- !u!1 &1189862588492784
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4231907180520432}
+  - component: {fileID: 114878582297170494}
+  - component: {fileID: 114622280447147708}
+  - component: {fileID: 114130867927078942}
+  m_Layer: 0
+  m_Name: Managers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4231907180520432
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1189862588492784}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114130867927078942
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1189862588492784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1c2bcb41ab5764499c88ba84e366b86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dataBase:
+  - id: 1
+    weaponPrefab: {fileID: 1487556820555230, guid: ff234285406f42e4eafc5a5b7074d096,
+      type: 2}
+  - id: 2
+    weaponPrefab: {fileID: 1953012379529164, guid: 2f81d60cae3aad94083e082abd37c2fa,
+      type: 2}
+  - id: 3
+    weaponPrefab: {fileID: 1082261984156578, guid: b94b9513e26a3134eb59ddf495740a6b,
+      type: 2}
+  - id: 0
+    weaponPrefab: {fileID: 1809978662663876, guid: 87054f37f5ca04e4bb800eeeffe92ecd,
+      type: 2}
+  - id: 4
+    weaponPrefab: {fileID: 1527718447822810, guid: 7304c5377236be64ba2d18b5caf0274e,
+      type: 2}
+--- !u!114 &114622280447147708
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1189862588492784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52ed85889dc0bb74382977ef80fe5872, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvasRef: {fileID: 114876633934547424, guid: f9ef0e00fe7fb994abed3f24e02442ad,
+    type: 2}
+--- !u!114 &114878582297170494
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1189862588492784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acbcc0c74ff95da448a4bf6d9eab6ee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameData:
+    playerStats:
+      maxHP: 100
+      currentHP: 100
+      maxSouls: 100
+      currentSouls: 0
+      armorRating: 0
+      movementSpeed: 0
+    playerWeapons: 
+    playerConsumables: []
+  untaggedHitdecal: {fileID: 1000010844420130, guid: 4edabb1c0dde62743b137378c7d22980,
+    type: 2}
+  woodHitdecal: {fileID: 1000011190285628, guid: beb3acff7ab73944fb8f470f24d74ed3,
+    type: 2}
+  stoneHitdecal: {fileID: 1000010844420130, guid: 4edabb1c0dde62743b137378c7d22980,
+    type: 2}
+  fleshHitdecal: {fileID: 1000013169864706, guid: e5a3d6da48298a0458c1990f58c27069,
+    type: 2}
