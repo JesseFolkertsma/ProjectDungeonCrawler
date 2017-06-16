@@ -28,6 +28,8 @@ public class Pathfinding_Visualizer : MonoBehaviour {
     private float durationPathVisualization;
     [SerializeField]
     private bool showBake;
+    [SerializeField]
+    private bool visualizeRealltimeObjects;
 
     private void Awake()
     {
@@ -197,7 +199,7 @@ public class Pathfinding_Visualizer : MonoBehaviour {
             return;
         if (!(pathfinding != null))
             return;
-        if (!pathfinding.visualize)
+        if (!pathfinding.visualize && !visualizeRealltimeObjects)
             return;
         if (!showBake)
             return;
@@ -232,6 +234,10 @@ public class Pathfinding_Visualizer : MonoBehaviour {
                             default:
                                 break;
                         }
+
+                        if (visualizeRealltimeObjects && !pathfinding.visualize)
+                            if (node.bakeType == PathFinding.BakeType.Object)
+                                continue;
 
                         _x = x * pathfinding.widthSizeNode;
                         _y = y * pathfinding.heightSizeNode;

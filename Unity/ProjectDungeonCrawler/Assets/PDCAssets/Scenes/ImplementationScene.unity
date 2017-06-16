@@ -319,15 +319,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bbdd8a622fc3654387445f4b22729c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  widthSize: 250
-  heightSize: 100
+  widthSize: 200
+  heightSize: 60
   widthSizeNode: 0.5
   heightSizeNode: 0.5
-  visualize: 1
+  visualize: 0
   visualizeNodes: 0
   visualizeRaycasts: 0
   edgeBakeAmount: 0
-  calculationsPerFrame: 1
+  calculationsPerFrame: 500
   initializesPerFrame: 20000
   center: {fileID: 0}
   positionUpdateFrequency: 3
@@ -343,18 +343,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9adda0a615c4544bbe5464145312f2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leftBotBack: {x: -62.5, y: -25, z: -62.5}
-  rightBotBack: {x: 62.5, y: -25, z: -62.5}
-  leftBotFront: {x: -62.5, y: -25, z: 62.5}
-  rightBotFront: {x: 62.5, y: -25, z: 62.5}
-  leftTopBack: {x: -62.5, y: 25, z: -62.5}
-  rightTopBack: {x: 62.5, y: 25, z: -62.5}
-  leftTopFront: {x: -62.5, y: 25, z: 62.5}
-  rightTopFront: {x: 62.5, y: 25, z: 62.5}
-  fullX: 125
-  fullY: 50
+  leftBotBack: {x: -50, y: -15, z: -50}
+  rightBotBack: {x: 50, y: -15, z: -50}
+  leftBotFront: {x: -50, y: -15, z: 50}
+  rightBotFront: {x: 50, y: -15, z: 50}
+  leftTopBack: {x: -50, y: 15, z: -50}
+  rightTopBack: {x: 50, y: 15, z: -50}
+  leftTopFront: {x: -50, y: 15, z: 50}
+  rightTopFront: {x: 50, y: 15, z: 50}
+  fullX: 100
+  fullY: 30
   durationPathVisualization: 0.2
-  showBake: 1
+  showBake: 0
+  visualizeRealltimeObjects: 1
 --- !u!4 &761871902
 Transform:
   m_ObjectHideFlags: 0
