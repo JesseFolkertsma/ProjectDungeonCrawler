@@ -165,6 +165,7 @@ namespace PDC.Characters {
                 //if so move
                 CalcRefreshRate();
                 PauseMovement();
+
                 if (playerDistance <= enemy.engagementRange)
                     if (CheckIfSeePlayer())
                     {
@@ -202,9 +203,14 @@ namespace PDC.Characters {
             since the player has no collider whatsoever, im going to pass the "see player"
             if at least one of the raycasts DOESNT hit anything
             */
+            RaycastHit hit;
             foreach (Vector3 pos in GetMultiPlayerPos())
-                if(!Physics.Linecast(transform.position, pos))
-                    return true;
+            {
+                //Debug.DrawLine(transform.position, pos, Color.red, 0.1f);
+                if (Physics.Linecast(transform.position, pos, out hit))
+                    if(hit.transform == pC.transform)
+                        return true;
+            }
             return false;
         }
 

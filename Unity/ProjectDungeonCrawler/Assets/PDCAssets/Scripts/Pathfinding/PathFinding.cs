@@ -159,7 +159,7 @@ public class PathFinding : MonoBehaviour {
 
     private bool currentlyBakingObject = false;
     private List<List<Node>> bakedObjects;
-    private IEnumerator BakePreparedScene(Transform center)
+    private IEnumerator BakePreparedScene(Transform center) 
     {
         List<GameObject> toBake = bakeable; //contantly remove from this list
 

@@ -108,6 +108,56 @@ NavMeshSettings:
     tileSize: 256
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &153103449
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 153103451}
+  - component: {fileID: 153103450}
+  m_Layer: 0
+  m_Name: Game Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &153103450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 153103449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acbcc0c74ff95da448a4bf6d9eab6ee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameData:
+    playerStats:
+      maxHP: 100
+      currentHP: 100
+      maxSouls: 100
+      currentSouls: 0
+      armorRating: 0
+      movementSpeed: 0
+    playerWeapons: 
+    playerConsumables: []
+--- !u!4 &153103451
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 153103449}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.6588659, y: 8.800621, z: -10.426304}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &345867454
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,7 +378,7 @@ MonoBehaviour:
   visualizeRaycasts: 0
   edgeBakeAmount: 0
   calculationsPerFrame: 500
-  initializesPerFrame: 20000
+  initializesPerFrame: 10000
   center: {fileID: 0}
   positionUpdateFrequency: 3
   curRoom: {fileID: 0}
@@ -355,7 +405,7 @@ MonoBehaviour:
   fullY: 30
   durationPathVisualization: 0.2
   showBake: 0
-  visualizeRealltimeObjects: 1
+  visualizeRealltimeObjects: 0
 --- !u!4 &761871902
 Transform:
   m_ObjectHideFlags: 0
@@ -658,10 +708,13 @@ MonoBehaviour:
   densityInteriorMax: 3
   densityEnemyMin: 0
   densityEnemyMax: 3
-  difficulty: 10
-  difficultyBuffer: 1
-  player: {fileID: 1127685906234672, guid: bb382713be54dec478275f76212d5d23, type: 2}
-  enemies: []
+  difficulty: 20
+  difficultyBuffer: 10
+  player: {fileID: 1009196950182780, guid: 0085af4a580137d48813c66bc45354e9, type: 2}
+  enemies:
+  - obj: {fileID: 1048198498332828, guid: 623a7fabc732a54458e878953f2d0214, type: 2}
+    cost: 1
+    difficulty: 20
   spawnedRooms: []
   enemyValue: 0
 --- !u!114 &2097285919
