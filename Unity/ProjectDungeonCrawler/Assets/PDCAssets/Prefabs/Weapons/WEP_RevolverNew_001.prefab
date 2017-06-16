@@ -472,6 +472,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponName: Revolver
+  weaponID: 0
   type: 0
   weaponIcon: {fileID: 21300000, guid: ffafe9fa527ba644d9c069e7ef2da9be, type: 3}
   damage: 20
@@ -496,7 +497,7 @@ MonoBehaviour:
   ammoUsePerShot: 1
   maxAmmo: 6
   ammo: 6
-  minMaxAmmoReturnOnBounce: {x: 1, y: 3}
+  minMaxAmmoReturnOnBounce: {x: 6, y: 6}
   bulletEjectPosition: {fileID: 4141200252563860}
   bulletEjectEffect: {fileID: 1401581062580156, guid: 2f24d42c5dadbfd4f878489e55f85e5c,
     type: 2}

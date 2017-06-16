@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 534158ff4ec05274c9732d3c45fb83af
-timeCreated: 1497601629
+guid: f0b21b4581d65ff4ebd9793e8abc454d
+timeCreated: 1497601630
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -30,10 +30,11 @@ ModelImporter:
     400020: WEP_LeverActionRifle_001
     400022: //RootNode
     4300000: WEP_LeverActionRifle_001
-    7400000: ARM_LeverActionRifle_001|Untitled
-    7400002: ARM_LeverActionRifle_001|Untitled.001
-    7400004: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Draw_001
+    7400000: ARM_LeverActionRifle_001|ARM_LeverActionRifle_Throw_001
+    7400002: ARM_LeverActionRifle_001|Untitled
+    7400004: ARM_LeverActionRifle_001|Untitled.001
     7400006: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Shoot_001.001
+    7400008: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Throw_001
     9500000: //RootNode
     13700000: WEP_LeverActionRifle_001
   materials:
@@ -60,10 +61,10 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Draw_001
-      takeName: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Draw_001
+      name: ARM_LeverActionRifle_001|ARM_LeverActionRifle_Throw_001
+      takeName: ARM_LeverActionRifle_001|ARM_LeverActionRifle_Throw_001
       firstFrame: 0
-      lastFrame: 38
+      lastFrame: 24
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -82,7 +83,14 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.95145637
+        functionName: Throw
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1

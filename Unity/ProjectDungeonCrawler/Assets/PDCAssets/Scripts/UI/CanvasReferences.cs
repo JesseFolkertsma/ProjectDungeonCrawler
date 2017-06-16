@@ -27,6 +27,15 @@ namespace PDC.UI
         [SerializeField] GameObject newQuestObject;
         [SerializeField] GameObject newWeaponSlot;
         [SerializeField] GameObject newStatusEffect;
+        [SerializeField] AudioClip swapWeaponSound;
+
+        //Private variables
+        AudioSource audioS;
+
+        private void Awake()
+        {
+            audioS = GetComponent<AudioSource>();
+        }
 
         public void SetHp(float currentHP, float maxHp)
         {
@@ -59,6 +68,8 @@ namespace PDC.UI
             else
             {
                 weaponSlots[slotToSet].SetVisuals(wep, isEquipped);
+                audioS.clip = swapWeaponSound;
+                audioS.Play();
             }
         }
 

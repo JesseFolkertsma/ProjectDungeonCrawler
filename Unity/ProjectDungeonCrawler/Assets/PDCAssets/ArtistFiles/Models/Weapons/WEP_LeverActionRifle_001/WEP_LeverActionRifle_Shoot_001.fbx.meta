@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 1898e1c37e88e424291b7a915087f6ff
-timeCreated: 1497440024
+guid: fd53b8225cfd2b241be76fc7946ec636
+timeCreated: 1497601630
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -30,11 +30,12 @@ ModelImporter:
     400020: WEP_LeverActionRifle_001
     400022: //RootNode
     4300000: WEP_LeverActionRifle_001
-    7400000: ARM_LeverActionRifle_001|Untitled
-    7400002: ARM_LeverActionRifle_001|Untitled.001
-    7400004: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Shoot_001
-    7400006: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Shoot_001.001
-    7400008: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Dryfire_001
+    7400000: ARM_LeverActionRifle_001|ARM_LeverActionRifle_Throw_001
+    7400002: ARM_LeverActionRifle_001|Untitled
+    7400004: ARM_LeverActionRifle_001|Untitled.001
+    7400006: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Shoot_001
+    7400008: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Shoot_001.001
+    7400010: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Throw_001
     9500000: //RootNode
     13700000: WEP_LeverActionRifle_001
   materials:
@@ -64,7 +65,7 @@ ModelImporter:
       name: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Shoot_001
       takeName: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Shoot_001
       firstFrame: 0
-      lastFrame: 35
+      lastFrame: 37
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -84,7 +85,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.19329388
+      - time: 0.18446602
         functionName: Attack
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -102,66 +103,6 @@ ModelImporter:
         weight: 1
       - path: ARM_LeverActionRifle_001/MainGun/DrumMag/DrumMag_end
         weight: 1
-      - path: ARM_LeverActionRifle_001/MainGun/Lever
-        weight: 1
-      - path: ARM_LeverActionRifle_001/MainGun/Lever/Lever_end
-        weight: 1
-      - path: ARM_LeverActionRifle_001/MainGun/PullBack
-        weight: 1
-      - path: ARM_LeverActionRifle_001/MainGun/PullBack/PullBack_end
-        weight: 1
-      - path: ARM_LeverActionRifle_001/MainGun/TriggerHappy
-        weight: 1
-      - path: ARM_LeverActionRifle_001/MainGun/TriggerHappy/TriggerHappy_end
-        weight: 1
-      - path: WEP_LeverActionRifle_001
-        weight: 1
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Dryfire_001
-      takeName: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Shoot_001
-      firstFrame: 0
-      lastFrame: 35
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events:
-      - time: 0
-        functionName: PlaySound
-        data: 
-        objectReferenceParameter: {fileID: 8300000, guid: 4c63b1c071c6eac4b92fca9fd3d22552,
-          type: 3}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      transformMask:
-      - path: 
-        weight: 1
-      - path: ARM_LeverActionRifle_001
-        weight: 1
-      - path: ARM_LeverActionRifle_001/MainGun
-        weight: 0
-      - path: ARM_LeverActionRifle_001/MainGun/DrumMag
-        weight: 0
-      - path: ARM_LeverActionRifle_001/MainGun/DrumMag/DrumMag_end
-        weight: 0
       - path: ARM_LeverActionRifle_001/MainGun/Lever
         weight: 1
       - path: ARM_LeverActionRifle_001/MainGun/Lever/Lever_end

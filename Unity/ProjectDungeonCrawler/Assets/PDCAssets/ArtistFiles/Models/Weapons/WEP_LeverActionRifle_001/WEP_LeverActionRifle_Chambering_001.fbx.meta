@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 534158ff4ec05274c9732d3c45fb83af
+guid: 05509710705ad7140a6c3686912d5d4b
 timeCreated: 1497601629
 licenseType: Free
 ModelImporter:
@@ -30,10 +30,12 @@ ModelImporter:
     400020: WEP_LeverActionRifle_001
     400022: //RootNode
     4300000: WEP_LeverActionRifle_001
-    7400000: ARM_LeverActionRifle_001|Untitled
-    7400002: ARM_LeverActionRifle_001|Untitled.001
-    7400004: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Draw_001
-    7400006: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Shoot_001.001
+    7400000: ARM_LeverActionRifle_001|ARM_LeverActionRifle_Throw_001
+    7400002: ARM_LeverActionRifle_001|Untitled
+    7400004: ARM_LeverActionRifle_001|Untitled.001
+    7400006: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Chambering_001
+    7400008: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Shoot_001.001
+    7400010: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Throw_001
     9500000: //RootNode
     13700000: WEP_LeverActionRifle_001
   materials:
@@ -60,10 +62,10 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Draw_001
-      takeName: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Draw_001
+      name: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Chambering_001
+      takeName: ARM_LeverActionRifle_001|WEP_LeverActionRifle_Chambering_001
       firstFrame: 0
-      lastFrame: 38
+      lastFrame: 31
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -82,7 +84,15 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: PlaySound
+        data: 
+        objectReferenceParameter: {fileID: 8300000, guid: 0c4a23946a1e4a2469c8deda299bd9ed,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1
