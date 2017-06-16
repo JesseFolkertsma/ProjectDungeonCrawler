@@ -30,7 +30,7 @@ public class PathFinding : MonoBehaviour {
     [SerializeField]
     private int edgeBakeAmount;
     [SerializeField]
-    private int calculationsPerFrame = 100, initializesPerFrame = 20000;
+    private int calculationsPerFrame = 100, initializesPerFrame = 20000, heavyCalcPerFrame = 10;
     public static bool pathfindable = false;
     [HideInInspector]
     public Transform center; //priorites baking of areas around this object
@@ -238,6 +238,7 @@ public class PathFinding : MonoBehaviour {
         }
 
         int calc = 0;
+        int colCalc = 0;
         #region Old Code
         for (int x = midNode.x - halfX; x <= halfX + midNode.x; x++)
             for (int y = midNode.y - halfY; y <= halfY + midNode.y + 1; y++)
@@ -263,6 +264,14 @@ public class PathFinding : MonoBehaviour {
                     }
 
                     Vector3 midPos = GetVectorFromNode(grid[x, y, z]);
+
+                    colCalc++; //heavy calculation
+                    if (colCalc > heavyCalcPerFrame)
+                    {
+                        colCalc = 0;
+                        yield return null;
+                    }
+
                     hits = Physics.OverlapSphere(midPos, heightSizeNode / 2); //in het midden schieten, niet in de hoek
                     if (visualizeRaycasts)
                     {
@@ -271,6 +280,12 @@ public class PathFinding : MonoBehaviour {
                     }
                     foreach (Collider hit in hits)
                     {
+                        colCalc++;
+                        if (colCalc > heavyCalcPerFrame)
+                        {
+                            colCalc = 0;
+                            yield return null;
+                        }
                         if (bakeable != hit.transform.gameObject)
                             continue;
                         node.bakeType = type;
