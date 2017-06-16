@@ -23,6 +23,8 @@ namespace PDC.Weapons
                     {
                         canAttack = false;
                         anim.SetTrigger("Attack");
+                        GameManager.OnAnimationEnd newDelegate = new GameManager.OnAnimationEnd(AttackAnimationEnd);
+                        GameManager.instance.CheckWhenAnimationTagEnds(anim, "Attack", newDelegate);
                     }
                     else Debug.LogError(gameObject.name + "'s Animator variable is not setup dipnugget!");
                 }
@@ -47,8 +49,6 @@ namespace PDC.Weapons
                 ammo--;
                 ShootVisuals();
                 DamageRaycast();
-                GameManager.OnAnimationEnd newDelegate = new GameManager.OnAnimationEnd(AttackAnimationEnd);
-                GameManager.instance.CheckWhenAnimationTagEnds(anim, "Attack", newDelegate);
             }
             else
             {
