@@ -185,6 +185,7 @@ namespace PDC
                             int e = mG.random.Next(densityEnemyMin, densityEnemyMax);
                             int _e = 0;
                             List<int> positions = new List<int>();
+                            int i = n == entrance ? 1 : 0;
                             while(_e < e)
                             {
                                 int newEnemy = mG.random.Next(0, fitEnemies.Count - 1);
@@ -194,7 +195,7 @@ namespace PDC
                                 bool fit = false;
                                 while (!fit)
                                 {
-                                    enemySpawnpos = mG.random.Next(0, rI.spawnPositions.Count - 1);
+                                    enemySpawnpos = mG.random.Next(0, rI.spawnPositions.Count - i);
                                     if (!positions.Contains(enemySpawnpos))
                                         fit = true;
                                     if (positions.Count >= rI.spawnPositions.Count)
@@ -208,6 +209,7 @@ namespace PDC
                                 Transform t = rI.spawnPositions[enemySpawnpos].spawnPosition;
                                 Instantiate(enemy.obj, t.position, t.rotation);
                                 enemyValue += enemy.cost;
+                                positions.Add(enemySpawnpos);
                             }
 
                             yield return null;

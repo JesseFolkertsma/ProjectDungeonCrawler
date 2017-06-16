@@ -279,8 +279,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1527718447822810}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.2340817, y: 0.441, z: -25.797457}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 15.878368, y: 19.1, z: 18.39306}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4403260299140610}
@@ -531,7 +531,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -576,7 +576,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   spreadCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -588,7 +588,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   reverbZoneMixCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -600,7 +600,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
 --- !u!95 &95078219230430142
 Animator:
   serializedVersion: 3
@@ -637,7 +637,7 @@ MonoBehaviour:
   throwDamage: 20
   weaponEffects: []
   physicsCol: {fileID: 1836040198077288}
-  weaponHolderPositionOffset: {x: 0, y: 0, z: 0}
+  weaponHolderPositionOffset: {x: 0.15, y: 0.3, z: 0.2}
   weaponHolderRotationOffset: {x: 0, y: 180, z: 0}
   isEquipped: 0
   assignedSlot: 0
@@ -653,8 +653,8 @@ MonoBehaviour:
   dryfireSound: {fileID: 8300000, guid: 694d6af4264c0e542b078412aa12b229, type: 3}
   ammoIcon: {fileID: 21300002, guid: a601d40eaef4f7d4a9b9eaa9787d123c, type: 3}
   ammoUsePerShot: 1
-  maxAmmo: 30
-  ammo: 30
+  maxAmmo: 32
+  ammo: 32
   minMaxAmmoReturnOnBounce: {x: 2, y: 6}
   bulletEjectPosition: {fileID: 4664353745174068}
   bulletEjectEffect: {fileID: 1401581062580156, guid: 2f24d42c5dadbfd4f878489e55f85e5c,
