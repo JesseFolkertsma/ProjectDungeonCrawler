@@ -381,12 +381,13 @@ MonoBehaviour:
   visualizeNodes: 0
   visualizeRaycasts: 0
   edgeBakeAmount: 0
-  calculationsPerFrame: 6000
+  calculationsPerFrame: 12000
   initializesPerFrame: 500000
-  heavyCalcPerFrame: 400
+  heavyCalcPerFrame: 800
   center: {fileID: 0}
   positionUpdateFrequency: 3
   curRoom: {fileID: 0}
+  bakesPerFrame: 1
 --- !u!114 &761871901
 MonoBehaviour:
   m_ObjectHideFlags: 0
