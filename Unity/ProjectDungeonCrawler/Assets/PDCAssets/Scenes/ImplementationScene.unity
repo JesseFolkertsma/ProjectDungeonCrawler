@@ -145,6 +145,10 @@ MonoBehaviour:
       movementSpeed: 0
     playerWeapons: 
     playerConsumables: []
+  untaggedHitdecal: {fileID: 0}
+  woodHitdecal: {fileID: 0}
+  stoneHitdecal: {fileID: 0}
+  fleshHitdecal: {fileID: 0}
 --- !u!4 &153103451
 Transform:
   m_ObjectHideFlags: 0
@@ -377,12 +381,13 @@ MonoBehaviour:
   visualizeNodes: 0
   visualizeRaycasts: 0
   edgeBakeAmount: 0
-  calculationsPerFrame: 3000
-  initializesPerFrame: 20000
-  heavyCalcPerFrame: 200
+  calculationsPerFrame: 12000
+  initializesPerFrame: 500000
+  heavyCalcPerFrame: 800
   center: {fileID: 0}
   positionUpdateFrequency: 3
   curRoom: {fileID: 0}
+  bakesPerFrame: 1
 --- !u!114 &761871901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -709,13 +714,12 @@ MonoBehaviour:
   densityInteriorMax: 3
   densityEnemyMin: 0
   densityEnemyMax: 3
-  difficulty: 20
   difficultyBuffer: 10
   player: {fileID: 1009196950182780, guid: 0085af4a580137d48813c66bc45354e9, type: 2}
   enemies:
-  - obj: {fileID: 1048198498332828, guid: 623a7fabc732a54458e878953f2d0214, type: 2}
+  - obj: {fileID: 1157821817706260, guid: 184cfe620d5f037469eafaf7f2433d7c, type: 2}
     cost: 1
-    difficulty: 20
+    difficulty: 0
   spawnedRooms: []
   enemyValue: 0
 --- !u!114 &2097285919

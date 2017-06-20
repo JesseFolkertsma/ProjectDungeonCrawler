@@ -136,8 +136,8 @@ public class PathFinding : MonoBehaviour {
         if (bake != null)
             StopCoroutine(bake);
 
-        if (checkBake != null)
-            StopCoroutine(checkBake);
+        if (bakePrepare != null)
+            StopCoroutine(bakePrepare);
 
         if (objectBake != null)
             StopCoroutine(objectBake);
@@ -145,7 +145,7 @@ public class PathFinding : MonoBehaviour {
         bake = StartCoroutine(Bake());
     }
 
-    private Coroutine bake, checkBake, objectBake;
+    private Coroutine bake, bakePrepare, objectBake;
     public IEnumerator Bake() //1 grote fout: de bake bugt de fuck out als de objecten aan de bovenkant komen
     {
         #region Prepare Bake
@@ -172,53 +172,52 @@ public class PathFinding : MonoBehaviour {
         SetMidsAndBoundary(); //this is the node where this transform now is, neccessity for getnodefromvector
         #endregion
 
-        checkBake = StartCoroutine(BakePreparedScene(center)); //now bake all objects in the 3d array
+        toBake = bakeable; //contantly remove from this list
+        bakeCalcs = 0;
+        bakePrepare = StartCoroutine(BakePreparedScene()); //now bake all objects in the 3d array
     }
 
-    private int currentlyBakingObject = 0;
     private List<List<Node>> bakedObjects;
-    private IEnumerator BakePreparedScene(Transform center) 
+    private List<GameObject> toBake;
+    private int bakeCalcs = 0;
+    [SerializeField]
+    private int bakesPerFrame;
+    private IEnumerator BakePreparedScene()
     {
-        List<GameObject> toBake = bakeable; //contantly remove from this list
+        if (toBake.Count == 0)
+            yield break;
 
-        int calc = 0;
-        while(toBake.Count > 0)
+        //print(toBake.Count + " to go.");
+
+        bakeCalcs++;
+        if (bakeCalcs > bakesPerFrame) {
+            bakeCalcs = 0;
+            yield return null;
+        }
+
+        //get cheapest
+        GameObject closest = null;
+        float dis = 0;
+        foreach (GameObject obj in toBake)
         {
-            while (currentlyBakingObject > 0)
-                yield return null;
-
-            //get cheapest
-            GameObject closest = null;
-            float dis = 0;
-            foreach (GameObject obj in toBake)
+            float distance = Vector3.Distance(obj.transform.position, center.position);
+            //remove from tobake
+            if(!(closest != null))
             {
-                calc++;
-                if(calc > calculationsPerFrame)
-                {
-                    calc = 0;
-                    yield return null;
-                }
-
-                float distance = Vector3.Distance(obj.transform.position, center.position);
-                //remove from tobake
-                if(!(closest != null))
-                {
-                    closest = obj;
-                    dis = distance;
-                    continue;
-                }
-
-                if (distance > dis)
-                    continue;
-
-                dis = distance;
                 closest = obj;
+                dis = distance;
+                continue;
             }
 
-            currentlyBakingObject++;
-            objectBake = StartCoroutine(BakeObject(closest, BakeType.Object));
-            toBake.Remove(closest);
+            if (distance > dis)
+                continue;
+
+            dis = distance;
+            closest = obj;
         }
+
+        objectBake = StartCoroutine(BakeObject(closest, BakeType.Object));
+        toBake.Remove(closest);
     }
 
     public enum BakeType {Object, Enemy, Movable, Walkable }
@@ -230,7 +229,7 @@ public class PathFinding : MonoBehaviour {
         if (!(c != null))
         {
             if (type == BakeType.Object)
-                currentlyBakingObject--;
+                StartCoroutine(BakePreparedScene());
             if (type != BakeType.Object)
                 EndRealtimeBakeFrame(bakeable, ret);
             yield break;
@@ -255,7 +254,7 @@ public class PathFinding : MonoBehaviour {
         {
             //Debug.Log(bakeable.name + " not scanned, the center has to be in the bakeable area.");
             if(type == BakeType.Object)
-                currentlyBakingObject--;
+                StartCoroutine(BakePreparedScene());
             if (type != BakeType.Object)
                 EndRealtimeBakeFrame(bakeable, ret);
             yield break;
@@ -322,7 +321,7 @@ public class PathFinding : MonoBehaviour {
         #endregion
 
         if (type == BakeType.Object)
-            currentlyBakingObject--;
+            StartCoroutine(BakePreparedScene());
         if (type != BakeType.Object)
             EndRealtimeBakeFrame(bakeable, ret);
     }
