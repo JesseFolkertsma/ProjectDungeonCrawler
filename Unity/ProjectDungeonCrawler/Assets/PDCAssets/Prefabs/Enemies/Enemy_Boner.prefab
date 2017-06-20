@@ -1231,7 +1231,7 @@ Animator:
   m_GameObject: {fileID: 1157821817706260}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: ef2fdd10d6485f543aa7ff8adb73f3e0, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 77aab72f3a5213047bece01f524f8a8f, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1309,14 +1309,18 @@ MonoBehaviour:
   recalculatePathTime: 1
   nodeStoppingDistance: 3
   ragdoll: {fileID: 1336534025855518, guid: f002cb70d62ed0646bf53d1005f73a68, type: 2}
+  walkAnim: Moving
+  walkAnimValue: Movespeed
+  attackAnim: 
   enemy:
     fastUpdate: 0.1
     slowUpdate: 1
     fastDis: 10
     slowDis: 30
-    engagementRange: 20
-    attackRange: 2
+    engagementRange: 40
+    attackRange: 1
   loopIdle: 1
+  walkAnimSpeedupDistance: 1
 --- !u!136 &136807525660119488
 CapsuleCollider:
   m_ObjectHideFlags: 1
