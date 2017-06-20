@@ -4,6 +4,8 @@ using UnityEngine;
 using PDC.Saving;
 using PDC.Characters;
 using PDC.Weapons;
+using PDC.NPCS;
+using PDC.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -112,5 +114,10 @@ public class GameManager : MonoBehaviour
         }
         print("Animation: " + tagName + " has ended.");
         effectAfterEnd();
+    }
+
+    public void StartCoversation(NPC npc)
+    {
+        UIQuestGiver.instance.ActivateQuest(npc);
     }
 }
