@@ -39,8 +39,8 @@ namespace PDC.Characters {
         [SerializeField]
         private GameObject ragdoll;
 
-        //[SerializeField]
-        //private string ;
+        [SerializeField]
+        private string walkAnim, walkAnimValue, attackAnim;
 
         public class PlayerReference
         {
@@ -184,13 +184,12 @@ namespace PDC.Characters {
                 //check in range
                 //if so move
                 CalcRefreshRate();
-                PauseMovement();
+                PauseMovement(false);
 
                 if (playerDistance <= enemy.engagementRange)
                     if (CheckIfSeePlayer())
-                    {
                         Move(pC.Position);
-                    }
+
                 yield return new WaitForSeconds(updateTime);
             }
         }
@@ -244,7 +243,7 @@ namespace PDC.Characters {
         public void Attack()
         {
             //shoot raycasts and get direction, and rotate that way
-            PauseMovement();
+            PauseMovement(true);
             status = Status.Attacking;
             print("Attacking!");
         }
@@ -259,10 +258,17 @@ namespace PDC.Characters {
             Destroy(gameObject);
         }
 
+        private bool _moving;
         public void Move(Vector3 target)
         {
+            if (!_moving)
+            {
+                status = Status.Moving;
+                anim.SetBool(walkAnim, true);
+                startPos = transform.position;
+                _moving = true;
+            }
             navAgent.MoveTowards(target, _Move);
-            status = Status.Moving;
         }
 
         public void _Move(List<Vector3> path)
@@ -290,21 +296,31 @@ namespace PDC.Characters {
             }
         }
 
+        private Vector3 startPos;
         private IEnumerator MoveCoroutine()
         {
             List<Vector3> rest = _path;
             status = Status.Moving;
             Vector3 destination;
+            float lerpWalkAnim = 0, lerpCalc;
 
             while (rest.Count > 0)
             {
                 destination = rest[rest.Count - 1];
+
+                //lerp animation
+                lerpWalkAnim = Vector3.Distance(transform.position, startPos);
+                lerpCalc = Vector3.Distance(transform.position, destination);
+                if (lerpCalc < lerpWalkAnim)
+                    lerpWalkAnim = lerpCalc;
+                LerpWalkAnim(lerpWalkAnim);
+
                 while (Vector3.Distance(transform.position, rest[0]) < Vector3.Distance(destination, rest[0]) + nodeStoppingDistance * widthNode)
                 {
                     rest.Remove(destination);
                     if (rest.Count == 0)
                     {
-                        status = Status.Idle;
+                        PauseMovement(true);
                         yield break;
                     }
 
@@ -317,15 +333,36 @@ namespace PDC.Characters {
             }
 
             //finally end moving and set status to idle
-            status = Status.Idle;
+            PauseMovement(true);
             yield break;
         }
 
-        protected virtual void PauseMovement()
+        [SerializeField]
+        private float walkAnimSpeedupDistance = 1;
+        private void LerpWalkAnim(float range)
+        {
+            float lerpValue = Mathf.Lerp(0, walkAnimSpeedupDistance, range);
+            anim.SetFloat(walkAnimValue, lerpValue);
+        }
+
+        private void UseAttackAnim(int attack)
+        {
+            anim.SetInteger(attackAnim, attack);
+        }
+
+        private void EndAttackAnim()
+        {
+            anim.SetInteger(attackAnim, 0);
+        }
+
+        protected virtual void PauseMovement(bool stop)
         {
             if (moving != null)
                 StopCoroutine(moving);
+            if(stop)
+                _moving = false;
             status = Status.Idle;
+            anim.SetBool(walkAnim, false);
         }
 
         public void GetHit(float damage, EffectType hitType, StatusEffect[] effects, Vector3 shotPosition)
