@@ -5,11 +5,20 @@ using PDC.Characters;
 using System;
 using UnityEngine.AI;
 
+using PDC;
+using PDC.StatusEffects;
+
 namespace PDC.Characters {
     [RequireComponent(typeof(MoveManager))]
-    public class Enemy : BaseCharacter
+    public class Enemy : BaseCharacter, IHitable
     {
+        //rotate towards player while moving
+        //animatie
+        //mapmode movement
+        //other shizzle, look at planning
+
         private Rigidbody rb;
+        private Animator anim;
 
         [Serializable]
         public class EnemyStats
@@ -26,6 +35,12 @@ namespace PDC.Characters {
         [SerializeField]
         private int nodeStoppingDistance = 3;
         private float widthNode;
+
+        [SerializeField]
+        private GameObject ragdoll;
+
+        //[SerializeField]
+        //private string ;
 
         public class PlayerReference
         {
@@ -54,8 +69,7 @@ namespace PDC.Characters {
             }
         }
 
-        [SerializeField, Tooltip("Used for scanning player")]
-        private float heightChar, widthChar;
+        private static float heightChar = 2, widthChar = 1;
         protected List<Vector3> GetMultiPlayerPos()
         {
             //get normal, mid, left mid / right mid, high
@@ -91,9 +105,15 @@ namespace PDC.Characters {
 
         protected virtual void Awake()
         {
-            rb = GetComponent<Rigidbody>();
+            PrepareSelf();
             SetupNavMesh();
             StartCoroutine(SearchForPlayer());
+        }
+
+        private void PrepareSelf()
+        {
+            rb = GetComponent<Rigidbody>();
+            anim = GetComponent<Animator>();
         }
 
         private void Start()
@@ -231,7 +251,12 @@ namespace PDC.Characters {
 
         public override void Die()
         {
+            if (isdead)
+                return;
+            isdead = true;
             //drop items, calc which ones in enemymanager
+            Instantiate(ragdoll, transform.position, transform.rotation);
+            Destroy(gameObject);
         }
 
         public void Move(Vector3 target)
@@ -256,6 +281,15 @@ namespace PDC.Characters {
         private Coroutine moving;
         private List<Vector3> _path;
         private Vector3 direction;
+
+        public Vector3 ObjectCenter
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         private IEnumerator MoveCoroutine()
         {
             List<Vector3> rest = _path;
@@ -292,6 +326,11 @@ namespace PDC.Characters {
             if (moving != null)
                 StopCoroutine(moving);
             status = Status.Idle;
+        }
+
+        public void GetHit(float damage, EffectType hitType, StatusEffect[] effects, Vector3 shotPosition)
+        {
+            Die(); //DIE DIE!
         }
     }
 }
