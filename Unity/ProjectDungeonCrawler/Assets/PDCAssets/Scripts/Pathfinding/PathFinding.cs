@@ -133,6 +133,8 @@ public class PathFinding : MonoBehaviour {
 
     public void StartBake()
     {
+        Debug.Log("PREPARE ZE BAKKER");
+
         if (bake != null)
             StopCoroutine(bake);
 
@@ -186,7 +188,7 @@ public class PathFinding : MonoBehaviour {
         {
             while (currentlyBakingObject > 0)
                 yield return null;
-
+            print(toBake.Count + " to go.");
             //get cheapest
             GameObject closest = null;
             float dis = 0;
@@ -219,6 +221,8 @@ public class PathFinding : MonoBehaviour {
             objectBake = StartCoroutine(BakeObject(closest, BakeType.Object));
             toBake.Remove(closest);
         }
+
+        Debug.Log("BAKKER BART HEEFT GEBAKT");
     }
 
     public enum BakeType {Object, Enemy, Movable, Walkable }
