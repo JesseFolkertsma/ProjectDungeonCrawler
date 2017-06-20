@@ -19,7 +19,6 @@ namespace PDC
             private int densityInteriorMin, densityInteriorMax;
             [SerializeField, Range(0, 20)]
             private int densityEnemyMin, densityEnemyMax;
-            [SerializeField, Range(0, 100)]
             private int difficulty;
             [SerializeField]
             private int difficultyBuffer;
@@ -42,6 +41,7 @@ namespace PDC
 
             private void Awake()
             {
+                difficulty = MapData.difficulty;
                 self = this;
                 loader = GetComponent<MapLoader>();
             }
