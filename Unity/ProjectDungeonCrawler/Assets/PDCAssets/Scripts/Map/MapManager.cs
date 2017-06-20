@@ -38,7 +38,7 @@ public class MapManager : MonoBehaviour
         return grid[(int)x, (int)y];
     }
 
-    private Vector2 ConvertNodeToMap(Node node)
+    private Vector2 ConvertNodeToMap(Node node) //onbekend of dit werkt
     {
         float x = (float)Screen.width / resolutionX;
         float y = (float)Screen.height / resolutionY;
