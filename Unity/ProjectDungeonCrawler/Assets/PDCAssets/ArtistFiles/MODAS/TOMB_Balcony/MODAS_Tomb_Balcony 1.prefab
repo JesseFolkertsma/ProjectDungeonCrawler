@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4315694268256108}
   - component: {fileID: 33759847579919964}
   - component: {fileID: 23525152002942558}
+  - component: {fileID: 64106685232777352}
   m_Layer: 0
   m_Name: MODAS_Tomb_Balcony 1
   m_TagString: Untagged
@@ -35,7 +36,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1412338173842452}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 14.380121, y: -10, z: 8.138281}
+  m_LocalPosition: {x: 23.8, y: -5, z: 27}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -54,7 +55,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 1982309205, guid: 914c1a68ca063b045b06074aa584e1f5, type: 3}
+  - {fileID: -1360943130, guid: 914c1a68ca063b045b06074aa584e1f5, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -79,4 +80,18 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1412338173842452}
+  m_Mesh: {fileID: 4300002, guid: f385c9c759ee51043a944369db7e3c33, type: 3}
+--- !u!64 &64106685232777352
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1412338173842452}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 1
+  m_InflateMesh: 0
+  m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300002, guid: f385c9c759ee51043a944369db7e3c33, type: 3}
