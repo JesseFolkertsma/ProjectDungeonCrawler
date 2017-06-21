@@ -40,10 +40,10 @@ namespace PDC.Characters {
         private GameObject ragdoll;
 
         [SerializeField]
-        private string walkAnim, walkAnimValue, attackAnim;
+        private string walkAnim = "Moving", walkAnimValue = "Movespeed", attackAnim = "Attack";
 
         [SerializeField]
-        private float raycastOffsetHeight;
+        private float raycastOffsetHeight = 1.5f;
 
         public class PlayerReference
         {
@@ -101,7 +101,7 @@ namespace PDC.Characters {
         public class EnemyManagement
         {
             public float fastUpdate = 0.1f, slowUpdate = 1; //speed of updating, depending how far the player is from this enemy
-            public float fastDis, slowDis, engagementRange, attackRange; //lerp between ^ this with percentage distance
+            public float fastDis = 10, slowDis = 30, engagementRange = 20, attackRange = 1; //lerp between ^ this with percentage distance
         }
 
         public EnemyManagement enemy;
@@ -320,7 +320,7 @@ namespace PDC.Characters {
                 }
 
                 //rotate the enemy towards the player
-                transform.LookAt(pC.transform);
+                Rotate(pC.transform.position);
 
                 //move towards player
                 direction = (transform.position - destination).normalized;
@@ -334,15 +334,40 @@ namespace PDC.Characters {
             yield break;
         }
 
+        private Vector3 targetDir, newDir;
+        private float step;
+        private void Rotate(Vector3 des)
+        {
+            targetDir = des - transform.position;
+            step = rotateSpeed * Time.deltaTime;
+            newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0F);
+            //Debug.DrawRay(transform.position, newDir, Color.red);
+            transform.rotation = Quaternion.LookRotation(newDir);
+        }
+
+        #region Combat
+
+        protected virtual void UseAttack(int attack)
+        {
+            UseAttackAnim(attack);
+        }
+
         private void UseAttackAnim(int attack)
         {
             anim.SetInteger(attackAnim, attack);
         }
 
-        private void EndAttackAnim()
+        protected virtual void EndAttack(int attack)
         {
-            anim.SetInteger(attackAnim, 0);
+            EndAttackAnim(attack);
         }
+
+        private void EndAttackAnim(int attack)
+        {
+            anim.SetInteger(attackAnim, attack);
+        }
+
+        #endregion
 
         protected virtual void PauseMovement(bool stop)
         {
