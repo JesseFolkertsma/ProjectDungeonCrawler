@@ -9,7 +9,7 @@ using PDC;
 using PDC.StatusEffects;
 
 namespace PDC.Characters {
-    [RequireComponent(typeof(MoveManager))]
+    [RequireComponent(typeof(MoveManager), typeof(TagManager))]
     public class Enemy : BaseCharacter, IHitable
     {
         //rotate towards player while moving not working
@@ -21,12 +21,6 @@ namespace PDC.Characters {
         [SerializeField]
         private Animator anim;
 
-        [Serializable]
-        public class EnemyStats
-        {
-            public int damage;
-        }
-        public EnemyStats enemyStats;
         protected static PlayerReference pC = null;
         protected MoveManager navAgent;
         public enum Status {Idle, Attacking, Moving}
@@ -166,13 +160,8 @@ namespace PDC.Characters {
                 while (status == Status.Moving)
                 {
                     CalcRefreshRate();
-                    if (CheckIfAbleToAttack())
-                        //check if able to attack
-                        Attack();
-                    else
-                    {
+                    if (!CheckIfAbleToAttack())
                         Move(pC.Position); //because it also calculates new player position
-                    }
 
                     yield return new WaitForSeconds(recalculatePathTime * GetRefreshPercentage());
                 }
@@ -191,7 +180,8 @@ namespace PDC.Characters {
 
                 if (playerDistance <= enemy.engagementRange)
                     if (CheckIfSeePlayer())
-                        Move(pC.Position);
+                        if(!CheckIfAbleToAttack())
+                            Move(pC.Position);
 
                 yield return new WaitForSeconds(updateTime);
             }
@@ -236,17 +226,35 @@ namespace PDC.Characters {
 
         protected virtual bool CheckIfAbleToAttack()
         {
-            bool ret = GetPlayerDistance() < enemy.attackRange;
-            //check attack info, check if close enough        
-            return ret;
-        }
+            float dis = GetPlayerDistance();
+            bool ret = dis < enemy.attackRange;
+            //check attack info, check if close enough    
+            if (!ret)
+                return ret;
 
-        public void Attack()
-        {
-            //shoot raycasts and get direction, and rotate that way
-            PauseMovement(true);
-            status = Status.Attacking;
-            print("Attacking!");
+            EnemyAttack attack = null;
+            //check if attacks are in range and choose attack which has the least range
+            foreach (EnemyAttack eA in enemyAttacks)
+            {
+                if (eA.range > dis)
+                {
+                    if (attack != null)
+                    {
+                        if (eA.range < attack.range)
+                            attack = eA;
+                    }
+                    else
+                        attack = eA;
+                }
+            }
+
+            if(attack != null)
+            {
+                UseAttack(attack);
+                return true;
+            }
+                
+            return false;
         }
 
         public override void Die()
@@ -334,37 +342,106 @@ namespace PDC.Characters {
             yield break;
         }
 
+        #region Rotation
+
         private Vector3 targetDir, newDir;
         private float step;
         private void Rotate(Vector3 des)
         {
-            targetDir = des - transform.position;
+            targetDir = (des - transform.position).normalized;
             step = rotateSpeed * Time.deltaTime;
             newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0F);
             //Debug.DrawRay(transform.position, newDir, Color.red);
             transform.rotation = Quaternion.LookRotation(newDir);
         }
 
+        private Coroutine rotateCoroutine;
+        private void RotateContinual(Vector3 des)
+        {
+            EndRotateContinual();
+            rotateCoroutine = StartCoroutine(_RotateContinual(des));
+        }
+
+        private void EndRotateContinual()
+        {
+            if (rotateCoroutine != null)
+                StopCoroutine(rotateCoroutine);
+        }
+
+        private IEnumerator _RotateContinual(Vector3 des)
+        {
+            while (true)
+            {
+                Rotate(transform.position);
+                CalcRefreshRate();
+                yield return new WaitForSeconds(updateTime);
+            }
+        }
+
+        #endregion
+
         #region Combat
 
-        protected virtual void UseAttack(int attack)
+        [Serializable]
+        public class EnemyAttack
         {
-            UseAttackAnim(attack);
+            public int index;
+            public int damage;
+            public float range;
+            public EffectType type;
+            public StatusEffect[] statusEffects;
+            public bool ranged;
         }
 
-        private void UseAttackAnim(int attack)
+        [SerializeField]
+        private EnemyAttack[] enemyAttacks;
+        private EnemyAttack curAttack;
+        [HideInInspector]
+        public bool damages;
+        private List<IHitable> hits = new List<IHitable>(); //to make sure he doesnt hit something twice in one attack
+
+        public void SwitchDamageFrames()
         {
-            anim.SetInteger(attackAnim, attack);
+            damages = !damages;
         }
 
-        protected virtual void EndAttack(int attack)
+        protected virtual void UseAttack(EnemyAttack eA)
         {
-            EndAttackAnim(attack);
+            PauseMovement(true);
+            status = Status.Attacking;
+
+            curAttack = eA;
+            RotateContinual(pC.transform.position);
+
+            damages = false;
+            hits.Clear();
+            anim.SetInteger(attackAnim, eA.index);
         }
 
-        private void EndAttackAnim(int attack)
+        public virtual void EndAttack()
         {
-            anim.SetInteger(attackAnim, attack);
+            //continue while still in range
+            if (GetPlayerDistance() <= curAttack.range)
+                return;
+            anim.SetInteger(attackAnim, 0);
+            EndRotateContinual();
+            status = Status.Idle;
+        }
+
+        public virtual void HitObject(IHitable hit)
+        {
+            if (hits.Contains(hit))
+                return;
+            if (status != Status.Attacking)
+                return;
+            if (curAttack.ranged)
+                return;
+            if (!damages)
+                return;
+
+            //check if attacking     
+            hits.Add(hit);      
+            hit.GetHit(curAttack.damage, curAttack.type, curAttack.statusEffects, transform.position);
         }
 
         #endregion
@@ -377,7 +454,6 @@ namespace PDC.Characters {
             if (stopping)
             {
                 status = Status.Idle;
-
                 anim.SetBool(walkAnim, false);
                 anim.SetFloat(walkAnimValue, 0);
             } 
