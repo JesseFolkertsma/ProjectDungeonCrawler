@@ -135,23 +135,26 @@ public class MoveManager : MonoBehaviour {
         else
             Debug.Log("Currently not in a walkable area, unable to create a path.");
 
-        reference = destination;
-        nodesBetween = -maxNodesBetweenGroundAndTargetReverse;
-        y = 0;
-        if (destination != null)
+        if (start != null)
         {
-            while (nodesBetween < maxNodesBetweenGroundAndTarget)
+            reference = destination;
+            nodesBetween = -maxNodesBetweenGroundAndTargetReverse;
+            y = 0;
+            if (destination != null)
             {
-                y = reference.y - nodesBetween;
-                if (!(y > 0 && y < p.grid.GetLength(1)))
+                while (nodesBetween < maxNodesBetweenGroundAndTarget)
                 {
+                    y = reference.y - nodesBetween;
+                    if (!(y > 0 && y < p.grid.GetLength(1)))
+                    {
+                        nodesBetween++;
+                        continue;
+                    }
+                    reference = p.grid[start.x, y, start.z]; //BUG
                     nodesBetween++;
-                    continue;
+                    if (reference.filled && reference.bakeType == PathFinding.BakeType.Object)
+                        break;
                 }
-                reference = p.grid[start.x, y, start.z];
-                nodesBetween++;
-                if (reference.filled && reference.bakeType == PathFinding.BakeType.Object)
-                    break;
             }
         }
 

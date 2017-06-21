@@ -81,6 +81,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4189855354273362}
   - component: {fileID: 95576166387204580}
+  - component: {fileID: 114251804215225476}
   m_Layer: 0
   m_Name: Enemy_Boner
   m_TagString: Untagged
@@ -398,6 +399,23 @@ GameObject:
   - component: {fileID: 4329476051693050}
   m_Layer: 0
   m_Name: mixamorig:RightHand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1662002199265124
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4710793241684856}
+  - component: {fileID: 65155468004874120}
+  - component: {fileID: 114378411483307982}
+  m_Layer: 0
+  m_Name: HITBOX - HIPSTER EDITION
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1092,6 +1110,19 @@ Transform:
   m_Father: {fileID: 4189855354273362}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4710793241684856
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1662002199265124}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4862183605317590}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4716189330061512
 Transform:
   m_ObjectHideFlags: 1
@@ -1175,6 +1206,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4152029685588658}
+  - {fileID: 4710793241684856}
   m_Father: {fileID: 4256868373874812}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1185,7 +1217,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1720111186506282}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5224247, y: -2.6831517, z: 6.996585}
+  m_LocalPosition: {x: 131.69891, y: 373.13782, z: 47.325554}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4189855354273362}
@@ -1249,8 +1281,20 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!65 &65155468004874120
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1662002199265124}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 20, y: 100, z: 20}
+  m_Center: {x: 0, y: 100, z: 0}
 --- !u!95 &95576166387204580
 Animator:
   serializedVersion: 3
@@ -1268,6 +1312,28 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114251804215225476
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1113561048162238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d42ba3bcbc2e69478e5093912707ac2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114378411483307982
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1662002199265124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 430afb5b919fba64d8d5241b2c9449ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114397053463086610
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1301,8 +1367,6 @@ MonoBehaviour:
     movementSpeed: 5
   isdead: 0
   anim: {fileID: 95576166387204580}
-  enemyStats:
-    damage: 0
   status: 0
   recalculatePathTime: 1
   nodeStoppingDistance: 3
@@ -1317,9 +1381,17 @@ MonoBehaviour:
     fastDis: 10
     slowDis: 30
     engagementRange: 40
-    attackRange: 1
+    attackRange: 5
   loopIdle: 1
-  rotateSpeed: 10
+  rotateSpeed: 2
+  enemyAttacks:
+  - index: 1
+    damage: 10
+    range: 3
+    type: 0
+    statusEffects: []
+    ranged: 0
+  damages: 0
 --- !u!114 &114762618731357432
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1350,7 +1422,7 @@ MonoBehaviour:
   maxNodesBetweenGroundAndTargetReverse: 1
   _2d: 0
   checksPerFrame: 10
-  stoppingNodeDistance: 5
+  stoppingNodeDistance: 1
   maxNodesCheckable: 200
 --- !u!136 &136546463817757898
 CapsuleCollider:
