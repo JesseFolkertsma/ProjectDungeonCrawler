@@ -1312,6 +1312,7 @@ MonoBehaviour:
   walkAnim: Moving
   walkAnimValue: Movespeed
   attackAnim: 
+  raycastOffsetHeight: 1.5
   enemy:
     fastUpdate: 0.1
     slowUpdate: 1
@@ -1320,7 +1321,7 @@ MonoBehaviour:
     engagementRange: 40
     attackRange: 1
   loopIdle: 1
-  walkAnimSpeedupDistance: 1
+  rotateSpeed: 10
 --- !u!136 &136807525660119488
 CapsuleCollider:
   m_ObjectHideFlags: 1
