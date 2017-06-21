@@ -12,12 +12,13 @@ namespace PDC.Characters {
     [RequireComponent(typeof(MoveManager))]
     public class Enemy : BaseCharacter, IHitable
     {
-        //rotate towards player while moving
-        //animatie
+        //rotate towards player while moving not working
+        //kleine hiccup als hij aan het eind van zn tijdelijke path is
         //mapmode movement
         //other shizzle, look at planning
 
         private Rigidbody rb;
+        [SerializeField]
         private Animator anim;
 
         [Serializable]
@@ -40,7 +41,10 @@ namespace PDC.Characters {
         private GameObject ragdoll;
 
         [SerializeField]
-        private string walkAnim, walkAnimValue, attackAnim;
+        private string walkAnim = "Moving", walkAnimValue = "Movespeed", attackAnim = "Attack";
+
+        [SerializeField]
+        private float raycastOffsetHeight = 1.5f;
 
         public class PlayerReference
         {
@@ -98,7 +102,7 @@ namespace PDC.Characters {
         public class EnemyManagement
         {
             public float fastUpdate = 0.1f, slowUpdate = 1; //speed of updating, depending how far the player is from this enemy
-            public float fastDis, slowDis, engagementRange, attackRange; //lerp between ^ this with percentage distance
+            public float fastDis = 10, slowDis = 30, engagementRange = 20, attackRange = 1; //lerp between ^ this with percentage distance
         }
 
         public EnemyManagement enemy;
@@ -113,7 +117,6 @@ namespace PDC.Characters {
         private void PrepareSelf()
         {
             rb = GetComponent<Rigidbody>();
-            anim = GetComponent<Animator>();
         }
 
         private void Start()
@@ -184,7 +187,7 @@ namespace PDC.Characters {
                 //check in range
                 //if so move
                 CalcRefreshRate();
-                PauseMovement(false);
+                PauseMovement(true);
 
                 if (playerDistance <= enemy.engagementRange)
                     if (CheckIfSeePlayer())
@@ -217,16 +220,14 @@ namespace PDC.Characters {
 
         protected virtual bool CheckIfSeePlayer()
         {
-            /*
-            so this is a weird check
-            since the player has no collider whatsoever, im going to pass the "see player"
-            if at least one of the raycasts DOESNT hit anything
-            */
+            Vector3 origin = transform.position;
+            origin.y += raycastOffsetHeight;
+
             RaycastHit hit;
             foreach (Vector3 pos in GetMultiPlayerPos())
             {
-                //Debug.DrawLine(transform.position, pos, Color.red, 0.1f);
-                if (Physics.Linecast(transform.position, pos, out hit))
+                //Debug.DrawLine(origin, pos, Color.red, 1);
+                if (Physics.Linecast(origin, pos, out hit))
                     if(hit.transform == pC.transform)
                         return true;
             }
@@ -258,16 +259,10 @@ namespace PDC.Characters {
             Destroy(gameObject);
         }
 
-        private bool _moving;
         public void Move(Vector3 target)
         {
-            if (!_moving)
-            {
-                status = Status.Moving;
-                anim.SetBool(walkAnim, true);
-                startPos = transform.position;
-                _moving = true;
-            }
+            status = Status.Moving;
+            anim.SetBool(walkAnim, true);
             navAgent.MoveTowards(target, _Move);
         }
 
@@ -296,25 +291,22 @@ namespace PDC.Characters {
             }
         }
 
-        private Vector3 startPos;
+        private float walkAnimLerpValue;
+        private Vector3 destination, quatRot;
+        [SerializeField]
+        private float rotateSpeed;
         private IEnumerator MoveCoroutine()
         {
             List<Vector3> rest = _path;
             status = Status.Moving;
-            Vector3 destination;
-            float lerpWalkAnim = 0, lerpCalc;
 
             while (rest.Count > 0)
             {
+                if (walkAnimLerpValue < 1)
+                    walkAnimLerpValue += Time.deltaTime;
+                anim.SetFloat(walkAnimValue, walkAnimLerpValue);
+
                 destination = rest[rest.Count - 1];
-
-                //lerp animation
-                lerpWalkAnim = Vector3.Distance(transform.position, startPos);
-                lerpCalc = Vector3.Distance(transform.position, destination);
-                if (lerpCalc < lerpWalkAnim)
-                    lerpWalkAnim = lerpCalc;
-                LerpWalkAnim(lerpWalkAnim);
-
                 while (Vector3.Distance(transform.position, rest[0]) < Vector3.Distance(destination, rest[0]) + nodeStoppingDistance * widthNode)
                 {
                     rest.Remove(destination);
@@ -326,9 +318,14 @@ namespace PDC.Characters {
 
                     destination = rest[rest.Count - 1];
                 }
-                
+
+                //rotate the enemy towards the player
+                Rotate(pC.transform.position);
+
+                //move towards player
                 direction = (transform.position - destination).normalized;
-                rb.MovePosition(transform.position - direction * Time.deltaTime * characterStats.movementSpeed);
+                rb.MovePosition(transform.position - direction * Time.deltaTime * characterStats.movementSpeed);              
+
                 yield return new WaitForSeconds(Time.deltaTime);
             }
 
@@ -337,12 +334,22 @@ namespace PDC.Characters {
             yield break;
         }
 
-        [SerializeField]
-        private float walkAnimSpeedupDistance = 1;
-        private void LerpWalkAnim(float range)
+        private Vector3 targetDir, newDir;
+        private float step;
+        private void Rotate(Vector3 des)
         {
-            float lerpValue = Mathf.Lerp(0, walkAnimSpeedupDistance, range);
-            anim.SetFloat(walkAnimValue, lerpValue);
+            targetDir = des - transform.position;
+            step = rotateSpeed * Time.deltaTime;
+            newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0F);
+            //Debug.DrawRay(transform.position, newDir, Color.red);
+            transform.rotation = Quaternion.LookRotation(newDir);
+        }
+
+        #region Combat
+
+        protected virtual void UseAttack(int attack)
+        {
+            UseAttackAnim(attack);
         }
 
         private void UseAttackAnim(int attack)
@@ -350,19 +357,30 @@ namespace PDC.Characters {
             anim.SetInteger(attackAnim, attack);
         }
 
-        private void EndAttackAnim()
+        protected virtual void EndAttack(int attack)
         {
-            anim.SetInteger(attackAnim, 0);
+            EndAttackAnim(attack);
         }
+
+        private void EndAttackAnim(int attack)
+        {
+            anim.SetInteger(attackAnim, attack);
+        }
+
+        #endregion
 
         protected virtual void PauseMovement(bool stop)
         {
             if (moving != null)
                 StopCoroutine(moving);
-            if(stop)
-                _moving = false;
-            status = Status.Idle;
-            anim.SetBool(walkAnim, false);
+            bool stopping = stop;
+            if (stopping)
+            {
+                status = Status.Idle;
+
+                anim.SetBool(walkAnim, false);
+                anim.SetFloat(walkAnimValue, 0);
+            } 
         }
 
         public void GetHit(float damage, EffectType hitType, StatusEffect[] effects, Vector3 shotPosition)
