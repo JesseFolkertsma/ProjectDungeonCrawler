@@ -18,6 +18,7 @@ namespace PDC.Characters {
         //other shizzle, look at planning
 
         private Rigidbody rb;
+        [SerializeField]
         private Animator anim;
 
         [Serializable]
@@ -116,7 +117,6 @@ namespace PDC.Characters {
         private void PrepareSelf()
         {
             rb = GetComponent<Rigidbody>();
-            anim = GetComponent<Animator>();
         }
 
         private void Start()
