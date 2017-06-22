@@ -223,6 +223,12 @@ public class PathFinding : MonoBehaviour {
     public enum BakeType {Object, Enemy, Movable, Walkable }
     private IEnumerator BakeObject(GameObject bakeable, BakeType type) //hier zit HET PROBLEEM
     {
+        if(!(bakeable != null))
+        {
+            StartCoroutine(BakePreparedScene());
+            yield break;
+        }
+
         List<Node> ret = new List<Node>();
         //get size collider
         Collider c = bakeable.GetComponent<Collider>();
