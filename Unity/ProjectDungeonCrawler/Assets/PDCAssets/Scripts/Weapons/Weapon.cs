@@ -103,10 +103,7 @@ namespace PDC.Weapons
             }
         }
 
-        public virtual void OnPickup()
-        {
-
-        }
+        public virtual void OnPickup() { }
 
         private void OnCollisionEnter(Collision collision)
         {
