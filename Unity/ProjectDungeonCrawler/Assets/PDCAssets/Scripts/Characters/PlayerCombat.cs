@@ -6,6 +6,7 @@ using PDC.Weapons;
 using PDC.UI;
 using PDC.Consumables;
 using PDC.StatusEffects;
+using PDC.Saving;
 
 namespace PDC.Characters
 {
@@ -15,18 +16,11 @@ namespace PDC.Characters
         public static PlayerCombat instance;
         PlayerController pc;
 
-        //Public variables
-        public List<Weapon> weapons = new List<Weapon>();
-        public int availableSlots;
-        public List<Consumable> consumables;
-        public float throwStrenght = 700;
-
         //Private variables
+        PlayerData data;
         [SerializeField] Transform weaponPos;
         [SerializeField] Transform offSetObject;
         Transform weaponTrans;
-        int equippedWeapon;
-        int selectedConsumable;
         bool setup = false;
 
         //Hidden public variables
@@ -38,30 +32,13 @@ namespace PDC.Characters
         public static event OnPlayerDeath onSpawnEvent;
         public delegate void OnPlayerDeath();
         public static event OnPlayerDeath onDeathEvent;
-        public delegate void OnWeaponDataChange(List<Weapon> weapons, Weapon equipped);
-        public OnWeaponDataChange onWeaponDataChange;
         public delegate void OnAmmoDataChange(Weapon equipped);
         public OnAmmoDataChange onAmmoDataChange;
         public delegate void OnHPChange(float newHP, float maxHP);
         public OnHPChange onHPChange;
-        public delegate void OnConsumableChange(List<Consumable> consumables, int selectedConsumable, bool playAnimation);
-        public OnConsumableChange onConsumableChange;
         public delegate void OnGiveStatusEffect(OngoingEffect effect);
         public OnGiveStatusEffect onGiveStatusEffect;
-
-        public Weapon EquippedWeapon
-        {
-            get
-            {
-                if (equippedWeapon < weapons.Count && equippedWeapon != -1)
-                {
-                    if (weapons[equippedWeapon] != null)
-                        return weapons[equippedWeapon];
-                }
-                return null;
-            }
-        }
-
+        
         void Awake()
         {
             if (instance == null)
@@ -73,16 +50,28 @@ namespace PDC.Characters
 
             weaponAnim = weaponPos.GetComponent<Animator>();
             
-            GameManager.instance.LoadGameData();
-            for (int i = 0; i < availableSlots; i++)
+            //GameManager.instance.LoadGameData();
+            for (int i = 0; i < data.availableSlots; i++)
             {
                 PickupWeapon(EmptyWeapon.GetNew());
             }
+
+            GatherWeaponData();
 
             if (onSpawnEvent != null)
                 onSpawnEvent();
 
             setup = true;
+        }
+
+        void GatherWeaponData()
+        {
+            foreach(int i in data.weaponsByID)
+            {
+                GameObject go = Instantiate(WeaponDatabase.instace.GetWeaponByID(i));
+                Weapon wep = go.GetComponent<Weapon>();
+                PickupWeapon(wep);
+            }
         }
 
         void Update()
@@ -113,7 +102,7 @@ namespace PDC.Characters
             if (weaponTrans)
             {
                 Vector3 sway = new Vector3(-(Mathf.Clamp(Input.GetAxisRaw("Mouse X"), -1, 1) + pc.xInput) / 14, -pc.rb.velocity.y / 20, 0);
-                Vector3 newPos = EquippedWeapon.weaponHolderPositionOffset + sway;
+                Vector3 newPos = data.EquippedWeapon.weaponHolderPositionOffset + sway;
                 if (newPos.y > .1f)
                     newPos.y = .1f;
                 else if (newPos.y < -.1f)
@@ -126,7 +115,7 @@ namespace PDC.Characters
         {
             if (Input.GetButtonDown("Save"))
             {
-                GameManager.instance.GatherGameData();
+                //GameManager.instance.GatherGameData();
             }
             if (Input.GetButtonDown("MainMenu"))
             {
@@ -135,7 +124,7 @@ namespace PDC.Characters
             }
 
             
-            if (EquippedWeapon.GetType() != typeof(EmptyWeapon))
+            if (data.EquippedWeapon.GetType() != typeof(EmptyWeapon))
             {
                 if (Input.GetButton("Fire2"))
                 {
@@ -158,7 +147,7 @@ namespace PDC.Characters
                     Throw();
                 }
                 if (onAmmoDataChange != null)
-                    onAmmoDataChange(EquippedWeapon);
+                    onAmmoDataChange(data.EquippedWeapon);
             }
 
             //Check scrollwheel input
@@ -170,22 +159,22 @@ namespace PDC.Characters
                 int equipThis = 0;
                 if (scroll < 0)
                 {
-                    equipThis = EquippedWeapon.assignedSlot + 1;
-                    if (equipThis > weapons.Count - 1)
+                    equipThis = data.EquippedWeapon.assignedSlot + 1;
+                    if (equipThis > data.weapons.Count - 1)
                         equipThis = 0;
                 }
                 else if (scroll > 0)
                 {
-                    equipThis = EquippedWeapon.assignedSlot - 1;
+                    equipThis = data.EquippedWeapon.assignedSlot - 1;
                     if (equipThis < 0)
-                        equipThis = weapons.Count - 1;
+                        equipThis = data.weapons.Count - 1;
                 }
 
                 //Equip the right weapon
                 EquipWeapon(equipThis);
             }
 
-            for (int i = 0; i < availableSlots; i++)
+            for (int i = 0; i < data.availableSlots; i++)
             {
                 if (Input.GetButton((i + 1).ToString()))
                 {
@@ -194,7 +183,7 @@ namespace PDC.Characters
             }
 
             //Consumables inputs
-            if (consumables.Count > 0)
+            if (data.consumables.Count > 0)
             {
                 if (Input.GetButtonDown("Consume"))
                 {
@@ -210,136 +199,99 @@ namespace PDC.Characters
 
         void LeftMouse()
         {
-            EquippedWeapon.Fire1Hold(pc.playerCam, pc.playerLayer);
+            data.EquippedWeapon.Fire1Hold(pc.playerCam, pc.playerLayer);
         }
 
         void RightMouse()
         {
-            EquippedWeapon.Fire2Hold();
+            data.EquippedWeapon.Fire2Hold();
         }
 
         void LeftMouseUp()
         {
-            EquippedWeapon.Fire1Up();
+            data.EquippedWeapon.Fire1Up();
         }
 
         void RightMouseUp()
         {
-            EquippedWeapon.Fire2Up();
+            data.EquippedWeapon.Fire2Up();
         }
 
         void Throw()
         {
-            if (EquippedWeapon.GetType() != typeof(EmptyWeapon))
-                EquippedWeapon.anim.SetTrigger("Throw");
+            if (data.EquippedWeapon.GetType() != typeof(EmptyWeapon))
+                data.EquippedWeapon.anim.SetTrigger("Throw");
         }
 
         public void ThrowWeapon()
         {
             //Reset weapon slot
-            EquippedWeapon.ThrowWeapon(pc.playerCam, throwStrenght);
-            if (EquippedWeapon.GetType() != typeof(EmptyWeapon))
+            data.EquippedWeapon.ThrowWeapon(pc.playerCam, data.throwStrenght);
+            if (data.EquippedWeapon.GetType() != typeof(EmptyWeapon))
             {
                 weaponTrans = null;
-                RemoveWeapon(EquippedWeapon.assignedSlot);
+                RemoveWeapon(data.EquippedWeapon.assignedSlot);
 
-                if (onWeaponDataChange != null)
-                    onWeaponDataChange(weapons, EquippedWeapon);
+                if (data.onWeaponDataChange != null)
+                    data.onWeaponDataChange(data.weapons, data.EquippedWeapon);
             }
         }
 
         public void EquipWeapon(int weapI)
         {
             //Return if the slot is already the equipped slot
-            if (weapI == EquippedWeapon.assignedSlot && EquippedWeapon.gameObject.activeInHierarchy)
+            if (weapI == data.EquippedWeapon.assignedSlot && data.EquippedWeapon.gameObject.activeInHierarchy)
                 return;
 
-            if (EquippedWeapon.GetType() != typeof(EmptyWeapon))
-                EquippedWeapon.gameObject.SetActive(false);
-            
-            equippedWeapon = weapI;
+            if (data.EquippedWeapon.GetType() != typeof(EmptyWeapon))
+                data.EquippedWeapon.gameObject.SetActive(false);
 
-            if (weapons[weapI].GetType() != typeof(EmptyWeapon))
+            data.equippedWeapon = weapI;
+
+            if (data.weapons[weapI].GetType() != typeof(EmptyWeapon))
             {
-                offSetObject.localPosition = weapons[weapI].weaponHolderPositionOffset;
-                offSetObject.localEulerAngles = weapons[weapI].weaponHolderRotationOffset;
-                EquippedWeapon.gameObject.SetActive(true);
-                weaponTrans = EquippedWeapon.transform;
-                weapons[weapI].anim.SetTrigger("Pickup");
+                offSetObject.localPosition = data.weapons[weapI].weaponHolderPositionOffset;
+                offSetObject.localEulerAngles = data.weapons[weapI].weaponHolderRotationOffset;
+                data.EquippedWeapon.gameObject.SetActive(true);
+                weaponTrans = data.EquippedWeapon.transform;
+                data.weapons[weapI].anim.SetTrigger("Pickup");
                 weaponAnim.SetTrigger("Equip");
             }
 
-            if (onWeaponDataChange != null)
-                onWeaponDataChange(weapons, EquippedWeapon);
+            if (data.onWeaponDataChange != null)
+                data.onWeaponDataChange(data.weapons, data.EquippedWeapon);
         }
 
         public void PickupConsumable(Consumable cons)
         {
-            consumables.Add(cons);
-            if (onConsumableChange != null)
-                onConsumableChange(consumables, selectedConsumable, false);
+            data.AddConsumable(cons);
         }
 
         public void RemoveConsumable(Consumable cons)
         {
-            if(consumables.Contains(cons))
-                consumables.Remove(cons);
-            if (onConsumableChange != null)
-                onConsumableChange(consumables, selectedConsumable, false);
+            data.RemoveConsumable(cons);
         }
 
         void Consume()
         {
-            print("CONSUMING THE SOUL OF: " + consumables[selectedConsumable].name);
-            consumables[selectedConsumable].Use(this);
-            RemoveConsumable(consumables[selectedConsumable]);
+            data.consumables[data.selectedConsumable].Use(this);
+            RemoveConsumable(data.consumables[data.selectedConsumable]);
         }
 
         void NextConsumable()
         {
-            selectedConsumable++;
-            if (selectedConsumable > consumables.Count - 1)
-                selectedConsumable = 0;
+            data.selectedConsumable++;
+            if (data.selectedConsumable > data.consumables.Count - 1)
+                data.selectedConsumable = 0;
 
-            if (onConsumableChange != null)
-                onConsumableChange(consumables, selectedConsumable, true);
-        }
-
-        //Check for a free slot and return true if so
-        public bool TryAssignWeapon(Weapon weap)
-        {
-            for (int i = 0; i < availableSlots; i++)
-            {
-                if (weapons.Count - 1 < i)
-                {
-                    weapons.Add(weap);
-                    weap.assignedSlot = i;
-                    return true;
-                }
-                else if (weap.GetType() == typeof(EmptyWeapon))
-                {
-                    if (weapons[i] == null)
-                    {
-                        weapons[i] = weap;
-                        weap.assignedSlot = i;
-                        return true;
-                    }
-                    continue;
-                }
-                else if (weapons[i].GetType() == typeof(EmptyWeapon))
-                {
-                    weapons[i] = weap;
-                    weap.assignedSlot = i;
-                    return true;
-                }
-            }
-            return false;
+            if (data.onConsumableChange != null)
+                data.onConsumableChange(data.consumables, data.selectedConsumable, true);
         }
 
         public void PickupWeapon(Weapon weap)
         {
             //Check for free slot
-            if (TryAssignWeapon(weap))
+            if (data.TryAssignWeapon(weap))
             {
                 //Setup variables
                 weap.isEquipped = true;
@@ -359,8 +311,8 @@ namespace PDC.Characters
                     print("Assigning empty");
                 }
                 EquipWeapon(weap.assignedSlot);
-                if (onWeaponDataChange != null)
-                    onWeaponDataChange(weapons, EquippedWeapon);
+                if (data.onWeaponDataChange != null)
+                    data.onWeaponDataChange(data.weapons, data.EquippedWeapon);
 
                 weap.OnPickup();
             }
@@ -372,7 +324,7 @@ namespace PDC.Characters
 
         void RemoveWeapon(int slotToRemove)
         {
-            weapons[slotToRemove] = null;
+            data.weapons[slotToRemove] = null;
             PickupWeapon(EmptyWeapon.GetNew());
         }
 
@@ -406,7 +358,7 @@ namespace PDC.Characters
                 pc.playerCam.gameObject.AddComponent<CapsuleCollider>();
                 pc.playerCam.gameObject.AddComponent<Rigidbody>();
                 pc.playerCam.GetComponent<Rigidbody>().AddForce(transform.forward);
-                EquippedWeapon.gameObject.SetActive(false);
+                data.EquippedWeapon.gameObject.SetActive(false);
                 onDeathEvent();
             }
         }

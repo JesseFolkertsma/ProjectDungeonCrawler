@@ -17,7 +17,7 @@ namespace PDC.UI
         public float typeRate = 1;
         public float skipConvAcceleration = 2;
         public float moveSpeed = 250;
-        public float fadeDuration = 2;
+        public float fadeDuration = 0;
 
         float CurrentTypeSpeed
         {
@@ -37,67 +37,90 @@ namespace PDC.UI
             audioS = GetComponent<AudioSource>();
         }
 
+        /// <summary>
+        /// Play entire conversation
+        /// </summary>
+        /// <param name="_npc">The NPC to play the conversation from</param>
         public void ActivateQuest(NPC _npc)
         {
             npc = _npc;
             image.sprite = _npc.npcSprite;
-            image.color = Color.black;
-            text.text = "";
             StartCoroutine(MoveIntoScreen());
         }
 
         IEnumerator MoveIntoScreen()
         {
-            while (transform.localPosition.y < -.05f)
+            image.color = Color.black;
+            text.text = "";
+            yield return FadeNPCInOrOut(true);
+            //Loop each sentance
+            foreach (NPCSentance s in npc.conversation)
             {
-                transform.localPosition = Vector2.MoveTowards(transform.localPosition, Vector2.zero, moveSpeed * Time.deltaTime);
-                yield return null;
+                yield return HandleSentance(s);
             }
-            print("Moved in");
-            //image.CrossFadeColor(Color.white, fadeDuration, false, false);
-            float elapsedTime = 0f;
-            while (!image.color.Equals(Color.white))
+            yield return FadeNPCInOrOut(false);
+        }
+
+        IEnumerator HandleSentance(NPCSentance sentance)
+        {
+            PlayRandomTalkSound();
+            sentance.action();
+            //Type out each char
+            foreach (char c in sentance.sentance)
             {
-                image.color = Color.Lerp(image.color, Color.white, elapsedTime/fadeDuration);
-                elapsedTime += Time.deltaTime;
-                yield return null;
-            }
-            print("faded in");
-            foreach (string s in npc.conversation)
-            {
-                print("talking: " + s);
-                PlayRandomTalkSound();
-                foreach (char c in s)
+                text.text += c;
+                //Play talk sound when we reached a space
+                if (c == ' ')
                 {
-                    text.text += c;
-                    if (c == ' ')
-                    {
-                        PlayRandomTalkSound();
-                    }
-                    yield return new WaitForSeconds(1 / CurrentTypeSpeed);
+                    PlayRandomTalkSound();
                 }
-                print("Finised sentance");
-                bool next = false;
-                while (!next)
+                yield return new WaitForSeconds(1 / CurrentTypeSpeed);
+            }
+            //Press jump when sentence is finished
+            bool next = false;
+            while (!next)
+            {
+                if (Input.GetButtonDown("Jump"))
+                    next = true;
+                yield return null;
+            }
+            text.text = "";
+        }
+
+        IEnumerator FadeNPCInOrOut(bool b)
+        {
+            float fade = 0;
+            if (b)
+            {
+                //Move NPC into screen
+                while (transform.localPosition.y < -.05f)
                 {
-                    if (Input.GetButtonDown("Jump"))
-                        next = true;
+                    transform.localPosition = Vector2.MoveTowards(transform.localPosition, Vector2.zero, moveSpeed * Time.deltaTime);
                     yield return null;
                 }
-                text.text = "";
+                //Fade NPC from black
+                while (!image.color.Equals(Color.white))
+                {
+                    image.color = Color.Lerp(image.color, Color.white, fade);
+                    fade += Time.deltaTime * fadeDuration;
+                    yield return null;
+                }
             }
-            //image.CrossFadeColor(Color.black, fadeDuration, false, false);
-            float elapsedTime2 = 0f;
-            while (!image.color.Equals(Color.black))
+            else
             {
-                image.color = Color.Lerp(image.color, Color.black, elapsedTime2/fadeDuration);
-                elapsedTime2 += Time.deltaTime;
-                yield return null;
-            }
-            while (transform.localPosition.y > -379f)
-            {
-                transform.localPosition = Vector2.MoveTowards(transform.localPosition, new Vector2(0, -380), moveSpeed * Time.deltaTime);
-                yield return null;
+                //Fade color back to black
+                while (!image.color.Equals(Color.black))
+                {
+                    image.color = Color.Lerp(image.color, Color.black, fade);
+                    fade += Time.deltaTime * fadeDuration;
+                    yield return null;
+                }
+                //Move NPC out of screen
+                while (transform.localPosition.y > -379f)
+                {
+                    transform.localPosition = Vector2.MoveTowards(transform.localPosition, new Vector2(0, -380), moveSpeed * Time.deltaTime);
+                    yield return null;
+                }
             }
         }
 

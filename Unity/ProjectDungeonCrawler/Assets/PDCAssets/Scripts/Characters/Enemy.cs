@@ -398,6 +398,7 @@ namespace PDC.Characters {
         [HideInInspector]
         public bool damages;
         private List<IHitable> hits = new List<IHitable>(); //to make sure he doesnt hit something twice in one attack
+        private Transform target;
 
         public void SwitchDamageFrames()
         {
@@ -408,6 +409,7 @@ namespace PDC.Characters {
         {
             PauseMovement(true);
             status = Status.Attacking;
+            target = pC.transform;
 
             curAttack = eA;
             RotateContinual(pC.transform);
@@ -425,6 +427,44 @@ namespace PDC.Characters {
             anim.SetInteger(attackAnim, 0);
             EndRotateContinual();
             status = Status.Idle;
+        }
+
+        [SerializeField]
+        private float secondsUntilRangedHit;
+        [SerializeField]
+        private Transform originRangeAttacks;
+        public virtual void RangedHit(int hitChance)
+        {
+            int index = UnityEngine.Random.Range(0,100);
+            List<Vector3> positions = GetMultiPlayerPos();
+
+            if (hitChance < index)
+                index = UnityEngine.Random.Range(1, positions.Count);
+            else
+                index = 0;
+
+            StartCoroutine(_RangedHit(positions[index]));
+        }
+
+        private IEnumerator _RangedHit(Vector3 hitPoint)
+        {
+            yield return new WaitForSeconds(secondsUntilRangedHit);
+
+            RaycastHit hit;
+
+            if(Physics.Raycast(originRangeAttacks.position, hitPoint, out hit, curAttack.range))
+            {
+                IHitable iHit = (IHitable)hit.transform.GetComponent(typeof(IHitable));
+                if (iHit != null)
+                    HitRangeObject(iHit);
+            }
+        }
+
+        public virtual void HitRangeObject(IHitable hit)
+        {
+            //check if attacking     
+            hits.Add(hit);
+            hit.GetHit(curAttack.damage, curAttack.type, curAttack.statusEffects, transform.position);
         }
 
         public virtual void HitObject(IHitable hit)
