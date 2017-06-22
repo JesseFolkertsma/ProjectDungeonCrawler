@@ -10,7 +10,7 @@ using PDC.UI;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public GameData gameData;
+    public PlayerData gameData;
 
     public GameObject untaggedHitdecal;
     public GameObject woodHitdecal;
@@ -30,34 +30,34 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void GatherGameData()
-    {
-        print("SAVE");
-        gameData = new GameData();
-        gameData.playerStats = PlayerCombat.instance.characterStats;
-        foreach(Weapon w in PlayerCombat.instance.weapons)
-        {
-            if(w != null)
-                gameData.playerWeapons.Add(w.weaponID);
-        }
-        gameData.playerConsumables = PlayerCombat.instance.consumables;
-    }
+    //public void GatherGameData()
+    //{
+    //    print("SAVE");
+    //    gameData = new PlayerData();
+    //    gameData.playerStats = PlayerCombat.instance.characterStats;
+    //    foreach(Weapon w in PlayerCombat.instance.weapons)
+    //    {
+    //        if(w != null)
+    //            gameData.playerWeapons.Add(w.weaponID);
+    //    }
+    //    gameData.playerConsumables = PlayerCombat.instance.consumables;
+    //}
 
-    public void LoadGameData()
-    {
-        if(gameData != null)
-        {
-            PlayerCombat.instance.characterStats = gameData.playerStats;
-            PlayerCombat.instance.consumables = gameData.playerConsumables;
-            int[] weapons = gameData.playerWeapons.ToArray();
-            foreach(int w in weapons)
-            {
-                GameObject newWep = Instantiate(WeaponDatabase.instace.GetWeaponByID(w));
-                Weapon newWepComp = newWep.GetComponent<Weapon>();
-                PlayerCombat.instance.PickupWeapon(newWepComp);
-            }
-        }
-    }
+    //public void LoadGameData()
+    //{
+    //    if(gameData != null)
+    //    {
+    //        PlayerCombat.instance.characterStats = gameData.playerStats;
+    //        PlayerCombat.instance.consumables = gameData.playerConsumables;
+    //        int[] weapons = gameData.playerWeapons.ToArray();
+    //        foreach(int w in weapons)
+    //        {
+    //            GameObject newWep = Instantiate(WeaponDatabase.instace.GetWeaponByID(w));
+    //            Weapon newWepComp = newWep.GetComponent<Weapon>();
+    //            PlayerCombat.instance.PickupWeapon(newWepComp);
+    //        }
+    //    }
+    //}
 
     /// <summary>
     /// Spawn Decal for given tag at given position and rotation

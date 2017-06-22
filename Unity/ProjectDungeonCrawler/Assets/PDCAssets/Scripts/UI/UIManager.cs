@@ -33,13 +33,13 @@ namespace PDC.UI
         private void OnPlayerSpawn()
         {
             spawnedCanvas = Instantiate(canvasRef);
-            for (int i = 0; i < PlayerCombat.instance.availableSlots; i++)
+            for (int i = 0; i < GameManager.instance.gameData.availableSlots; i++)
             {
                 spawnedCanvas.SpawnNewSlot();
             }
-            PlayerCombat.instance.onWeaponDataChange += UpdateWeaponVisual;
+            GameManager.instance.gameData.onWeaponDataChange += UpdateWeaponVisual;
             PlayerCombat.instance.onAmmoDataChange += spawnedCanvas.SetAmmoVisuals;
-            PlayerCombat.instance.onConsumableChange += UpdateConsumable;
+            GameManager.instance.gameData.onConsumableChange += UpdateConsumable;
             PlayerCombat.instance.onHPChange += spawnedCanvas.SetHp;
             PlayerCombat.instance.onGiveStatusEffect += spawnedCanvas.AddStatusEffect;
             SetupUI(PlayerCombat.instance);
@@ -47,17 +47,17 @@ namespace PDC.UI
 
         private void OnPlayerDeath()
         {
-            PlayerCombat.instance.onWeaponDataChange -= UpdateWeaponVisual;
+            GameManager.instance.gameData.onWeaponDataChange -= UpdateWeaponVisual;
             PlayerCombat.instance.onAmmoDataChange -= spawnedCanvas.SetAmmoVisuals;
-            PlayerCombat.instance.onConsumableChange -= UpdateConsumable;
+            GameManager.instance.gameData.onConsumableChange -= UpdateConsumable;
             PlayerCombat.instance.onHPChange -= spawnedCanvas.SetHp;
             PlayerCombat.instance.onGiveStatusEffect -= spawnedCanvas.AddStatusEffect;
         }
 
         void SetupUI(PlayerCombat pc)
         {
-            UpdateWeaponVisual(pc.weapons, pc.EquippedWeapon);
-            UpdateConsumable(pc.consumables, 0, false);
+            UpdateWeaponVisual(GameManager.instance.gameData.weapons, GameManager.instance.gameData.EquippedWeapon);
+            UpdateConsumable(GameManager.instance.gameData.consumables, 0, false);
             spawnedCanvas.SetHp(pc.characterStats.currentHP, pc.characterStats.MaxHP);
         }
 
