@@ -356,10 +356,10 @@ namespace PDC.Characters {
         }
 
         private Coroutine rotateCoroutine;
-        private void RotateContinual(Vector3 des)
+        private void RotateContinual(Transform t)
         {
             EndRotateContinual();
-            rotateCoroutine = StartCoroutine(_RotateContinual(des));
+            rotateCoroutine = StartCoroutine(_RotateContinual(t));
         }
 
         private void EndRotateContinual()
@@ -368,13 +368,12 @@ namespace PDC.Characters {
                 StopCoroutine(rotateCoroutine);
         }
 
-        private IEnumerator _RotateContinual(Vector3 des)
+        private IEnumerator _RotateContinual(Transform t)
         {
             while (true)
             {
-                Rotate(transform.position);
-                CalcRefreshRate();
-                yield return new WaitForSeconds(updateTime);
+                Rotate(t.position);
+                yield return null;
             }
         }
 
@@ -411,7 +410,7 @@ namespace PDC.Characters {
             status = Status.Attacking;
 
             curAttack = eA;
-            RotateContinual(pC.transform.position);
+            RotateContinual(pC.transform);
 
             damages = false;
             hits.Clear();
