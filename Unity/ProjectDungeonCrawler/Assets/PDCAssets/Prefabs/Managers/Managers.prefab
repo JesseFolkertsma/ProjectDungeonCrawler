@@ -104,8 +104,13 @@ MonoBehaviour:
       currentSouls: 0
       armorRating: 0
       movementSpeed: 0
-    playerWeapons: 
-    playerConsumables: []
+    weapons: []
+    weaponsByID: 
+    availableSlots: 6
+    consumables: []
+    throwStrenght: 700
+    equippedWeapon: 0
+    selectedConsumable: 0
   untaggedHitdecal: {fileID: 1000010844420130, guid: 4edabb1c0dde62743b137378c7d22980,
     type: 2}
   woodHitdecal: {fileID: 1000011190285628, guid: beb3acff7ab73944fb8f470f24d74ed3,

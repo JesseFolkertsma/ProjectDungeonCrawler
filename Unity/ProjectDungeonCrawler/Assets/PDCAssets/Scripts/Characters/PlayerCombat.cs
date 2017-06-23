@@ -49,19 +49,29 @@ namespace PDC.Characters
             pc = GetComponent<PlayerController>();
 
             weaponAnim = weaponPos.GetComponent<Animator>();
-            
-            //GameManager.instance.LoadGameData();
+
+            data = GameManager.instance.gameData;
+
+            GatherWeaponData();
+
             for (int i = 0; i < data.availableSlots; i++)
             {
                 PickupWeapon(EmptyWeapon.GetNew());
             }
 
-            GatherWeaponData();
-
             if (onSpawnEvent != null)
                 onSpawnEvent();
 
+            GameManager.instance.onSceneExit += OnSceneExit;
             setup = true;
+        }
+
+        void OnSceneExit()
+        {
+            if (onDeathEvent != null) 
+                onDeathEvent();
+
+            data.ConvertWeaponsToID();
         }
 
         void GatherWeaponData()
@@ -359,7 +369,8 @@ namespace PDC.Characters
                 pc.playerCam.gameObject.AddComponent<Rigidbody>();
                 pc.playerCam.GetComponent<Rigidbody>().AddForce(transform.forward);
                 data.EquippedWeapon.gameObject.SetActive(false);
-                onDeathEvent();
+                if(onDeathEvent != null)
+                    onDeathEvent();
             }
         }
     }

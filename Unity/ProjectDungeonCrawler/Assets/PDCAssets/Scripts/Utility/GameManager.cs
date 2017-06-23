@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using PDC.Saving;
 using PDC.Characters;
 using PDC.Weapons;
@@ -17,6 +18,11 @@ public class GameManager : MonoBehaviour
     public GameObject stoneHitdecal;
     public GameObject fleshHitdecal;
 
+    public delegate void OnSceneExit();
+    public OnSceneExit onSceneExit;
+
+    public int vuileviezeint;
+
     private void Awake()
     {
         if(instance == null)
@@ -28,6 +34,13 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public void LoadScene(int sceneID)
+    {
+        if (onSceneExit != null)
+            onSceneExit();
+        SceneManager.LoadScene(sceneID);
     }
 
     //public void GatherGameData()
