@@ -144,7 +144,7 @@ namespace PDC
                                 }
 
                                 int p = mG.random.Next(0, rI.spawnPositions.Count - 1);
-                                Transform t = rI.spawnPositions[p].spawnPosition;
+                                Transform t = rI.spawnPositions[p];
                                 GameObject pl = Instantiate(player, t.position, t.rotation);
                                 PathFinding.self.center = pl.transform;
                                 yield return null;
@@ -206,7 +206,7 @@ namespace PDC
                                     break;
 
                                 //spawn enemy
-                                Transform t = rI.spawnPositions[enemySpawnpos].spawnPosition;
+                                Transform t = rI.spawnPositions[enemySpawnpos];
                                 Instantiate(enemy.obj, t.position, t.rotation);
                                 enemyValue += enemy.cost;
                                 positions.Add(enemySpawnpos);

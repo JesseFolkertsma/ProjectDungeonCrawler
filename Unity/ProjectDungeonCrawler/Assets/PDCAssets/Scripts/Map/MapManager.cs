@@ -10,7 +10,7 @@ public class MapManager : MonoBehaviour
     #region Normal Functions
 
     [SerializeField]
-    public Transform player;
+    public MapPlayer player;
 
     [SerializeField]
     private int resolutionX = 256, resolutionY = 144;
@@ -28,12 +28,17 @@ public class MapManager : MonoBehaviour
 
     private Node ConvertMapToNode(Vector2 vec) //dit werkt niet
     {
-        float x = resolutionX / vec.x;
-        float y = resolutionY / vec.y;
+        float x = Mathf.InverseLerp(0, Screen.width, vec.x);
+        x = Mathf.Lerp(0, resolutionX, x);
 
-        //calculate percentage into grid
-        x = Mathf.Lerp(0, grid.GetLength(0), x) - 1;
-        y = Mathf.Lerp(0, grid.GetLength(1), y) - 1;
+        float y = Mathf.InverseLerp(0, Screen.height, vec.y);
+        y = Mathf.Lerp(0, resolutionY, y);
+
+        if (x < 0 || x > resolutionX)
+            return null;
+        if (y < 0 || y > resolutionY)
+            return null;
+
 
         return grid[(int)x, (int)y];
     }
@@ -53,7 +58,7 @@ public class MapManager : MonoBehaviour
     //map node system
     private Node[,] grid;
 
-    public enum TerrainType { Road = 1, Walkable = 3, Difficult = 8, Unwalkable }
+    public enum TerrainType { Road = 1, Walkable = 2, Difficult = 4, Unwalkable }
     [Serializable]
     private class Node
     {
@@ -86,7 +91,6 @@ public class MapManager : MonoBehaviour
         {
             this.node = node;
             this.parentNode = parentNode;
-            value = (int)node.terrain;
         }
     }
 
@@ -149,11 +153,14 @@ public class MapManager : MonoBehaviour
     private Vector3 endPos;
     private IEnumerator _GetMapMovement(Node goal)
     {
+        if (!(goal != null))
+            yield break;
+
         open = new List<NodeCom>();
         closed = new List<Node>();
 
         //add start node
-        startNode = new NodeCom(ConvertMapToNode(player.position), null);
+        startNode = new NodeCom(ConvertMapToNode(player.transform.position), null);
         open.Add(startNode);
         endPos = ConvertNodeToMap(goal);
 
@@ -203,7 +210,7 @@ public class MapManager : MonoBehaviour
             curNode = curNode.parentNode;
         }
 
-        player.GetComponent<MapPlayer>().Move(path);
+        player.Move(path);
     }
 
     private void CheckNode(int x, int y)
@@ -216,6 +223,9 @@ public class MapManager : MonoBehaviour
 
         Node node = grid[x, y];
 
+        if (node.terrain == TerrainType.Unwalkable)
+            return;
+
         //check if open and closed contains this
         if (closed.Contains(node)) //no work eh?
             return;
@@ -226,8 +236,8 @@ public class MapManager : MonoBehaviour
         //add to open
         NodeCom _n = new NodeCom(node, curNode);
         Vector2 myPos = ConvertNodeToMap(_n.node);
-        _n.value += (int)Vector2.Distance(myPos, player.position);
-        _n.value += (int)Vector2.Distance(myPos, endPos);
+        _n.value += (int)Vector2.Distance(myPos, player.transform.position) * (int)_n.node.terrain;
+        _n.value += (int)Vector2.Distance(myPos, endPos) * (int)_n.node.terrain;
 
         open.Add(_n);
     }
