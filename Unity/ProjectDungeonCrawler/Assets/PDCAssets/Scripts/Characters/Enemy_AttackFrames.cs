@@ -21,4 +21,9 @@ public class Enemy_AttackFrames : MonoBehaviour {
     {
         myEnemy.EndAttack();
     }
+
+    public void RangedHit(int hitChance)
+    {
+        myEnemy.RangedHit(hitChance);
+    }
 }
