@@ -154,6 +154,7 @@ MonoBehaviour:
   woodHitdecal: {fileID: 0}
   stoneHitdecal: {fileID: 0}
   fleshHitdecal: {fileID: 0}
+  vuileviezeint: 0
 --- !u!4 &153103451
 Transform:
   m_ObjectHideFlags: 0
@@ -711,7 +712,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ca1592bb6881cf408e867f567a1feb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapType: 1
+  mapType: 0
   seed: zaad
   _seed: 0
   randomSeed: 1
@@ -719,7 +720,7 @@ MonoBehaviour:
   ySize: 0
   rooms:
   - room: {fileID: 1443504166534708, guid: ce3222a606e915744af086928e18fc6e, type: 2}
-    converter: 2
+    converter: 1
     top: 0
     down: 0
     left: 1
@@ -728,7 +729,7 @@ MonoBehaviour:
     back: 0
     rotation: 0
   - room: {fileID: 1744628161285962, guid: a2ad1dcf82b7b4d4fb8f6d59ca22d6b1, type: 2}
-    converter: 2
+    converter: 1
     top: 0
     down: 0
     left: 0
@@ -737,22 +738,49 @@ MonoBehaviour:
     back: 1
     rotation: 0
   - room: {fileID: 1059774933918288, guid: bf453737431374e4baad539a6c08148b, type: 2}
-    converter: 2
-    top: 1
-    down: 1
+    converter: 0
+    top: 0
+    down: 0
     left: 1
     right: 1
     front: 1
     back: 1
     rotation: 0
   - room: {fileID: 1700757408955728, guid: a6539d0b710fd5a4aa17acab9d087b56, type: 2}
-    converter: 2
+    converter: 0
     top: 0
-    down: 1
+    down: 0
     left: 1
     right: 1
     front: 1
     back: 1
+    rotation: 0
+  - room: {fileID: 1114037171090058, guid: b8e7b732cc5d54f43928bec667bdee9a, type: 2}
+    converter: 2
+    top: 0
+    down: 0
+    left: 1
+    right: 0
+    front: 1
+    back: 0
+    rotation: 0
+  - room: {fileID: 1197978773152498, guid: cb77c677ad180334385eb8dc4208c9fd, type: 2}
+    converter: 2
+    top: 0
+    down: 0
+    left: 1
+    right: 1
+    front: 1
+    back: 0
+    rotation: 0
+  - room: {fileID: 1197978773152498, guid: cb77c677ad180334385eb8dc4208c9fd, type: 2}
+    converter: 2
+    top: 0
+    down: 0
+    left: 0
+    right: 0
+    front: 1
+    back: 0
     rotation: 0
 --- !u!114 &2097285918
 MonoBehaviour:
