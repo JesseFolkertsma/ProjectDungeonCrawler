@@ -34,13 +34,17 @@ public class MapPlayer : MonoBehaviour {
         pathPoint.enabled = true;
         pathPoint.transform.position = list[0];
 
+        float dis1, dis2;
         //for testing purposes
         while (list.Count > 0)
         {
             //move to position
             transform.Translate((goal - (Vector2)transform.position).normalized);
 
-            if (Vector2.Distance(transform.position, goal) <= distanceToTargetWhenStopping)
+            dis1 = Vector2.Distance(transform.position, goal);
+            dis2 = Vector2.Distance(transform.position, list[0]);
+
+            if (dis1 <= distanceToTargetWhenStopping || dis1 > dis2)
                 if (list.Count > 1)
                 {
                     goal = list[list.Count - 2];

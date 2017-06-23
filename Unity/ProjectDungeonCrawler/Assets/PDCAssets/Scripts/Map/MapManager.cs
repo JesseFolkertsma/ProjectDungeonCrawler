@@ -146,7 +146,7 @@ public class MapManager : MonoBehaviour
     }
 
     private Coroutine getMapMovement;
-    public int calculationsPerFrame = 35;
+    public int calculationsPerFrame = 800;
     private List<NodeCom> open;
     private List<Node> closed;
     NodeCom curNode, startNode;
@@ -169,7 +169,6 @@ public class MapManager : MonoBehaviour
         int x, y;
         while (open.Count > 0)
         {
-            calc++;
             open.Sort();
 
             //remove from open and add to closed
@@ -192,6 +191,7 @@ public class MapManager : MonoBehaviour
             CheckNode(x, y - 1);
 
             //optimization
+            calc++;
             if (calc > calculationsPerFrame)
             {
                 calc = 0;
@@ -236,8 +236,9 @@ public class MapManager : MonoBehaviour
         //add to open
         NodeCom _n = new NodeCom(node, curNode);
         Vector2 myPos = ConvertNodeToMap(_n.node);
-        _n.value += (int)Vector2.Distance(myPos, player.transform.position) * (int)_n.node.terrain;
-        _n.value += (int)Vector2.Distance(myPos, endPos) * (int)_n.node.terrain;
+        _n.value += (int)Vector2.Distance(myPos, player.transform.position);
+        _n.value += (int)Vector2.Distance(myPos, endPos);
+        _n.value *= (int)_n.node.terrain;
 
         open.Add(_n);
     }
