@@ -19,6 +19,11 @@ namespace PDC.UI
         public float moveSpeed = 250;
         public float fadeDuration = 0;
 
+        public List<NPC> smerigehardcodeOrder;
+
+        Coroutine routine;
+        NPC npc;
+
         float CurrentTypeSpeed
         {
             get
@@ -28,7 +33,6 @@ namespace PDC.UI
             }
         }
 
-        NPC npc;
 
         private void Start()
         {
@@ -37,15 +41,29 @@ namespace PDC.UI
             audioS = GetComponent<AudioSource>();
         }
 
+        public void ViezeHardCode()
+        {
+            ActivateQuest(smerigehardcodeOrder[GameManager.instance.vuileviezeint]);
+            switch (GameManager.instance.vuileviezeint)
+            {
+                case 0:
+                    GameManager.instance.vuileviezeint++;
+                    break;
+            }
+        }
+
         /// <summary>
         /// Play entire conversation
         /// </summary>
         /// <param name="_npc">The NPC to play the conversation from</param>
         public void ActivateQuest(NPC _npc)
         {
-            npc = _npc;
-            image.sprite = _npc.npcSprite;
-            StartCoroutine(MoveIntoScreen());
+            if (routine == null)
+            {
+                npc = _npc;
+                image.sprite = _npc.npcSprite;
+                routine = StartCoroutine(MoveIntoScreen());
+            }
         }
 
         IEnumerator MoveIntoScreen()
@@ -59,12 +77,13 @@ namespace PDC.UI
                 yield return HandleSentance(s);
             }
             yield return FadeNPCInOrOut(false);
+            routine = null;
         }
 
         IEnumerator HandleSentance(NPCSentance sentance)
         {
+            HandleSentanceAction(sentance);
             PlayRandomTalkSound();
-            sentance.action();
             //Type out each char
             foreach (char c in sentance.sentance)
             {
@@ -121,6 +140,17 @@ namespace PDC.UI
                     transform.localPosition = Vector2.MoveTowards(transform.localPosition, new Vector2(0, -380), moveSpeed * Time.deltaTime);
                     yield return null;
                 }
+            }
+        }
+
+        void HandleSentanceAction(NPCSentance s)
+        {
+            switch (s.action)
+            {
+                case NPCAction.GiveWeapon:
+                    GameManager.instance.gameData.TryAssignWeapon(s.weapon.weaponID);
+                    MapPopup.instance.DisplayPopup(s.weapon.weaponIcon, "Obtained " + s.weapon.weaponName + "!");
+                    break;
             }
         }
 
