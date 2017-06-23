@@ -55,5 +55,14 @@ public class MapPlayer : MonoBehaviour {
         }
 
         pathPoint.enabled = false;
+
+        //presentatie check, beetje vies imo
+        MapManager m = MapManager.self;
+        if (!m.ready)
+            yield break;
+        if (m.movingTowardsSaloon)
+            m.saloonFunction.Invoke();
+        else
+            m.dungeonFunction.Invoke();
     }
 }
