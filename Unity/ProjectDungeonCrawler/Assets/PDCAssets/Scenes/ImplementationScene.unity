@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.2464749, g: 0.2823448, b: 0.34570262, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -154,6 +154,7 @@ MonoBehaviour:
   woodHitdecal: {fileID: 0}
   stoneHitdecal: {fileID: 0}
   fleshHitdecal: {fileID: 0}
+  vuileviezeint: 0
 --- !u!4 &153103451
 Transform:
   m_ObjectHideFlags: 0
@@ -775,6 +776,9 @@ MonoBehaviour:
   player: {fileID: 1009196950182780, guid: 0085af4a580137d48813c66bc45354e9, type: 2}
   enemies:
   - obj: {fileID: 1720111186506282, guid: f7637aecc4bb0804cb1c7d6631d7eb44, type: 2}
+    cost: 1
+    difficulty: 0
+  - obj: {fileID: 1924810257878962, guid: 2ff8d2c9b60766649bb26090270cf0d6, type: 2}
     cost: 1
     difficulty: 0
   spawnedRooms: []
