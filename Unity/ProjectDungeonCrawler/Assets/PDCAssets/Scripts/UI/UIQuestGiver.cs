@@ -20,6 +20,7 @@ namespace PDC.UI
         public float fadeDuration = 0;
 
         public Sprite questSprite;
+        public GameObject dungeon;
         public List<NPC> smerigehardcodeOrder;
 
         Coroutine routine;
@@ -79,6 +80,7 @@ namespace PDC.UI
             }
             yield return FadeNPCInOrOut(false);
             routine = null;
+            dungeon.SetActive(true);
         }
 
         IEnumerator HandleSentance(NPCSentance sentance)
