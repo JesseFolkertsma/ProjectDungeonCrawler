@@ -35,7 +35,26 @@ namespace PDC
             #region Quest Info
 
             [HideInInspector]
-            public int enemyValue;
+            public int enemyValue, enemyValueOriginal;
+            public List<Enemy> spawnedEnemies = new List<Enemy>();
+
+            public void OnEnemyDeath(Transform trans)
+            {
+                foreach(Enemy e in spawnedEnemies)
+                    if(e.obj == trans)
+                    {
+                        enemyValue -= e.cost;
+                        return;
+                    }
+            }
+
+            public int GetEnemyPercentage(bool reversed)
+            {
+                int i = (int)Mathf.InverseLerp(0, enemyValueOriginal, enemyValue);
+                if (reversed)
+                    i = 100 - i;
+                return i;
+            }
 
             #endregion
 
@@ -207,13 +226,22 @@ namespace PDC
 
                                 //spawn enemy
                                 Transform t = rI.spawnPositions[enemySpawnpos];
-                                Instantiate(enemy.obj, t.position, t.rotation);
+                                GameObject enObj = Instantiate(enemy.obj, t.position, t.rotation);
                                 enemyValue += enemy.cost;
                                 positions.Add(enemySpawnpos);
+
+                                //add to list of enemies
+                                Enemy en = new Enemy();
+                                en.cost = enemy.cost;
+                                en.difficulty = enemy.difficulty;
+                                en.obj = enObj;
+                                spawnedEnemies.Add(en);
                             }
 
                             yield return null;
                         }
+
+                enemyValueOriginal = enemyValue;
 
                 loader.SetProgress(MapLoader.Progress.Placing_Rooms);
                 PathFinding.self.SetupBakeable();
