@@ -420,6 +420,9 @@ namespace PDC
                 int chosen = random.Next(0, fitRooms.Count - 1);
                 n.room = fitRooms[chosen];
                 n.initialized = true;
+
+                //tijdelijk
+                print(n.room.front + " " + n.room.right + " " + n.room.back + " " + n.room.left + " " + n.posX + " " + n.posZ);
             }
 
             private List<Room> GetFitRooms(Node n)
