@@ -4,8 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+using UnityEngine.Events;
+
 public class MapManager : MonoBehaviour
 {
+    public UnityEvent saloonFunction,
+        dungeonFunction;
+    public Transform saloon;
+    [HideInInspector]
+    public bool movingTowardsSaloon = false, ready = false;
+
+    public static MapManager self;
 
     #region Normal Functions
 
@@ -17,13 +26,27 @@ public class MapManager : MonoBehaviour
 
     private void Awake()
     {
+        self = this;
         InitializeMap();
     }
 
     public void PressMap()
     {
         //convert mousepos to pixel position
-        GetMapMovement(ConvertMapToNode(Input.mousePosition));
+        StartMoving(Input.mousePosition);
+    }
+
+    public void StartMoving(Transform trans)
+    {
+        //saloon check
+        movingTowardsSaloon = saloon == trans ? true : false;
+
+        StartMoving(trans.position);
+    }
+
+    public void StartMoving(Vector2 pos)
+    {
+        GetMapMovement(ConvertMapToNode(pos));
     }
 
     private Node ConvertMapToNode(Vector2 vec) //dit werkt niet
@@ -38,7 +61,6 @@ public class MapManager : MonoBehaviour
             return null;
         if (y < 0 || y > resolutionY)
             return null;
-
 
         return grid[(int)x, (int)y];
     }
@@ -58,7 +80,7 @@ public class MapManager : MonoBehaviour
     //map node system
     private Node[,] grid;
 
-    public enum TerrainType { Road = 1, Walkable = 2, Difficult = 4, Unwalkable }
+    public enum TerrainType { Road = 1, Walkable = 2, Difficult = 2, Unwalkable }
     [Serializable]
     private class Node
     {
@@ -139,6 +161,7 @@ public class MapManager : MonoBehaviour
 
     private void GetMapMovement(Node goal)
     {
+        ready = false;
         if (getMapMovement != null)
             StopCoroutine(getMapMovement);
 
@@ -210,6 +233,7 @@ public class MapManager : MonoBehaviour
             curNode = curNode.parentNode;
         }
 
+        ready = true;
         player.Move(path);
     }
 

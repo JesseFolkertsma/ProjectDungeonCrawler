@@ -209,7 +209,7 @@ Prefab:
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 947641570}
     - target: {fileID: 1030565625156536, guid: eb97674dba1706c47b366cb8ad7f1ab3, type: 2}
       propertyPath: m_Name
       value: Logo (3)
@@ -229,12 +229,12 @@ Prefab:
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Travel
+      value: StartMoving
       objectReference: {fileID: 0}
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.RectTransform, UnityEngine
+      value: UnityEngine.Transform, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 224983147492873890, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
@@ -728,7 +728,7 @@ Prefab:
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 947641570}
     - target: {fileID: 1030565625156536, guid: eb97674dba1706c47b366cb8ad7f1ab3, type: 2}
       propertyPath: m_Name
       value: Logo (2)
@@ -748,12 +748,12 @@ Prefab:
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Travel
+      value: StartMoving
       objectReference: {fileID: 0}
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.RectTransform, UnityEngine
+      value: UnityEngine.Transform, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 224983147492873890, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
@@ -785,6 +785,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 1168258632}
     m_Modifications:
+    - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 224983147492873890, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_LocalPosition.x
@@ -879,16 +884,16 @@ Prefab:
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 959209433}
+      objectReference: {fileID: 947641570}
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: StartCoversation
+      value: StartMoving
       objectReference: {fileID: 0}
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: PDC.NPCS.NPC, Assembly-CSharp
+      value: UnityEngine.Transform, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 224983147492873890, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
@@ -909,8 +914,41 @@ Prefab:
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 11400000, guid: 873cba0ce091bba4da55fcb4eef43c3d,
+      objectReference: {fileID: 1507879198}
+    - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 947641570}
+    - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: StartMoving
+      objectReference: {fileID: 0}
+    - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Transform, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 1507879198}
+    - target: {fileID: 1030565625156536, guid: eb97674dba1706c47b366cb8ad7f1ab3, type: 2}
+      propertyPath: m_Name
+      value: Saloon
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: eb97674dba1706c47b366cb8ad7f1ab3, type: 2}
   m_IsPrefabParent: 0
@@ -1056,6 +1094,11 @@ Prefab:
         type: 2}
       propertyPath: m_LocalScale.z
       value: 1.0000001
+      objectReference: {fileID: 0}
+    - target: {fileID: 114202043149704216, guid: eb97674dba1706c47b366cb8ad7f1ab3,
+        type: 2}
+      propertyPath: m_Color.a
+      value: 0.522
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3, type: 2}
@@ -1370,13 +1413,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e7a6e940c1dfd243a34160021dae3cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  saloonFunction:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 67347662}
+        m_MethodName: ActivateQuest
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 11400000, guid: 873cba0ce091bba4da55fcb4eef43c3d,
+            type: 2}
+          m_ObjectArgumentAssemblyTypeName: PDC.NPCS.NPC, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  dungeonFunction:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  saloon: {fileID: 1507879198}
+  movingTowardsSaloon: 0
+  ready: 0
   player: {fileID: 1391971926}
   resolutionX: 256
   resolutionY: 144
   mapSkeleton: {fileID: 2800000, guid: 92683953d2a046345a590394c0a94264, type: 3}
   texX: 256
   texY: 144
-  calculationsPerFrame: 10
+  calculationsPerFrame: 35
 --- !u!114 &947641571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1504,12 +1572,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 948024689}
---- !u!114 &959209433 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114878582297170494, guid: e0c8fbc98b35dd54fbc3ec6546861047,
-    type: 2}
-  m_PrefabInternal: {fileID: 2088875022}
-  m_Script: {fileID: 11500000, guid: acbcc0c74ff95da448a4bf6d9eab6ee2, type: 3}
 --- !u!1 &1168258628
 GameObject:
   m_ObjectHideFlags: 0
@@ -1821,7 +1883,7 @@ Prefab:
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 947641570}
     - target: {fileID: 1030565625156536, guid: eb97674dba1706c47b366cb8ad7f1ab3, type: 2}
       propertyPath: m_Name
       value: Logo (4)
@@ -1841,12 +1903,12 @@ Prefab:
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Travel
+      value: StartMoving
       objectReference: {fileID: 0}
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.RectTransform, UnityEngine
+      value: UnityEngine.Transform, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 224983147492873890, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
@@ -2022,7 +2084,7 @@ Prefab:
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 947641570}
     - target: {fileID: 1030565625156536, guid: eb97674dba1706c47b366cb8ad7f1ab3, type: 2}
       propertyPath: m_Name
       value: Logo (1)
@@ -2042,12 +2104,12 @@ Prefab:
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Travel
+      value: StartMoving
       objectReference: {fileID: 0}
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.RectTransform, UnityEngine
+      value: UnityEngine.Transform, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 224983147492873890, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
