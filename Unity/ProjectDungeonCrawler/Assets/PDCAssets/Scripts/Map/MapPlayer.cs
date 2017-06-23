@@ -64,5 +64,6 @@ public class MapPlayer : MonoBehaviour {
             m.saloonFunction.Invoke();
         else
             m.dungeonFunction.Invoke();
+        m.movingTowardsSaloon = false;
     }
 }
