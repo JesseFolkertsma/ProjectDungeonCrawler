@@ -14,24 +14,4 @@ namespace PDC.NPCS
 
         public NPCSentance[] conversation;
     }
-
-    [System.Serializable]
-    public class NPCSentance
-    {
-        [TextArea]
-        public string sentance;
-        public NPCAction action;
-
-        public Weapon weapon;
-        public Consumable consumable;
-        public Quest quest;
-    }
-
-    public enum NPCAction
-    {
-        None,
-        GiveWeapon,
-        GiveConsumable,
-        AddQuest,
-    }
 }

@@ -251,6 +251,10 @@ Prefab:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1030565625156536, guid: eb97674dba1706c47b366cb8ad7f1ab3, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: eb97674dba1706c47b366cb8ad7f1ab3, type: 2}
   m_IsPrefabParent: 0
@@ -1205,7 +1209,18 @@ MonoBehaviour:
       PublicKeyToken=null
   dungeonFunction:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1306409441}
+        m_MethodName: LoadScene
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   saloon: {fileID: 1507879198}
@@ -1636,6 +1651,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1306409441 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114878582297170494, guid: e0c8fbc98b35dd54fbc3ec6546861047,
+    type: 2}
+  m_PrefabInternal: {fileID: 2088875022}
+  m_Script: {fileID: 11500000, guid: acbcc0c74ff95da448a4bf6d9eab6ee2, type: 3}
 --- !u!1 &1391971925 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1852707074819736, guid: ebf9a8936f71975499a395ba880bb37f,
@@ -1798,6 +1819,10 @@ Prefab:
         type: 2}
       propertyPath: m_LocalScale.z
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1030565625156536, guid: eb97674dba1706c47b366cb8ad7f1ab3, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: eb97674dba1706c47b366cb8ad7f1ab3, type: 2}
@@ -1999,6 +2024,10 @@ Prefab:
         type: 2}
       propertyPath: m_LocalScale.z
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1030565625156536, guid: eb97674dba1706c47b366cb8ad7f1ab3, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: eb97674dba1706c47b366cb8ad7f1ab3, type: 2}

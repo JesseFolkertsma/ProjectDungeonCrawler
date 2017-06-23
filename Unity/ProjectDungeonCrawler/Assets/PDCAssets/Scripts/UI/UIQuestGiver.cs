@@ -19,6 +19,7 @@ namespace PDC.UI
         public float moveSpeed = 250;
         public float fadeDuration = 0;
 
+        public Sprite questSprite;
         public List<NPC> smerigehardcodeOrder;
 
         Coroutine routine;
@@ -151,6 +152,10 @@ namespace PDC.UI
                     GameManager.instance.gameData.TryAssignWeapon(s.weapon.weaponID);
                     MapPopup.instance.DisplayPopup(s.weapon.weaponIcon, "Obtained " + s.weapon.weaponName + "!");
                     break;
+                case NPCAction.AddQuest:
+                    MapPopup.instance.DisplayPopup(questSprite, "Quest: " + s.questName);
+                    break;
+
             }
         }
 

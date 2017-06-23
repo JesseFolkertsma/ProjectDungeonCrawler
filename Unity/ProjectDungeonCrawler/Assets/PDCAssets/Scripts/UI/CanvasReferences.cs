@@ -50,13 +50,13 @@ namespace PDC.UI
             caveProgressionImage.fillAmount = percentage;
         }
 
-        public void AddQuest(Quest questToAdd)
-        {
-            GameObject newQuest = Instantiate(newQuestObject, questLog);
-            Text questText = newQuest.GetComponent<Text>();
-            questText.text = questToAdd.inGameDesc;
-            quests.Add(questText);
-        }
+        //public void AddQuest(Quest questToAdd)
+        //{
+        //    GameObject newQuest = Instantiate(newQuestObject, questLog);
+        //    Text questText = newQuest.GetComponent<Text>();
+        //    questText.text = questToAdd.inGameDesc;
+        //    quests.Add(questText);
+        //}
 
         public void SetWeaponSlot(int slotToSet, Weapon wep, bool isEquipped)
         {
