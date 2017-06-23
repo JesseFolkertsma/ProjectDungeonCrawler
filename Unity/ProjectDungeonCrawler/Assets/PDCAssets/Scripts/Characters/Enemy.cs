@@ -263,6 +263,7 @@ namespace PDC.Characters {
                 return;
             isdead = true;
             //drop items, calc which ones in enemymanager
+            Generating.MapVisualizer.self.OnEnemyDeath(transform);
             Instantiate(ragdoll, transform.position, transform.rotation);
             Destroy(gameObject);
         }
