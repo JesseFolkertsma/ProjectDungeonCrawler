@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.2464749, g: 0.2823448, b: 0.34570262, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -143,8 +143,13 @@ MonoBehaviour:
       currentSouls: 0
       armorRating: 0
       movementSpeed: 0
-    playerWeapons: 
-    playerConsumables: []
+    weapons: []
+    weaponsByID: 
+    availableSlots: 0
+    consumables: []
+    throwStrenght: 700
+    equippedWeapon: 0
+    selectedConsumable: 0
   untaggedHitdecal: {fileID: 0}
   woodHitdecal: {fileID: 0}
   stoneHitdecal: {fileID: 0}
@@ -706,44 +711,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ca1592bb6881cf408e867f567a1feb0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapType: 0
+  mapType: 1
   seed: zaad
   _seed: 0
   randomSeed: 1
   size: 0
   ySize: 0
   rooms:
-  - room: {fileID: 1274212222158976, guid: 1f280eeff57328d47b85ed4d2092c7e8, type: 2}
-    converter: 2
-    top: 0
-    down: 0
-    left: 1
-    right: 0
-    front: 0
-    back: 0
-    rotation: 0
-  - room: {fileID: 1274212222158976, guid: 1f280eeff57328d47b85ed4d2092c7e8, type: 2}
-    converter: 2
-    top: 0
-    down: 0
-    left: 1
-    right: 0
-    front: 1
-    back: 0
-    rotation: 0
-  - room: {fileID: 1274212222158976, guid: 1f280eeff57328d47b85ed4d2092c7e8, type: 2}
+  - room: {fileID: 1443504166534708, guid: ce3222a606e915744af086928e18fc6e, type: 2}
     converter: 2
     top: 0
     down: 0
     left: 1
     right: 1
-    front: 1
+    front: 0
     back: 0
     rotation: 0
-  - room: {fileID: 1274212222158976, guid: 1f280eeff57328d47b85ed4d2092c7e8, type: 2}
+  - room: {fileID: 1744628161285962, guid: a2ad1dcf82b7b4d4fb8f6d59ca22d6b1, type: 2}
     converter: 2
     top: 0
     down: 0
+    left: 0
+    right: 0
+    front: 1
+    back: 1
+    rotation: 0
+  - room: {fileID: 1059774933918288, guid: bf453737431374e4baad539a6c08148b, type: 2}
+    converter: 2
+    top: 1
+    down: 1
+    left: 1
+    right: 1
+    front: 1
+    back: 1
+    rotation: 0
+  - room: {fileID: 1700757408955728, guid: a6539d0b710fd5a4aa17acab9d087b56, type: 2}
+    converter: 2
+    top: 0
+    down: 1
     left: 1
     right: 1
     front: 1
