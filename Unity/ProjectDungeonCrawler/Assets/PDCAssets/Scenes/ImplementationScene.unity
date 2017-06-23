@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -746,7 +746,7 @@ MonoBehaviour:
     front: 1
     back: 1
     rotation: 0
-  - room: {fileID: 1575486491601964, guid: 7023bab7d84777c4c8c45df306679179, type: 2}
+  - room: {fileID: 1752501677625424, guid: 0fe02b84a34f926449fa645dc7ef8237, type: 2}
     converter: 2
     top: 0
     down: 0
@@ -758,11 +758,29 @@ MonoBehaviour:
   - room: {fileID: 1700757408955728, guid: a6539d0b710fd5a4aa17acab9d087b56, type: 2}
     converter: 0
     top: 0
-    down: 0
+    down: 1
     left: 1
     right: 1
     front: 1
     back: 1
+    rotation: 0
+  - room: {fileID: 1059774933918288, guid: bf453737431374e4baad539a6c08148b, type: 2}
+    converter: 0
+    top: 1
+    down: 1
+    left: 1
+    right: 1
+    front: 1
+    back: 1
+    rotation: 0
+  - room: {fileID: 1443504166534708, guid: ce3222a606e915744af086928e18fc6e, type: 2}
+    converter: 0
+    top: 0
+    down: 0
+    left: 1
+    right: 1
+    front: 0
+    back: 0
     rotation: 0
 --- !u!114 &2097285918
 MonoBehaviour:
