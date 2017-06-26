@@ -30,7 +30,7 @@ public class PathFinding : MonoBehaviour {
     [SerializeField]
     private int edgeBakeAmount;
     [SerializeField]
-    private int calculationsPerFrame = 100, initializesPerFrame = 20000, heavyCalcPerFrame = 10;
+    private int calculationsPerFrame = 100, initializesPerFrame = 20000, heavyCalcCost = 10;
     public static bool pathfindable = false;
     [HideInInspector]
     public Transform center; //priorites baking of areas around this object
@@ -67,11 +67,16 @@ public class PathFinding : MonoBehaviour {
         StartCoroutine(UpdatePosition());
     }
 
+#if UNITY_EDITOR
+    
     private void Update()
     {
-        if (repaint != null)
-            repaint();
+        if(visualize)
+            if (repaint != null)
+                repaint();
     }
+    
+#endif
 
     //current room
     [HideInInspector]
@@ -149,17 +154,17 @@ public class PathFinding : MonoBehaviour {
     public IEnumerator Bake() //1 grote fout: de bake bugt de fuck out als de objecten aan de bovenkant komen
     {
         #region Prepare Bake
-        int calc = 0;
+        int _calc = 0;
         //initialize grid
         for (int x = 0; x < widthSize; x++)
             for (int y = 0; y < heightSize; y++)
                 for (int z = 0; z < widthSize; z++)
                 {
-                    calc++;
+                    _calc++;
                     grid[x, y, z] = new Node(x, y, z);
-                    if(calc > initializesPerFrame)
+                    if(_calc > initializesPerFrame)
                     {
-                        calc = 0;
+                        _calc = 0;
                         yield return null;
                     }
                 }
@@ -173,29 +178,28 @@ public class PathFinding : MonoBehaviour {
         #endregion
 
         toBake = bakeable; //contantly remove from this list
-        bakeCalcs = 0;
         bakePrepare = StartCoroutine(BakePreparedScene()); //now bake all objects in the 3d array
     }
 
     private List<List<Node>> bakedObjects;
     private List<GameObject> toBake;
-    private int bakeCalcs = 0;
     [SerializeField]
-    private int bakesPerFrame;
+    private int maxObjectsBakedPerFrame = 5;
+    private int curObjectsBakedPerFrame;
     private IEnumerator BakePreparedScene()
     {
-        if (toBake.Count == 0)
-            yield break;
-
-        //print(toBake.Count + " to go.");
-
-        bakeCalcs++;
-        if (bakeCalcs > bakesPerFrame) {
-            bakeCalcs = 0;
+        curObjectsBakedPerFrame++;
+        if(curObjectsBakedPerFrame > maxObjectsBakedPerFrame)
+        {
+            curObjectsBakedPerFrame = 0;
             yield return null;
         }
 
-        //get cheapest
+        if (toBake.Count == 0)
+            yield break;
+
+        //get closest
+        /*
         GameObject closest = null;
         float dis = 0;
         foreach (GameObject obj in toBake)
@@ -216,14 +220,18 @@ public class PathFinding : MonoBehaviour {
             closest = obj;
         }
 
-        objectBake = StartCoroutine(BakeObject(closest, BakeType.Object));
+        */
+
+        GameObject closest = toBake[0];
         toBake.Remove(closest);
+        objectBake = StartCoroutine(BakeObject(closest, BakeType.Object));
     }
 
+    private int calc;
     public enum BakeType {Object, Enemy, Movable, Walkable }
-    private IEnumerator BakeObject(GameObject bakeable, BakeType type) //hier zit HET PROBLEEM
+    private IEnumerator BakeObject(GameObject _bakeable, BakeType type) //hier zit HET PROBLEEM
     {
-        if(!(bakeable != null))
+        if(!(_bakeable != null))
         {
             StartCoroutine(BakePreparedScene());
             yield break;
@@ -231,13 +239,13 @@ public class PathFinding : MonoBehaviour {
 
         List<Node> ret = new List<Node>();
         //get size collider
-        Collider c = bakeable.GetComponent<Collider>();
+        Collider c = _bakeable.GetComponent<Collider>();
         if (!(c != null))
         {
             if (type == BakeType.Object)
-                StartCoroutine(BakePreparedScene());
+                bakePrepare = StartCoroutine(BakePreparedScene());
             if (type != BakeType.Object)
-                EndRealtimeBakeFrame(bakeable, ret);
+                EndRealtimeBakeFrame(_bakeable, ret);
             yield break;
         }
 
@@ -252,27 +260,32 @@ public class PathFinding : MonoBehaviour {
         int halfX = _x / 2;
         int halfY = _y / 2;
         int halfZ = _z / 2;
-        
+
         Collider[] hits;
+        //RaycastHit hit;
         Node node;
 
         if (!(midNode != null))
         {
             //Debug.Log(bakeable.name + " not scanned, the center has to be in the bakeable area.");
             if(type == BakeType.Object)
-                StartCoroutine(BakePreparedScene());
+                bakePrepare = StartCoroutine(BakePreparedScene());
             if (type != BakeType.Object)
-                EndRealtimeBakeFrame(bakeable, ret);
+                EndRealtimeBakeFrame(_bakeable, ret);
             yield break;
         }
 
-        int calc = 0;
-        int colCalc = 0;
-        #region Old Code
         for (int x = midNode.x - halfX; x <= halfX + midNode.x; x++)
             for (int y = midNode.y - halfY; y <= halfY + midNode.y + 1; y++)
                 for (int z = midNode.z - halfZ; z <= halfZ + midNode.z; z++)
-                {                 
+                {
+                    calc++;
+                    if (calc > calculationsPerFrame)
+                    {
+                        calc = 0;
+                        yield return null;
+                    }
+
                     //check if in bounds
                     if (x < 0 || x >= grid.GetLength(0))
                         continue;
@@ -285,37 +298,25 @@ public class PathFinding : MonoBehaviour {
                     if (node.filled && node.bakeType == BakeType.Object)
                         continue;
 
-                    calc++;
-                    if (calc > calculationsPerFrame)
-                    {
-                        calc = 0;
-                        yield return null;
-                    }
-
                     Vector3 midPos = GetVectorFromNode(grid[x, y, z]);
-
-                    colCalc++; //heavy calculation
-                    if (colCalc > heavyCalcPerFrame)
-                    {
-                        colCalc = 0;
-                        yield return null;
-                    }
-
+                    
                     hits = Physics.OverlapSphere(midPos, heightSizeNode / 2); //in het midden schieten, niet in de hoek
                     if (visualizeRaycasts)
                     {
                         Color v = hits.Length > 0 ? Color.red : Color.grey;
                         Debug.DrawRay(midPos, Vector3.down, v, 1);
                     }
+
+                    calc += heavyCalcCost;
+                    if (calc > calculationsPerFrame)
+                    {
+                        calc = 0;
+                        yield return null;
+                    }
+
                     foreach (Collider hit in hits)
                     {
-                        colCalc++;
-                        if (colCalc > heavyCalcPerFrame)
-                        {
-                            colCalc = 0;
-                            yield return null;
-                        }
-                        if (bakeable != hit.transform.gameObject)
+                        if (_bakeable != hit.transform.gameObject)
                             continue;
                         node.bakeType = type;
                         node.filled = true;
@@ -324,18 +325,16 @@ public class PathFinding : MonoBehaviour {
                     }
                 }
 
-        #endregion
-
         if (type == BakeType.Object)
-            StartCoroutine(BakePreparedScene());
+            bakePrepare = StartCoroutine(BakePreparedScene());
         if (type != BakeType.Object)
-            EndRealtimeBakeFrame(bakeable, ret);
+            EndRealtimeBakeFrame(_bakeable, ret);
     }
 
-    private void EndRealtimeBakeFrame(GameObject bakeable, List<Node> nodes)
+    private void EndRealtimeBakeFrame(GameObject _bakeable, List<Node> nodes)
     {
         foreach (BakeProcess bP in realtimeBake)
-            if (bP.obj == bakeable)
+            if (bP.obj == _bakeable)
             {
                 bP.busy = false;
                 bP.bakeable.myNodes = nodes;

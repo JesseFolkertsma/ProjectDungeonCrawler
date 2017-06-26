@@ -1431,9 +1431,9 @@ MonoBehaviour:
   raycastOffsetHeight: 1.5
   enemy:
     fastUpdate: 0.1
-    slowUpdate: 1
+    slowUpdate: 10
     fastDis: 10
-    slowDis: 30
+    slowDis: 100
     engagementRange: 40
     attackRange: 5
   loopIdle: 1
@@ -1477,10 +1477,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21ee27ae6132e644596f5385e69160f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  refreshSpeed: 0.1
+  refreshSpeed: 100
   bakeType: 1
   myNodes: []
-  bake: 1
+  bake: 0
 --- !u!114 &114930352546908386
 MonoBehaviour:
   m_ObjectHideFlags: 1
