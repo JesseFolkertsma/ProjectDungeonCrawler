@@ -6,6 +6,10 @@ using UnityEngine;
 [RequireComponent(typeof(Pathfinding_Visualizer))]
 public class PathFinding : MonoBehaviour {
 
+    //FOUTEN:
+    //baket soms vanaf oude kamer
+    //enemy ienumerator kost heel veel
+
     //make a 3d grid (visually in the editor) from the object this stands on
 
     //get all static objects in scene
@@ -87,7 +91,7 @@ public class PathFinding : MonoBehaviour {
 
         if(!(mV != null))
         {
-            Debug.Log("Map Visualizer does not excist in this scene. Aborting.");
+            Debug.Log("Map Visualizer does not exist in this scene. Aborting.");
             yield break;
         }
 
@@ -128,8 +132,11 @@ public class PathFinding : MonoBehaviour {
             if(curRoom != null)
             {
                 //rebake
-                if(changed)
+                if (changed)
+                {
+                    SetupBakeable();
                     StartBake();
+                }
             }
 
             yield return new WaitForSeconds(positionUpdateFrequency);
@@ -187,7 +194,7 @@ public class PathFinding : MonoBehaviour {
     private int maxObjectsBakedPerFrame = 5;
     private int curObjectsBakedPerFrame;
     private IEnumerator BakePreparedScene()
-    {
+    {   
         curObjectsBakedPerFrame++;
         if(curObjectsBakedPerFrame > maxObjectsBakedPerFrame)
         {
@@ -366,9 +373,9 @@ public class PathFinding : MonoBehaviour {
             obj = bakeable.gameObject;
         }
     }
-    public void BakeObjectRealTime(Pathfinding_Bakeable bakeable)
+    public void BakeObjectRealTime(Pathfinding_Bakeable _bakeable)
     {
-        BakeProcess bP = new BakeProcess(bakeable);
+        BakeProcess bP = new BakeProcess(_bakeable);
         realtimeBake.Add(bP);
         StartCoroutine(_BakeObjectRealTime(bP));
     }
