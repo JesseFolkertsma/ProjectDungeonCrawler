@@ -51,13 +51,12 @@ namespace PDC.Characters
             weaponAnim = weaponPos.GetComponent<Animator>();
 
             data = GameManager.instance.gameData;
-
-            GatherWeaponData();
-
+            
             for (int i = 0; i < data.availableSlots; i++)
             {
                 PickupWeapon(EmptyWeapon.GetNew());
             }
+            GatherWeaponData();
 
             if (onSpawnEvent != null)
                 onSpawnEvent();

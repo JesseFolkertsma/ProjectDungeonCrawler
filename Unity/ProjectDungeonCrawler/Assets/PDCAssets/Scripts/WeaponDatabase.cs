@@ -7,7 +7,7 @@ public class WeaponDatabase : MonoBehaviour {
 
     public static WeaponDatabase instace;
 
-    private void Start()
+    private void Awake()
     {
         if(instace == null)
         {
