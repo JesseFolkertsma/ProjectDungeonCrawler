@@ -122,6 +122,8 @@ GameObject:
   - component: {fileID: 124112171864783476}
   - component: {fileID: 92667667954400026}
   - component: {fileID: 81333990134087694}
+  - component: {fileID: 114938814571308716}
+  - component: {fileID: 135452195080989042}
   m_Layer: 8
   m_Name: PlayerCamera
   m_TagString: Player
@@ -579,13 +581,20 @@ MonoBehaviour:
     armorRating: 0
     movementSpeed: 5
   isdead: 0
-  weapons: []
-  availableSlots: 6
-  consumables: []
-  throwStrenght: 700
   weaponPos: {fileID: 4750375687892324}
   offSetObject: {fileID: 4366895131145312}
   weaponAnim: {fileID: 0}
+--- !u!114 &114938814571308716
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1625098297174926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86f44ec7119b53e45a1c7e5fa83a4329, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114957312870417138
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -651,6 +660,18 @@ Behaviour:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1625098297174926}
   m_Enabled: 1
+--- !u!135 &135452195080989042
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1625098297174926}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 60
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!136 &136457335432702720
 CapsuleCollider:
   m_ObjectHideFlags: 1
