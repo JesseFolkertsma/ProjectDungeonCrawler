@@ -14326,6 +14326,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114878582297170494, guid: e0c8fbc98b35dd54fbc3ec6546861047,
+        type: 2}
+      propertyPath: gameData.weaponsByID.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4231907180520432, guid: e0c8fbc98b35dd54fbc3ec6546861047, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -14357,6 +14362,16 @@ Prefab:
     - target: {fileID: 4231907180520432, guid: e0c8fbc98b35dd54fbc3ec6546861047, type: 2}
       propertyPath: m_RootOrder
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 114878582297170494, guid: e0c8fbc98b35dd54fbc3ec6546861047,
+        type: 2}
+      propertyPath: gameData.weaponsByID.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114878582297170494, guid: e0c8fbc98b35dd54fbc3ec6546861047,
+        type: 2}
+      propertyPath: gameData.weaponsByID.Array.data[1]
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e0c8fbc98b35dd54fbc3ec6546861047, type: 2}

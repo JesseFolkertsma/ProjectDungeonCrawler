@@ -296,7 +296,9 @@ namespace PDC.Characters {
         {
             get
             {
-                throw new NotImplementedException();
+                Vector3 origin = transform.position;
+                origin.y += raycastOffsetHeight;
+                return origin;
             }
         }
 
