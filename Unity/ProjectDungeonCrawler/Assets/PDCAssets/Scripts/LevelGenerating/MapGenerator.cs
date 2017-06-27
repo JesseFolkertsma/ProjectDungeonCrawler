@@ -422,7 +422,6 @@ namespace PDC
                 n.initialized = true;
 
                 //tijdelijk
-                print(n.room.front + " " + n.room.right + " " + n.room.back + " " + n.room.left + " " + n.posX + " " + n.posZ);
             }
 
             private List<Room> GetFitRooms(Node n)
