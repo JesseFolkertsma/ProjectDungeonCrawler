@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4208054387710468}
   - component: {fileID: 212183350021677734}
   - component: {fileID: 95366672797777928}
+  - component: {fileID: 114713431268261834}
   m_Layer: 0
   m_Name: SPRT_Fire_Spritesheet_001_0 (1)
   m_TagString: Untagged
@@ -153,7 +154,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1796097685458918}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -15.92, y: 0.0019827038, z: 3.81}
+  m_LocalPosition: {x: 9.84, y: -10, z: -19.58}
   m_LocalScale: {x: 0.19999999, y: 0.19999999, z: 0.19999999}
   m_Children:
   - {fileID: 4186955330150844}
@@ -385,6 +386,17 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &114713431268261834
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1146251732561608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3afc7dd7983208e45896c9da5551c539, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!212 &212183350021677734
 SpriteRenderer:
   m_ObjectHideFlags: 1
