@@ -277,7 +277,8 @@ namespace PDC.Characters {
                 GameObject drop = Instantiate(itemsToDrop[UnityEngine.Random.Range(0, itemsToDrop.Length)], ObjectCenter, transform.rotation);
                 drop.GetComponent<Rigidbody>().AddForce(Vector3.up * 500);
             }
-            for (int i = 0; i < UnityEngine.Random.Range(0,10); i++)
+            int rng = UnityEngine.Random.Range(0, 100);
+            for (int i = 0; i < rng; i++)
             {
                 Instantiate(coin, ObjectCenter, transform.rotation);
             }
