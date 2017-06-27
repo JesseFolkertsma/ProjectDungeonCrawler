@@ -15,8 +15,9 @@ namespace PDC.UI
 
         Coroutine routine;
 
-        public void SetVisuals(Weapon weapon, bool equipped)
+        public bool SetVisuals(Weapon weapon, bool equipped)
         {
+            bool playsound = false;
             if (equipped)
             {
                 //slot.localPosition = new Vector2(25, 0);
@@ -24,6 +25,7 @@ namespace PDC.UI
                 {
                     StopCoroutine(routine);
                 }
+                playsound = true;
                 routine = StartCoroutine(SelectSlot(150));
             }
             else
@@ -34,6 +36,7 @@ namespace PDC.UI
                     StopCoroutine(routine);
                 }
                 routine = StartCoroutine(DeSelectSlot(150));
+                playsound = true;
             }
             if (weapon.GetType() == typeof(EmptyWeapon))
             {
@@ -57,6 +60,7 @@ namespace PDC.UI
                     statusEffects[i].color = weapon.weaponEffects[i].effectColor;
                 }
             }
+            return playsound;
         }
 
         IEnumerator SelectSlot(float speed)
