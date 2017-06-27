@@ -49,21 +49,24 @@ namespace PDC.Weapons
             foreach(Collider col in hits)
             {
                 print("I hit: "  + col.name);
-                IHitable iHit = col.GetComponent<IHitable>();
-                if (iHit != null)
+                IHitable[] iHits = col.transform.GetComponents<IHitable>();
+                if (iHits != null)
                 {
-                    Vector3 enemyDir = (iHit.ObjectCenter - cam.transform.position).normalized;
-                    print(Vector3.Angle(enemyDir, cam.transform.forward));
-                    if(Vector3.Angle(enemyDir, (cam.transform.forward + attackData.angleDirectionOffset).normalized) < attackData.hitAngle)
+                    foreach (IHitable iHit in iHits)
                     {
-                        print(col.name + " is in Angle!");
-                        RaycastHit rHit;
-                        if (Physics.Raycast(cam.transform.position, enemyDir, out rHit, range, lMask))
+                        Vector3 enemyDir = (iHit.ObjectCenter - cam.transform.position).normalized;
+                        print(Vector3.Angle(enemyDir, cam.transform.forward));
+                        if (Vector3.Angle(enemyDir, (cam.transform.forward + attackData.angleDirectionOffset).normalized) < attackData.hitAngle)
                         {
-                            if (rHit.collider == col)
+                            print(col.name + " is in Angle!");
+                            RaycastHit rHit;
+                            if (Physics.Raycast(cam.transform.position, enemyDir, out rHit, range, lMask))
                             {
-                                foreach (IHitable h in col.GetComponents<IHitable>())
-                                    h.GetHit(damage, EffectType.Normal, weaponEffects, cam.transform.position);
+                                if (rHit.collider == col)
+                                {
+                                    foreach (IHitable h in col.GetComponents<IHitable>())
+                                        h.GetHit(damage, EffectType.Normal, weaponEffects, cam.transform.position);
+                                }
                             }
                         }
                     }

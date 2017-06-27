@@ -257,6 +257,10 @@ namespace PDC.Characters {
             return false;
         }
 
+        public int dropChanceItem = 30;
+        public GameObject[] itemsToDrop;
+        public GameObject coin;
+
         public override void Die()
         {
             if (isdead)
@@ -264,7 +268,19 @@ namespace PDC.Characters {
             isdead = true;
             //drop items, calc which ones in enemymanager
             Generating.MapVisualizer.self.OnEnemyDeath(transform);
-            Instantiate(ragdoll, transform.position, transform.rotation);
+            GameObject ragD = Instantiate(ragdoll, transform.position, transform.rotation);
+            ragD.GetComponent<Animator>().runtimeAnimatorController = anim.runtimeAnimatorController;
+            Vector3 dir = (transform.position - PlayerCombat.instance.transform.position).normalized;
+            ragD.GetComponentInChildren<Rigidbody>().AddForce(dir * 5000);
+            if(UnityEngine.Random.Range(0,100) < dropChanceItem)
+            {
+                GameObject drop = Instantiate(itemsToDrop[UnityEngine.Random.Range(0, itemsToDrop.Length)], ObjectCenter, transform.rotation);
+                drop.GetComponent<Rigidbody>().AddForce(Vector3.up * 500);
+            }
+            for (int i = 0; i < UnityEngine.Random.Range(0,10); i++)
+            {
+                Instantiate(coin, ObjectCenter, transform.rotation);
+            }
             Destroy(gameObject);
         }
 
@@ -296,7 +312,9 @@ namespace PDC.Characters {
         {
             get
             {
-                throw new NotImplementedException();
+                Vector3 origin = transform.position;
+                origin.y += raycastOffsetHeight;
+                return origin;
             }
         }
 
@@ -455,6 +473,7 @@ namespace PDC.Characters {
 
             if(Physics.Raycast(originRangeAttacks.position, hitPoint, out hit, curAttack.range))
             {
+                print("i hit: " + hit.transform.name);
                 IHitable iHit = (IHitable)hit.transform.GetComponent(typeof(IHitable));
                 if (iHit != null)
                     HitRangeObject(iHit);

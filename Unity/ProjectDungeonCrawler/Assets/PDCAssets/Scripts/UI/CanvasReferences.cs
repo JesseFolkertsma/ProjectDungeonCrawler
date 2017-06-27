@@ -67,9 +67,11 @@ namespace PDC.UI
             }
             else
             {
-                weaponSlots[slotToSet].SetVisuals(wep, isEquipped);
-                audioS.clip = swapWeaponSound;
-                audioS.Play();
+                if (weaponSlots[slotToSet].SetVisuals(wep, isEquipped))
+                {
+                    audioS.clip = swapWeaponSound;
+                    audioS.Play();
+                }
             }
         }
 

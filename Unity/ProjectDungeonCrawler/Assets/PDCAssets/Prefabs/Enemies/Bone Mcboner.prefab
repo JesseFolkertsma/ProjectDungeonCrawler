@@ -1424,7 +1424,7 @@ MonoBehaviour:
   status: 0
   recalculatePathTime: 1
   nodeStoppingDistance: 3
-  ragdoll: {fileID: 1336534025855518, guid: f002cb70d62ed0646bf53d1005f73a68, type: 2}
+  ragdoll: {fileID: 1240075018566678, guid: 8c6d2e4df0f590f4cb4e2c92f6762c49, type: 2}
   walkAnim: Moving
   walkAnimValue: Movespeed
   attackAnim: Attack
@@ -1437,6 +1437,13 @@ MonoBehaviour:
     engagementRange: 40
     attackRange: 5
   loopIdle: 1
+  dropChanceItem: 30
+  itemsToDrop:
+  - {fileID: 1487556820555230, guid: ff234285406f42e4eafc5a5b7074d096, type: 2}
+  - {fileID: 1953012379529164, guid: 2f81d60cae3aad94083e082abd37c2fa, type: 2}
+  - {fileID: 1082261984156578, guid: b94b9513e26a3134eb59ddf495740a6b, type: 2}
+  - {fileID: 1527718447822810, guid: 7304c5377236be64ba2d18b5caf0274e, type: 2}
+  coin: {fileID: 1490722095840770, guid: 7a1ed7c6c9b463e439861b0322a79931, type: 2}
   rotateSpeed: 5
   enemyAttacks:
   - index: 1
@@ -1453,7 +1460,7 @@ MonoBehaviour:
     ranged: 0
   - index: 3
     damage: 10
-    range: 1
+    range: 2
     type: 0
     statusEffects: []
     ranged: 0

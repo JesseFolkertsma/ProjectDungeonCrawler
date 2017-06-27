@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -108,66 +108,6 @@ NavMeshSettings:
     tileSize: 256
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &153103449
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 153103451}
-  - component: {fileID: 153103450}
-  m_Layer: 0
-  m_Name: Game Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &153103450
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 153103449}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: acbcc0c74ff95da448a4bf6d9eab6ee2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameData:
-    playerStats:
-      maxHP: 100
-      currentHP: 100
-      maxSouls: 100
-      currentSouls: 0
-      armorRating: 0
-      movementSpeed: 0
-    weapons: []
-    weaponsByID: 
-    availableSlots: 0
-    consumables: []
-    throwStrenght: 700
-    equippedWeapon: 0
-    selectedConsumable: 0
-  untaggedHitdecal: {fileID: 0}
-  woodHitdecal: {fileID: 0}
-  stoneHitdecal: {fileID: 0}
-  fleshHitdecal: {fileID: 0}
-  vuileviezeint: 0
---- !u!4 &153103451
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 153103449}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.6588659, y: 8.800621, z: -10.426304}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &309754360
 Prefab:
   m_ObjectHideFlags: 0
@@ -175,16 +115,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 114878582297170494, guid: e0c8fbc98b35dd54fbc3ec6546861047,
-        type: 2}
-      propertyPath: gameData.weaponsByID.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114878582297170494, guid: e0c8fbc98b35dd54fbc3ec6546861047,
-        type: 2}
-      propertyPath: gameData.playerWeapons.Array.size
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4231907180520432, guid: e0c8fbc98b35dd54fbc3ec6546861047, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -215,26 +145,6 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4231907180520432, guid: e0c8fbc98b35dd54fbc3ec6546861047, type: 2}
       propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 114878582297170494, guid: e0c8fbc98b35dd54fbc3ec6546861047,
-        type: 2}
-      propertyPath: gameData.playerWeapons.Array.data[0]
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114878582297170494, guid: e0c8fbc98b35dd54fbc3ec6546861047,
-        type: 2}
-      propertyPath: gameData.weaponsByID.Array.data[0]
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114878582297170494, guid: e0c8fbc98b35dd54fbc3ec6546861047,
-        type: 2}
-      propertyPath: gameData.weaponsByID.Array.data[1]
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114878582297170494, guid: e0c8fbc98b35dd54fbc3ec6546861047,
-        type: 2}
-      propertyPath: gameData.availableSlots
       value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -375,7 +285,11 @@ MonoBehaviour:
   heavyCalcCost: 10
   center: {fileID: 0}
   positionUpdateFrequency: 1
+<<<<<<< HEAD
   bakeTag: 
+=======
+  bakeTag: Walkable
+>>>>>>> origin/master
   curRoom: {fileID: 0}
   maxObjectsBakedPerFrame: 10
 --- !u!114 &761871901
@@ -651,7 +565,7 @@ MonoBehaviour:
   size: 0
   ySize: 0
   rooms:
-  - room: {fileID: 1197978773152498, guid: cb77c677ad180334385eb8dc4208c9fd, type: 2}
+  - room: {fileID: 1629339000994990, guid: cb77c677ad180334385eb8dc4208c9fd, type: 2}
     converter: 2
     top: 0
     down: 0
@@ -660,7 +574,7 @@ MonoBehaviour:
     front: 1
     back: 0
     rotation: 0
-  - room: {fileID: 1114037171090058, guid: b8e7b732cc5d54f43928bec667bdee9a, type: 2}
+  - room: {fileID: 1784844920587258, guid: b8e7b732cc5d54f43928bec667bdee9a, type: 2}
     converter: 2
     top: 0
     down: 0
@@ -669,7 +583,7 @@ MonoBehaviour:
     front: 1
     back: 0
     rotation: 0
-  - room: {fileID: 1744628161285962, guid: a2ad1dcf82b7b4d4fb8f6d59ca22d6b1, type: 2}
+  - room: {fileID: 1887822227204706, guid: a2ad1dcf82b7b4d4fb8f6d59ca22d6b1, type: 2}
     converter: 1
     top: 0
     down: 0
@@ -687,7 +601,7 @@ MonoBehaviour:
     front: 1
     back: 1
     rotation: 0
-  - room: {fileID: 1700757408955728, guid: a6539d0b710fd5a4aa17acab9d087b56, type: 2}
+  - room: {fileID: 1678662602718550, guid: a6539d0b710fd5a4aa17acab9d087b56, type: 2}
     converter: 0
     top: 0
     down: 1
@@ -696,7 +610,7 @@ MonoBehaviour:
     front: 1
     back: 1
     rotation: 0
-  - room: {fileID: 1059774933918288, guid: bf453737431374e4baad539a6c08148b, type: 2}
+  - room: {fileID: 1143230140042476, guid: bf453737431374e4baad539a6c08148b, type: 2}
     converter: 0
     top: 1
     down: 1
@@ -705,7 +619,7 @@ MonoBehaviour:
     front: 1
     back: 1
     rotation: 0
-  - room: {fileID: 1443504166534708, guid: ce3222a606e915744af086928e18fc6e, type: 2}
+  - room: {fileID: 1124554860577292, guid: ce3222a606e915744af086928e18fc6e, type: 2}
     converter: 0
     top: 0
     down: 0
@@ -797,7 +711,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &2127721495
 Light:
   m_ObjectHideFlags: 0

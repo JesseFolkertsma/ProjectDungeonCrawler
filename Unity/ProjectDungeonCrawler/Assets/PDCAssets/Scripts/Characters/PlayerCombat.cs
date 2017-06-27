@@ -11,7 +11,7 @@ using PDC.Saving;
 namespace PDC.Characters
 {
     [RequireComponent(typeof(PlayerController))]
-    public class PlayerCombat : BaseCharacter
+    public class PlayerCombat : BaseCharacter, IHitable
     {
         public static PlayerCombat instance;
         PlayerController pc;
@@ -38,7 +38,15 @@ namespace PDC.Characters
         public OnHPChange onHPChange;
         public delegate void OnGiveStatusEffect(OngoingEffect effect);
         public OnGiveStatusEffect onGiveStatusEffect;
-        
+
+        public Vector3 ObjectCenter
+        {
+            get
+            {
+                return transform.position + Vector3.up;
+            }
+        }
+
         void Awake()
         {
             if (instance == null)
@@ -371,6 +379,13 @@ namespace PDC.Characters
                 if(onDeathEvent != null)
                     onDeathEvent();
             }
+        }
+
+        public void GetHit(float damage, EffectType hitType, StatusEffect[] effects, Vector3 shotPosition)
+        {
+            TakeDamage(damage, hitType);
+            foreach(StatusEffect se in effects)
+                se.AddEffect(this);
         }
     }
 }
