@@ -371,7 +371,9 @@ namespace PDC.Characters {
             step = rotateSpeed * Time.deltaTime;
             newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0F);
             //Debug.DrawRay(transform.position, newDir, Color.red);
-            transform.rotation = Quaternion.LookRotation(newDir);
+            Quaternion rot = transform.rotation;
+            rot.y = Quaternion.LookRotation(newDir).y;
+            transform.rotation = rot;
         }
 
         private Coroutine rotateCoroutine;

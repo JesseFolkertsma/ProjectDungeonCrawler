@@ -244,6 +244,7 @@ namespace PDC
                 enemyValueOriginal = enemyValue;
 
                 loader.SetProgress(MapLoader.Progress.Placing_Rooms);
+                CustomOcclusion.self.Occlude();
                 PathFinding.self.SetupBakeable();
             }
 
