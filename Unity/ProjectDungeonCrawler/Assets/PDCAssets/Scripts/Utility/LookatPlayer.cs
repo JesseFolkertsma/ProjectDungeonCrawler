@@ -16,7 +16,8 @@ public class LookatPlayer : MonoBehaviour {
     {
         while(player == null)
         {
-            player = FindObjectOfType<PlayerController>().transform;
+            if(FindObjectOfType<PlayerController>() != null)
+                player = FindObjectOfType<PlayerController>().transform;
             yield return new WaitForSeconds(3);
         }
     }
