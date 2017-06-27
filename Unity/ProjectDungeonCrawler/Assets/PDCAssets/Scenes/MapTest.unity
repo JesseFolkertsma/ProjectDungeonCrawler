@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.2464749, g: 0.2823448, b: 0.34570262, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -589,12 +589,16 @@ Prefab:
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
+      objectReference: {fileID: 857785777}
+    - target: {fileID: 1030565625156536, guid: eb97674dba1706c47b366cb8ad7f1ab3, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: eb97674dba1706c47b366cb8ad7f1ab3, type: 2}
@@ -1031,6 +1035,11 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 1258595193}
   m_Script: {fileID: 11500000, guid: 6fc883a4cc813da4da6f11973c832db7, type: 3}
+--- !u!1 &578578655 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1030565625156536, guid: eb97674dba1706c47b366cb8ad7f1ab3,
+    type: 2}
+  m_PrefabInternal: {fileID: 107017956}
 --- !u!224 &857785777 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224983147492873890, guid: eb97674dba1706c47b366cb8ad7f1ab3,
@@ -1142,7 +1151,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -1484,6 +1493,11 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114603545983723232, guid: a4057ae3b98ef9843b6348b09820c71d,
+        type: 2}
+      propertyPath: dungeon
+      value: 
+      objectReference: {fileID: 578578655}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a4057ae3b98ef9843b6348b09820c71d, type: 2}
   m_IsPrefabParent: 0
