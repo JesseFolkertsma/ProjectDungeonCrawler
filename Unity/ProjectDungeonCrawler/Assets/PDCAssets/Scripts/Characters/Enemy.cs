@@ -257,8 +257,9 @@ namespace PDC.Characters {
             return false;
         }
 
-        public int dropChance = 30;
+        public int dropChanceItem = 30;
         public GameObject[] itemsToDrop;
+        public GameObject coin;
 
         public override void Die()
         {
@@ -271,10 +272,14 @@ namespace PDC.Characters {
             ragD.GetComponent<Animator>().runtimeAnimatorController = anim.runtimeAnimatorController;
             Vector3 dir = (transform.position - PlayerCombat.instance.transform.position).normalized;
             ragD.GetComponentInChildren<Rigidbody>().AddForce(dir * 5000);
-            if(UnityEngine.Random.Range(0,100) < dropChance)
+            if(UnityEngine.Random.Range(0,100) < dropChanceItem)
             {
                 GameObject drop = Instantiate(itemsToDrop[UnityEngine.Random.Range(0, itemsToDrop.Length)], ObjectCenter, transform.rotation);
                 drop.GetComponent<Rigidbody>().AddForce(Vector3.up * 500);
+            }
+            for (int i = 0; i < UnityEngine.Random.Range(0,10); i++)
+            {
+                Instantiate(coin, ObjectCenter, transform.rotation);
             }
             Destroy(gameObject);
         }
