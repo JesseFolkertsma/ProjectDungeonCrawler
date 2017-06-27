@@ -41,6 +41,10 @@ public class PathFinding : MonoBehaviour {
     [SerializeField]
     private float positionUpdateFrequency = 3;
 
+    //tijdelijk
+    [SerializeField]
+    private string bakeTag;
+
     private void Awake()
     {
         //initialize reference to self
@@ -56,10 +60,11 @@ public class PathFinding : MonoBehaviour {
         bakeable = new List<GameObject>();
 
         //get all gameobjects
-        GameObject[] all = FindObjectsOfType(typeof(GameObject)) as GameObject[];
+        GameObject[] all = /*FindObjectsOfType(typeof(GameObject)) as GameObject[]; */ GameObject.FindGameObjectsWithTag(bakeTag);
+
         foreach (GameObject possibleBakeObj in all)
         {
-            if (possibleBakeObj.isStatic)
+            //if (possibleBakeObj.isStatic)
                 bakeable.Add(possibleBakeObj);
         }
 
