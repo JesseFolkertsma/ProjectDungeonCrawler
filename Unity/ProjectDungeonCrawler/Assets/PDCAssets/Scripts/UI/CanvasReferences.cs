@@ -48,12 +48,26 @@ namespace PDC.UI
         bool popped = false;
         public void SetQuestProgression(float coins, float maxCoins)
         {
-            questProgressionImage.fillAmount = coins/maxCoins;
-            if(questProgressionImage.fillAmount >= 1 && !popped)
+            questProgressionImage.fillAmount = coins / maxCoins;
+            if (questProgressionImage.fillAmount >= 1 && !popped)
             {
                 questProgressionImage.fillAmount = 1;
                 popped = true;
                 GamePopup.instance.DisplayPopup("Enough coins obtained, good job!");
+                GameManager.instance.vuileviezeint++;
+            }
+        }
+
+        bool popped2 = false;
+        public void SetCaveProgression(float kills, float enemies)
+        {
+            caveProgressionImage.fillAmount = kills / enemies;
+            if (caveProgressionImage.fillAmount >= 1 && !popped)
+            {
+                caveProgressionImage.fillAmount = 1;
+                popped2 = true;
+                GamePopup.instance.DisplayPopup("All enemies killed! Press tab to leave.");
+                GameManager.instance.vuileviezeint++;
             }
         }
 
