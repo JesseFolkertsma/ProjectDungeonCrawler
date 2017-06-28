@@ -85,6 +85,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvasRef: {fileID: 114876633934547424, guid: f9ef0e00fe7fb994abed3f24e02442ad,
     type: 2}
+  coinsToAcuire: 500
 --- !u!114 &114878582297170494
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -107,7 +108,8 @@ MonoBehaviour:
     weapons: []
     weaponsByID: 0100000002000000
     availableSlots: 3
-    consumables: []
+    consumables:
+    - {fileID: 11400000, guid: 0f024881b2c51fd4ebeb977d6fc2cb51, type: 2}
     throwStrenght: 700
     equippedWeapon: 0
     selectedConsumable: 0

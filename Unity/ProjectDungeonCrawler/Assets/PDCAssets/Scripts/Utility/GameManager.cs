@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     public OnSceneExit onSceneExit;
 
     public int vuileviezeint;
+    public bool dungeonClear = false;
 
     private void Awake()
     {
@@ -33,6 +34,14 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void Update()
+    {
+        if(Input.GetButtonDown("Exit Dungeon"))
+        {
+            LoadScene(1);
         }
     }
 

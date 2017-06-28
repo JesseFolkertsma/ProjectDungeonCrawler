@@ -45,18 +45,31 @@ namespace PDC.UI
                 hpImage.fillAmount = currentHP / maxHp;
         }
 
-        public void SetCaveProgression(float percentage)
+        bool popped = false;
+        public void SetQuestProgression(float coins, float maxCoins)
         {
-            caveProgressionImage.fillAmount = percentage;
+            questProgressionImage.fillAmount = coins / maxCoins;
+            if (questProgressionImage.fillAmount >= 1 && !popped)
+            {
+                questProgressionImage.fillAmount = 1;
+                popped = true;
+                GamePopup.instance.DisplayPopup("Enough coins obtained, good job!");
+                GameManager.instance.vuileviezeint++;
+            }
         }
 
-        //public void AddQuest(Quest questToAdd)
-        //{
-        //    GameObject newQuest = Instantiate(newQuestObject, questLog);
-        //    Text questText = newQuest.GetComponent<Text>();
-        //    questText.text = questToAdd.inGameDesc;
-        //    quests.Add(questText);
-        //}
+        bool popped2 = false;
+        public void SetCaveProgression(float kills, float enemies)
+        {
+            caveProgressionImage.fillAmount = kills / enemies;
+            if (caveProgressionImage.fillAmount >= 1 && !popped)
+            {
+                caveProgressionImage.fillAmount = 1;
+                popped2 = true;
+                GamePopup.instance.DisplayPopup("All enemies killed! Press tab to leave.");
+                GameManager.instance.vuileviezeint++;
+            }
+        }
 
         public void SetWeaponSlot(int slotToSet, Weapon wep, bool isEquipped)
         {

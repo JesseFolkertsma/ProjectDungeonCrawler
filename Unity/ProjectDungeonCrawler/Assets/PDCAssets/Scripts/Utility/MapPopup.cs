@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MapPopup : MonoBehaviour {
+public class MapPopup : MonoBehaviour
+{
 
     public static MapPopup instance;
 
@@ -35,7 +36,7 @@ public class MapPopup : MonoBehaviour {
 
     public void DisplayPopup(Sprite sprite, string message)
     {
-        if(routine == null)
+        if (routine == null)
         {
             routine = StartCoroutine(Move(new Popup(message, sprite)));
         }
@@ -49,7 +50,7 @@ public class MapPopup : MonoBehaviour {
     {
         image.sprite = pop.sprite;
         text.text = pop.message;
-        while(myRect.localPosition.x < 225)
+        while (myRect.localPosition.x < 225)
         {
             myRect.localPosition = Vector3.MoveTowards(myRect.localPosition, new Vector2(226, 0), speed * Time.deltaTime);
             yield return null;
@@ -60,9 +61,10 @@ public class MapPopup : MonoBehaviour {
             myRect.localPosition = Vector3.MoveTowards(myRect.localPosition, new Vector2(-1, 0), speed * Time.deltaTime);
             yield return null;
         }
-        if(waiting.Count > 0)
+        if (waiting.Count > 0)
         {
             StartCoroutine(Move(waiting.Dequeue()));
         }
     }
 }
+

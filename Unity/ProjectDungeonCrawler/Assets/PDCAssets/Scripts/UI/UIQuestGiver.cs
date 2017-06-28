@@ -41,6 +41,13 @@ namespace PDC.UI
             if(instance == null)
                 instance = this;
             audioS = GetComponent<AudioSource>();
+
+            if(GameManager.instance.vuileviezeint > 0)
+            {
+                dungeon.SetActive(true);
+            }
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.Confined;
         }
 
         public void ViezeHardCode()
@@ -52,6 +59,10 @@ namespace PDC.UI
                     GameManager.instance.vuileviezeint++;
                     break;
             }
+        }
+        public void ViezeHardCode2()
+        {
+            GameManager.instance.LoadScene(2);
         }
 
         /// <summary>

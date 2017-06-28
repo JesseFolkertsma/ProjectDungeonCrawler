@@ -20,6 +20,9 @@ namespace PDC.UI
         public delegate void OnAmmo(Weapon equipped);
         public OnAmmo onAmmo;
 
+        float coins;
+        public float coinsToAcuire = 500;
+
         void Awake()
         {
             if (instance == null)
@@ -72,6 +75,12 @@ namespace PDC.UI
                 spawnedCanvas.SetAmmoVisuals(equipped);
             else
                 spawnedCanvas.SetAmmoVisualState(false);
+        }
+
+        public void AddProgress()
+        {
+            coins++;
+            spawnedCanvas.SetQuestProgression(coins, coinsToAcuire);
         }
 
         void UpdateConsumable(List<Consumable> consumables, int selected, bool playAnimation)

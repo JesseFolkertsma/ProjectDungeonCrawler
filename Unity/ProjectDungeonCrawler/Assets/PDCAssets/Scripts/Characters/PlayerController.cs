@@ -17,6 +17,7 @@ namespace PDC.Characters
         public Camera playerCam;
         public HeadBobVariables headbobVariables;
         public LayerMask playerLayer;
+        public LayerMask blockPath;
         public float movementSpeed;
         public float acceleration;
         public float movementModifier;
@@ -126,7 +127,8 @@ namespace PDC.Characters
 
         void Checks()
         {
-            if(Physics.Raycast(transform.position + Vector3.up, Vector3.down, 1.1f, playerLayer))
+            RaycastHit feethit;
+            if(Physics.SphereCast(transform.position + Vector3.up, 0.20f, Vector3.down, out feethit, 1.1f, playerLayer))
             {
                 grounded = true;
             }
@@ -137,7 +139,7 @@ namespace PDC.Characters
 
             if(direction != Vector3.zero)
             {
-                if(Physics.Raycast(transform.position + Vector3.up, direction, .3f, playerLayer) || Physics.Raycast(transform.position + Vector3.up /2, direction, .3f, playerLayer))
+                if(Physics.Raycast(transform.position + Vector3.up, direction, .3f, blockPath) || Physics.Raycast(transform.position + Vector3.up /2, direction, .3f, blockPath))
                 {
                     obstacle = true;
                 }
