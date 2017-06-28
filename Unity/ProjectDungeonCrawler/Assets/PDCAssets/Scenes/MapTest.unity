@@ -544,7 +544,7 @@ Prefab:
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 947641570}
+      objectReference: {fileID: 467454735}
     - target: {fileID: 1030565625156536, guid: eb97674dba1706c47b366cb8ad7f1ab3, type: 2}
       propertyPath: m_Name
       value: Logo (2)
@@ -564,12 +564,12 @@ Prefab:
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: StartMoving
+      value: ViezeHardCode2
       objectReference: {fileID: 0}
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Transform, UnityEngine
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 224983147492873890, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
@@ -589,13 +589,13 @@ Prefab:
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 857785777}
+      objectReference: {fileID: 0}
     - target: {fileID: 1030565625156536, guid: eb97674dba1706c47b366cb8ad7f1ab3, type: 2}
       propertyPath: m_IsActive
       value: 0
@@ -1512,6 +1512,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114603545983723232, guid: a4057ae3b98ef9843b6348b09820c71d,
+        type: 2}
+      propertyPath: smerigehardcodeOrder.Array.size
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 224375459817234866, guid: a4057ae3b98ef9843b6348b09820c71d,
         type: 2}
       propertyPath: m_LocalPosition.x
@@ -1607,6 +1612,12 @@ Prefab:
       propertyPath: dungeon
       value: 
       objectReference: {fileID: 578578655}
+    - target: {fileID: 114603545983723232, guid: a4057ae3b98ef9843b6348b09820c71d,
+        type: 2}
+      propertyPath: smerigehardcodeOrder.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: 5ad0bcffb8eaf794997744c3dafe51c9,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a4057ae3b98ef9843b6348b09820c71d, type: 2}
   m_IsPrefabParent: 0

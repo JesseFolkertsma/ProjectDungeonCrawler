@@ -62,7 +62,7 @@ namespace PDC.UI
         }
         public void ViezeHardCode2()
         {
-            GameManager.instance.LoadScene(2);
+            GameManager.instance.LoadScene(1);
         }
 
         /// <summary>
