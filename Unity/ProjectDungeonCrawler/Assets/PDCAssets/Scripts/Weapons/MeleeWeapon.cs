@@ -32,7 +32,6 @@ namespace PDC.Weapons
 
         public void AttackBox()
         {
-            print("Box");
             Vector3 boxPos = cam.transform.position + (cam.transform.forward * (range / 2));
             Vector3 boxSize = new Vector3(0, 0, range);
             if(attackData.attackType == AttackType.Horizontal)
@@ -48,17 +47,14 @@ namespace PDC.Weapons
             Collider[] hits = Physics.OverlapBox(boxPos, boxSize / 2 , cam.transform.rotation, lMask);
             foreach(Collider col in hits)
             {
-                print("I hit: "  + col.name);
                 IHitable[] iHits = col.transform.GetComponents<IHitable>();
                 if (iHits != null)
                 {
                     foreach (IHitable iHit in iHits)
                     {
                         Vector3 enemyDir = (iHit.ObjectCenter - cam.transform.position).normalized;
-                        print(Vector3.Angle(enemyDir, cam.transform.forward));
                         if (Vector3.Angle(enemyDir, (cam.transform.forward + attackData.angleDirectionOffset).normalized) < attackData.hitAngle)
                         {
-                            print(col.name + " is in Angle!");
                             RaycastHit rHit;
                             if (Physics.Raycast(cam.transform.position, enemyDir, out rHit, range, lMask))
                             {

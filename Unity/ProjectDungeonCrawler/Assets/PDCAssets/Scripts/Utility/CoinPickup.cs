@@ -1,21 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PDC.UI;
 
 public class CoinPickup : MonoBehaviour {
 
     AudioSource audioS;
+    public MeshRenderer render;
+    public Collider col;
 
     private void Start()
     {
-        audioS = transform.parent.GetComponent<AudioSource>();
+        audioS = GetComponent<AudioSource>();
     }
 
     private void OnTriggerEnter(Collider collision)
     {
-        transform.parent.GetComponent<MeshRenderer>().enabled = false;
-        transform.parent.GetComponent<MeshCollider>().enabled = false;
-        audioS.Play();
-        Destroy(gameObject, 5);
+        if (!collision.isTrigger)
+        {
+            render.enabled = false;
+            col.enabled = false;
+            audioS.Play();
+            UIManager.instance.AddProgress();
+            Destroy(col.gameObject, 5);
+        }
     }
 }
