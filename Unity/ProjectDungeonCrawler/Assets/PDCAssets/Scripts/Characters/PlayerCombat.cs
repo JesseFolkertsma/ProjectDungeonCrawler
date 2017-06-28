@@ -49,6 +49,11 @@ namespace PDC.Characters
 
         void Awake()
         {
+            StartCoroutine(Setup());
+        }
+
+        IEnumerator Setup()
+        {
             if (instance == null)
                 instance = this;
             else
@@ -59,11 +64,14 @@ namespace PDC.Characters
             weaponAnim = weaponPos.GetComponent<Animator>();
 
             data = GameManager.instance.gameData;
-            
+
+            data.weapons = new List<Weapon>();
             for (int i = 0; i < data.availableSlots; i++)
             {
                 PickupWeapon(EmptyWeapon.GetNew());
+                yield return null;
             }
+
             GatherWeaponData();
 
             if (onSpawnEvent != null)
@@ -77,7 +85,7 @@ namespace PDC.Characters
         {
             if (onDeathEvent != null) 
                 onDeathEvent();
-
+            
             data.ConvertWeaponsToID();
         }
 
@@ -257,8 +265,11 @@ namespace PDC.Characters
         public void EquipWeapon(int weapI)
         {
             //Return if the slot is already the equipped slot
-            if (weapI == data.EquippedWeapon.assignedSlot && data.EquippedWeapon.gameObject.activeInHierarchy)
-                return;
+            if (data.EquippedWeapon != null)
+            {
+                if (weapI == data.EquippedWeapon.assignedSlot && data.EquippedWeapon.gameObject.activeInHierarchy)
+                    return;
+            }
 
             if (data.EquippedWeapon.GetType() != typeof(EmptyWeapon))
                 data.EquippedWeapon.gameObject.SetActive(false);
@@ -376,7 +387,7 @@ namespace PDC.Characters
                 pc.playerCam.gameObject.AddComponent<Rigidbody>();
                 pc.playerCam.GetComponent<Rigidbody>().AddForce(transform.forward);
                 data.EquippedWeapon.gameObject.SetActive(false);
-                if(onDeathEvent != null)
+                if (onDeathEvent != null)
                     onDeathEvent();
             }
         }

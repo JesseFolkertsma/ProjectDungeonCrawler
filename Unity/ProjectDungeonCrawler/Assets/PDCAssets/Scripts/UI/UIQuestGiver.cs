@@ -47,7 +47,7 @@ namespace PDC.UI
                 dungeon.SetActive(true);
             }
             Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.lockState = CursorLockMode.None;
         }
 
         public void ViezeHardCode()

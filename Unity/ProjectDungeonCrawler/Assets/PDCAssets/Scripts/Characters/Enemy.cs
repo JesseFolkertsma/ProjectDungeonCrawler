@@ -49,6 +49,8 @@ namespace PDC.Characters {
             {
                 get
                 {
+                    if (transform == null)
+                        return Vector3.zero;
                     return transform.position;
                 }
             }
@@ -56,6 +58,8 @@ namespace PDC.Characters {
             {
                 get
                 {
+                    if (transform == null)
+                        return null;
                     return transform.gameObject;
                 }
             }
@@ -70,6 +74,8 @@ namespace PDC.Characters {
         private static float heightChar = 2, widthChar = 1;
         protected List<Vector3> GetMultiPlayerPos()
         {
+            if (pC == null)
+                return null;
             //get normal, mid, left mid / right mid, high
             List<Vector3> ret = new List<Vector3>();
             ret.Add(pC.Position);
@@ -108,6 +114,11 @@ namespace PDC.Characters {
             StartCoroutine(SearchForPlayer());
         }
 
+        private void OnSceneExit()
+        {
+            pC = null;
+        }
+
         private void PrepareSelf()
         {
             rb = GetComponent<Rigidbody>();
@@ -125,7 +136,7 @@ namespace PDC.Characters {
 
         protected IEnumerator SearchForPlayer()
         {
-            while(!(pC != null)) //makes sure there is a playercontroller reference
+            while(pC == null) //makes sure there is a playercontroller reference
             {
                 if (PlayerCombat.instance != null)
                     pC = new PlayerReference(PlayerCombat.instance);
@@ -148,42 +159,45 @@ namespace PDC.Characters {
         private float updateTime;
         protected virtual IEnumerator Idle()
         {
-            updateTime = enemy.slowUpdate;
-            float playerDistance = 0;
-            //func idle, default case for most ai
-            while (loopIdle)
+            if (pC != null)
             {
-                //check distance
-                playerDistance = GetPlayerDistance();
-
-                //while moving
-                while (status == Status.Moving)
+                updateTime = enemy.slowUpdate;
+                float playerDistance = 0;
+                //func idle, default case for most ai
+                while (loopIdle)
                 {
-                    CalcRefreshRate();
-                    if (!CheckIfAbleToAttack())
-                        Move(pC.Position); //because it also calculates new player position
+                    //check distance
+                    playerDistance = GetPlayerDistance();
 
-                    yield return new WaitForSeconds(recalculatePathTime * GetRefreshPercentage());
-                }
+                    //while moving
+                    while (status == Status.Moving)
+                    {
+                        CalcRefreshRate();
+                        if (!CheckIfAbleToAttack())
+                            Move(pC.Position); //because it also calculates new player position
 
-                //while attacking
-                while (status == Status.Attacking)
-                {
+                        yield return new WaitForSeconds(recalculatePathTime * GetRefreshPercentage());
+                    }
+
+                    //while attacking
+                    while (status == Status.Attacking)
+                    {
+                        CalcRefreshRate();
+                        yield return new WaitForSeconds(updateTime);
+                    }
+
+                    //check in range
+                    //if so move
                     CalcRefreshRate();
+                    PauseMovement(true);
+
+                    if (playerDistance <= enemy.engagementRange)
+                        if (CheckIfSeePlayer())
+                            if (!CheckIfAbleToAttack())
+                                Move(pC.Position);
+
                     yield return new WaitForSeconds(updateTime);
                 }
-
-                //check in range
-                //if so move
-                CalcRefreshRate();
-                PauseMovement(true);
-
-                if (playerDistance <= enemy.engagementRange)
-                    if (CheckIfSeePlayer())
-                        if(!CheckIfAbleToAttack())
-                            Move(pC.Position);
-
-                yield return new WaitForSeconds(updateTime);
             }
         }
 
@@ -205,11 +219,15 @@ namespace PDC.Characters {
 
         protected float GetPlayerDistance()
         {
+            if (pC == null)
+                return 0;
             return Vector3.Distance(transform.position, pC.Position);
         }
 
         protected virtual bool CheckIfSeePlayer()
         {
+            if (pC == null)
+                return false;
             Vector3 origin = transform.position;
             origin.y += raycastOffsetHeight;
 
@@ -348,7 +366,8 @@ namespace PDC.Characters {
                 }
 
                 //rotate the enemy towards the player
-                Rotate(pC.transform.position);
+                if(pC != null)
+                    Rotate(pC.transform.position);
 
                 //move towards player
                 direction = (transform.position - destination).normalized;
@@ -429,6 +448,8 @@ namespace PDC.Characters {
 
         protected virtual void UseAttack(EnemyAttack eA)
         {
+            if (pC == null)
+                return;
             PauseMovement(true);
             status = Status.Attacking;
             target = pC.transform;

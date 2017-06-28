@@ -544,7 +544,7 @@ Prefab:
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 467454735}
+      objectReference: {fileID: 947641570}
     - target: {fileID: 1030565625156536, guid: eb97674dba1706c47b366cb8ad7f1ab3, type: 2}
       propertyPath: m_Name
       value: Logo (2)
@@ -564,12 +564,12 @@ Prefab:
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ViezeHardCode2
+      value: StartMoving
       objectReference: {fileID: 0}
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
+      value: UnityEngine.Transform, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 224983147492873890, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
@@ -589,13 +589,13 @@ Prefab:
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114997941590997740, guid: eb97674dba1706c47b366cb8ad7f1ab3,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 857785777}
     - target: {fileID: 1030565625156536, guid: eb97674dba1706c47b366cb8ad7f1ab3, type: 2}
       propertyPath: m_IsActive
       value: 0
@@ -1145,9 +1145,9 @@ MonoBehaviour:
   dungeonFunction:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1306409441}
-        m_MethodName: LoadScene
-        m_Mode: 3
+      - m_Target: {fileID: 467454735}
+        m_MethodName: ViezeHardCode2
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1710,12 +1710,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1306409441 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114878582297170494, guid: e0c8fbc98b35dd54fbc3ec6546861047,
-    type: 2}
-  m_PrefabInternal: {fileID: 2088875022}
-  m_Script: {fileID: 11500000, guid: acbcc0c74ff95da448a4bf6d9eab6ee2, type: 3}
 --- !u!1 &1391971925 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1852707074819736, guid: ebf9a8936f71975499a395ba880bb37f,
@@ -1732,7 +1726,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c90364bc4e6b21b408bd86e0a3bc1e2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.01
+  speed: 0.0001
   distanceToTargetWhenStopping: 2
   moving: 0
   pathPoint: {fileID: 320471738}
