@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public GameObject woodHitdecal;
     public GameObject stoneHitdecal;
     public GameObject fleshHitdecal;
+    public AudioClip boneHit;
 
     public delegate void OnSceneExit();
     public OnSceneExit onSceneExit;
