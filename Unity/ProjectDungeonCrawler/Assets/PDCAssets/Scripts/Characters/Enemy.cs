@@ -285,7 +285,7 @@ namespace PDC.Characters {
 
         public int dropChanceItem = 30;
         public GameObject[] itemsToDrop;
-        public GameObject coin;
+        public GameObject[] drops;
 
         public override void Die()
         {
@@ -303,10 +303,10 @@ namespace PDC.Characters {
                 GameObject drop = Instantiate(itemsToDrop[UnityEngine.Random.Range(0, itemsToDrop.Length)], ObjectCenter, transform.rotation);
                 drop.GetComponent<Rigidbody>().AddForce(Vector3.up * 500);
             }
-            int rng = UnityEngine.Random.Range(0, 100);
+            int rng = UnityEngine.Random.Range(0, 40);
             for (int i = 0; i < rng; i++)
             {
-                Instantiate(coin, ObjectCenter, transform.rotation);
+                Instantiate(drops[UnityEngine.Random.Range(0,drops.Length)], ObjectCenter, transform.rotation);
             }
 
             GameManager.instance.SpawnSound(soundDeath, transform.position);
