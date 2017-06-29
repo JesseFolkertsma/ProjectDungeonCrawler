@@ -26,6 +26,10 @@ public class DetachableLimb : MonoBehaviour, IHitable{
 
     public void GetHit(float damage, EffectType hitType, StatusEffect[] effects, Vector3 shotPosition)
     {
+        GameManager.SoundObj obj = new GameManager.SoundObj();
+        obj.clip = GameManager.instance.boneHit;
+        obj.volume = 100;
+        GameManager.instance.SpawnSound(obj, transform.position);
         if (!isDetached)
         {
             isDetached = true;
