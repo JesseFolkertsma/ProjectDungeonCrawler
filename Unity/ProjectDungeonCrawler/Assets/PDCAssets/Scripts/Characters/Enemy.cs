@@ -515,6 +515,8 @@ namespace PDC.Characters {
 
         public virtual void HitObject(IHitable hit)
         {
+            if (hit == this as IHitable)
+                return;
             if (hits.Contains(hit))
                 return;
             if (status != Status.Attacking)
