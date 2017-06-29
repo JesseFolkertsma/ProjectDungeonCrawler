@@ -158,6 +158,7 @@ namespace PDC.Characters {
 
         protected void StartIdle()
         {
+            RotateContinual(pC.transform);
             StartCoroutine(Idle());
         }
 
@@ -314,7 +315,6 @@ namespace PDC.Characters {
 
         public void Move(Vector3 target)
         {
-            RotateContinual(pC.transform);
             status = Status.Moving;
             anim.SetBool(walkAnim, true);
             navAgent.MoveTowards(target, _Move);
@@ -355,7 +355,6 @@ namespace PDC.Characters {
         {
             List<Vector3> rest = _path;
             status = Status.Moving;
-            RotateContinual(pC.transform);
 
             while (rest.Count > 0)
             {
@@ -406,14 +405,7 @@ namespace PDC.Characters {
         private Coroutine rotateCoroutine;
         private void RotateContinual(Transform t)
         {
-            EndRotateContinual();
             rotateCoroutine = StartCoroutine(_RotateContinual(t));
-        }
-
-        private void EndRotateContinual()
-        {
-            if (rotateCoroutine != null)
-                StopCoroutine(rotateCoroutine);
         }
 
         private IEnumerator _RotateContinual(Transform t)
@@ -462,7 +454,6 @@ namespace PDC.Characters {
             target = pC.transform;
 
             curAttack = eA;
-            RotateContinual(pC.transform);
 
             damages = false;
             hits.Clear();
@@ -475,7 +466,6 @@ namespace PDC.Characters {
             if (GetPlayerDistance() <= curAttack.range)
                 return;
             anim.SetInteger(attackAnim, 0);
-            EndRotateContinual();
             status = Status.Idle;
         }
 

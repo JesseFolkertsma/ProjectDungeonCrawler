@@ -30,23 +30,28 @@ public class MapManager : MonoBehaviour
         InitializeMap();
     }
 
-    public void PressMap()
+    private void PressMap()
     {
         //convert mousepos to pixel position
-        StartMoving(Input.mousePosition);
+        StartMoving(Input.mousePosition, false);
     }
 
-    public void StartMoving(Transform trans)
+    public void PressIcon()
+    {
+        StartMoving(Input.mousePosition, true);
+    }
+
+    public void StartMoving(Transform trans, bool load)
     {
         //saloon check
         movingTowardsSaloon = saloon == trans ? true : false;
 
-        StartMoving(trans.position);
+        StartMoving(trans.position, load);
     }
 
-    public void StartMoving(Vector2 pos)
+    public void StartMoving(Vector2 pos, bool load)
     {
-        GetMapMovement(ConvertMapToNode(pos));
+        GetMapMovement(ConvertMapToNode(pos), load);
     }
 
     private Node ConvertMapToNode(Vector2 vec) //dit werkt niet
@@ -159,13 +164,13 @@ public class MapManager : MonoBehaviour
 
     #region Map Movement
 
-    private void GetMapMovement(Node goal)
+    private void GetMapMovement(Node goal, bool load)
     {
         ready = false;
         if (getMapMovement != null)
             StopCoroutine(getMapMovement);
 
-        getMapMovement = StartCoroutine(_GetMapMovement(goal));
+        getMapMovement = StartCoroutine(_GetMapMovement(goal, load));
     }
 
     private Coroutine getMapMovement;
@@ -174,7 +179,7 @@ public class MapManager : MonoBehaviour
     private List<Node> closed;
     NodeCom curNode, startNode;
     private Vector3 endPos;
-    private IEnumerator _GetMapMovement(Node goal)
+    private IEnumerator _GetMapMovement(Node goal, bool load)
     {
         if (!(goal != null))
             yield break;
@@ -234,7 +239,7 @@ public class MapManager : MonoBehaviour
         }
 
         ready = true;
-        player.Move(path);
+        player.Move(path, load);
     }
 
     private void CheckNode(int x, int y)

@@ -10,24 +10,26 @@ public class MapPlayer : MonoBehaviour {
     [HideInInspector]
     public bool moving = false;
     public Image pathPoint;
+    public GameManager.SoundObj moveSound;
 
     private void Awake()
     {
         pathPoint.enabled = false;
     }
 
-	public void Move(List<Vector2> list)
+	public void Move(List<Vector2> list, bool load)
     {
         if (moveRoutine != null)
         {
             StopCoroutine(moveRoutine);
             pathPoint.enabled = false;
         }
-        moveRoutine = StartCoroutine(_Move(list));
+        GameManager.instance.SpawnSound(moveSound, transform.position);
+        moveRoutine = StartCoroutine(_Move(list, load));
     }
 
     private Coroutine moveRoutine;
-    private IEnumerator _Move(List<Vector2> list)
+    private IEnumerator _Move(List<Vector2> list, bool load)
     {
         Vector2 goal = list[list.Count - 1];
 
@@ -56,6 +58,8 @@ public class MapPlayer : MonoBehaviour {
 
         pathPoint.enabled = false;
 
+        if (!load)
+            yield break;
         //presentatie check, beetje vies imo
         MapManager m = MapManager.self;
         if (!m.ready)
