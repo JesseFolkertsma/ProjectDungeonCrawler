@@ -51,6 +51,10 @@ public class PathFinding : MonoBehaviour {
         self = this;
         visualizer = GetComponent<Pathfinding_Visualizer>();
         grid = new Node[widthSize, heightSize, widthSize];
+        for (int x = 0; x < widthSize; x++)
+            for (int y = 0; y < heightSize; y++)
+                for (int z = 0; z < widthSize; z++)
+                    grid[x, y, z] = new Node(x, y, z); //later zou ik de nodes mogelijk kunnen resetten
     }
 
     private bool setupDone;
@@ -168,13 +172,29 @@ public class PathFinding : MonoBehaviour {
         #region Prepare Bake
         int _calc = 0;
         //initialize grid
+        /*
         for (int x = 0; x < widthSize; x++)
             for (int y = 0; y < heightSize; y++)
                 for (int z = 0; z < widthSize; z++)
                 {
                     _calc++;
-                    grid[x, y, z] = new Node(x, y, z);
+                    grid[x, y, z] = new Node(x, y, z); //later zou ik de nodes mogelijk kunnen resetten
                     if(_calc > initializesPerFrame)
+                    {
+                        _calc = 0;
+                        yield return null;
+                    }
+                }
+        */
+        Node n;
+        for (int x = 0; x < widthSize; x++)
+            for (int y = 0; y < heightSize; y++)
+                for (int z = 0; z < widthSize; z++)
+                {
+                    _calc++;
+                    n = grid[x, y, z];
+                    n.filled = false;
+                    if (_calc > initializesPerFrame)
                     {
                         _calc = 0;
                         yield return null;
