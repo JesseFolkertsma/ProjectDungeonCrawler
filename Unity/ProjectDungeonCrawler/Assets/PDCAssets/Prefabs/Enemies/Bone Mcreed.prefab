@@ -1435,7 +1435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1f73b692edc4f541a7e4cc8ac4163cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterName: New Character
+  characterName: Bone McCreed
   characterStats:
     maxHP: 100
     currentHP: 100
@@ -1452,7 +1452,7 @@ MonoBehaviour:
   walkAnim: Moving
   walkAnimValue: Movespeed
   attackAnim: Attack
-  raycastOffsetHeight: 1.5
+  raycastOffsetHeight: 1
   enemy:
     fastUpdate: 1
     slowUpdate: 10
@@ -1461,6 +1461,9 @@ MonoBehaviour:
     engagementRange: 20
     attackRange: 1
   loopIdle: 1
+  dropChanceItem: 30
+  itemsToDrop: []
+  coin: {fileID: 1490722095840770, guid: 7a1ed7c6c9b463e439861b0322a79931, type: 2}
   rotateSpeed: 5
   enemyAttacks:
   - index: 0
