@@ -168,10 +168,12 @@ namespace PDC.UI
             switch (s.action)
             {
                 case NPCAction.GiveWeapon:
+                    GameManager.instance.ObtainWeaponSound();
                     GameManager.instance.gameData.TryAssignWeapon(s.weapon.weaponID);
                     MapPopup.instance.DisplayPopup(s.weapon.weaponIcon, "Obtained " + s.weapon.weaponName + "!");
                     break;
                 case NPCAction.AddQuest:
+                    GameManager.instance.ObtainQuestSound();
                     MapPopup.instance.DisplayPopup(questSprite, "Quest: " + s.questName);
                     break;
 

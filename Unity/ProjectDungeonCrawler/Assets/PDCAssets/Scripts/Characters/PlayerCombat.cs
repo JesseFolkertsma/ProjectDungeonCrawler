@@ -370,9 +370,12 @@ namespace PDC.Characters
 
         public override void TakeDamage(float damage, EffectType damageType)
         {
-            base.TakeDamage(damage, damageType);
+            ScreenBlood.instance.GetHit();
+            characterStats.currentHP -= damage;
             if (onHPChange != null)
                 onHPChange(characterStats.currentHP, characterStats.MaxHP);
+            if (characterStats.currentHP <= 0)
+                Die();
         }
 
         public override void Heal(float hp)
