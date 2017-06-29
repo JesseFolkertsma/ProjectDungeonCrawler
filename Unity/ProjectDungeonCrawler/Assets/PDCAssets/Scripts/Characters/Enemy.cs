@@ -71,7 +71,7 @@ namespace PDC.Characters {
             }
         }
 
-        private static float heightChar = 0.8f, widthChar = 0.2f;
+        private static float heightChar = 0.5f, widthChar = 0.2f;
         protected List<Vector3> GetMultiPlayerPos()
         {
             if (pC == null)
