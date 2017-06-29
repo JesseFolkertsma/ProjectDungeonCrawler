@@ -50,6 +50,12 @@ namespace PDC.UI
             Cursor.lockState = CursorLockMode.None;
         }
 
+        private void Update()
+        {
+            if(Input.GetButtonDown("Fire3"))
+                dungeon.SetActive(true);
+        }
+
         public void ViezeHardCode()
         {
             ActivateQuest(smerigehardcodeOrder[GameManager.instance.vuileviezeint]);
