@@ -278,15 +278,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   widthSize: 200
-  heightSize: 60
+  heightSize: 80
   widthSizeNode: 0.5
   heightSizeNode: 0.5
-  visualize: 1
+  visualize: 0
   visualizeNodes: 0
   visualizeRaycasts: 0
   edgeBakeAmount: 0
   calculationsPerFrame: 20000
-  initializesPerFrame: 500000
+  initializesPerFrame: 60000
   heavyCalcCost: 10
   center: {fileID: 0}
   positionUpdateFrequency: 1
@@ -315,7 +315,7 @@ MonoBehaviour:
   fullX: 100
   fullY: 30
   durationPathVisualization: 0.2
-  showBake: 1
+  showBake: 0
   visualizeRealltimeObjects: 0
 --- !u!4 &761871902
 Transform:
