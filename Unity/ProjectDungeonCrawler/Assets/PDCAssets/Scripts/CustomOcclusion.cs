@@ -151,7 +151,7 @@ public class CustomOcclusion : MonoBehaviour {
                 SetRenderer(g, false);
 
         //turn all close objects on
-        Collider[] otherColliders = Physics.OverlapSphere(transform.position, _collider.bounds.size.x);
+        Collider[] otherColliders = Physics.OverlapSphere(transform.position, 60);
         foreach (Collider c in otherColliders)
             if (c.gameObject.isStatic)
                 SetRenderer(c, true);
