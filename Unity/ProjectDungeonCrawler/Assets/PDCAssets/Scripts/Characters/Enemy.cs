@@ -71,7 +71,7 @@ namespace PDC.Characters {
             }
         }
 
-        private static float heightChar = 2, widthChar = 1;
+        private static float heightChar = 0.8f, widthChar = 0.2f;
         protected List<Vector3> GetMultiPlayerPos()
         {
             if (pC == null)
@@ -506,7 +506,7 @@ namespace PDC.Characters {
 
         public virtual void HitRangeObject(IHitable hit)
         {
-            if (hit == this as IHitable)
+            if (hit as Enemy != null)
                 return;
             //check if attacking     
             hits.Add(hit);
@@ -515,7 +515,7 @@ namespace PDC.Characters {
 
         public virtual void HitObject(IHitable hit)
         {
-            if (hit == this as IHitable)
+            if (hit as Enemy != null)
                 return;
             if (hits.Contains(hit))
                 return;
