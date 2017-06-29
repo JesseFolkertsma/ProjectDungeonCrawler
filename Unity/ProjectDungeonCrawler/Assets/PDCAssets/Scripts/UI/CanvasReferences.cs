@@ -53,7 +53,7 @@ namespace PDC.UI
             {
                 questProgressionImage.fillAmount = 1;
                 popped = true;
-                GamePopup.instance.DisplayPopup("Enough gold obtained, good job!");
+                GamePopup.instance.DisplayPopup("Fill the Vault: 500 Treasure obtained!");
                 GameManager.instance.ObtainQuestSound();
                 GameManager.instance.vuileviezeint++;
             }
