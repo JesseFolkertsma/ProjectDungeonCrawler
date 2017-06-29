@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
     public GameObject stoneHitdecal;
     public GameObject fleshHitdecal;
     public AudioClip boneHit;
+    public AudioClip quest;
+    public AudioClip weap;
 
     public delegate void OnSceneExit();
     public OnSceneExit onSceneExit;
@@ -73,6 +75,22 @@ public class GameManager : MonoBehaviour
 
         id = sceneID;
         Invoke("Load", 1);
+    }
+
+    public void ObtainQuestSound()
+    {
+        SoundObj obj = new SoundObj();
+        obj.clip = instance.boneHit;
+        obj.volume = 100;
+        SpawnSound(obj, transform.position);
+    }
+
+    public void ObtainWeaponSound()
+    {
+        SoundObj obj = new SoundObj();
+        obj.clip = instance.boneHit;
+        obj.volume = 100;
+        SpawnSound(obj, transform.position);
     }
 
     void Load()

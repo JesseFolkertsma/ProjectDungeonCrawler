@@ -54,6 +54,7 @@ namespace PDC.UI
                 questProgressionImage.fillAmount = 1;
                 popped = true;
                 GamePopup.instance.DisplayPopup("Enough gold obtained, good job!");
+                GameManager.instance.ObtainQuestSound();
                 GameManager.instance.vuileviezeint++;
             }
         }
