@@ -15,7 +15,7 @@ public class Enemy_Weaponhitbox : MonoBehaviour {
 
 	private void OnTriggerEnter(Collider c)
     {
-        IHitable hit = (IHitable)c.GetComponent(typeof(IHitable));
+        IHitable hit = (IHitable)c.transform.root.GetComponentInChildren(typeof(IHitable));
         if(hit != null)
             myEnemy.HitObject(hit);
     }

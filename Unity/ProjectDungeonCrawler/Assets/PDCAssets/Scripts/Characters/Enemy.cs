@@ -305,6 +305,7 @@ namespace PDC.Characters {
 
         public void Move(Vector3 target)
         {
+            RotateContinual(pC.transform);
             status = Status.Moving;
             anim.SetBool(walkAnim, true);
             navAgent.MoveTowards(target, _Move);
@@ -345,6 +346,7 @@ namespace PDC.Characters {
         {
             List<Vector3> rest = _path;
             status = Status.Moving;
+            RotateContinual(pC.transform);
 
             while (rest.Count > 0)
             {
@@ -364,10 +366,6 @@ namespace PDC.Characters {
 
                     destination = rest[rest.Count - 1];
                 }
-
-                //rotate the enemy towards the player
-                if(pC != null)
-                    Rotate(pC.transform.position);
 
                 //move towards player
                 direction = (transform.position - destination).normalized;
@@ -525,7 +523,6 @@ namespace PDC.Characters {
                 return;
             if (!damages)
                 return;
-
             //check if attacking     
             hits.Add(hit);      
             hit.GetHit(curAttack.damage, curAttack.type, curAttack.statusEffects, transform.position);

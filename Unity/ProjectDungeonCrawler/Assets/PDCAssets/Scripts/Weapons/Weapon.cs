@@ -178,6 +178,7 @@ namespace PDC.Weapons
                 IHitable[] iHits = hit.transform.GetComponents<IHitable>();
                 if (iHits != null)
                 {
+                    HitIndicator.instance.Hit();
                     foreach (IHitable h in iHits)
                         h.GetHit(damage, EffectType.Normal, weaponEffects, cam.transform.position);
                 }
