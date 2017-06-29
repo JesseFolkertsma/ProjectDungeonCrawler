@@ -79,8 +79,6 @@ namespace PDC.Characters
 
             GameManager.instance.onSceneExit += OnSceneExit;
             setup = true;
-
-            GetHit(10, EffectType.Normal, null, Vector3.zero);
         }
 
         void OnSceneExit()
