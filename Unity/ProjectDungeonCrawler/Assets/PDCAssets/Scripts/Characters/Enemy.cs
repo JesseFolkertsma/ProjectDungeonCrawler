@@ -506,6 +506,8 @@ namespace PDC.Characters {
 
         public virtual void HitRangeObject(IHitable hit)
         {
+            if (hit == this as IHitable)
+                return;
             //check if attacking     
             hits.Add(hit);
             hit.GetHit(curAttack.damage, curAttack.type, curAttack.statusEffects, transform.position);
