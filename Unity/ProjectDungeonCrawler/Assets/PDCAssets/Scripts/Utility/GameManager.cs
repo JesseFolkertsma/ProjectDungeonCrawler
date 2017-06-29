@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
     {
         if(Input.GetButtonDown("Exit Dungeon"))
         {
-            LoadScene(0);
+            LoadScene(1);
         }
     }
 
