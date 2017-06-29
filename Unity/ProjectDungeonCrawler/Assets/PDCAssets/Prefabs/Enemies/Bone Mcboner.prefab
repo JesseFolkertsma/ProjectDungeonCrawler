@@ -1428,14 +1428,14 @@ MonoBehaviour:
   walkAnim: Moving
   walkAnimValue: Movespeed
   attackAnim: Attack
-  raycastOffsetHeight: 1.5
+  raycastOffsetHeight: 1
   enemy:
     fastUpdate: 1
     slowUpdate: 10
     fastDis: 10
     slowDis: 100
     engagementRange: 40
-    attackRange: 4
+    attackRange: 2.5
   loopIdle: 1
   dropChanceItem: 30
   itemsToDrop:
@@ -1448,19 +1448,19 @@ MonoBehaviour:
   enemyAttacks:
   - index: 1
     damage: 10
-    range: 4
+    range: 2.5
     type: 0
     statusEffects: []
     ranged: 0
   - index: 2
     damage: 20
-    range: 3
+    range: 2
     type: 0
     statusEffects: []
     ranged: 0
   - index: 3
     damage: 30
-    range: 2
+    range: 1.5
     type: 0
     statusEffects: []
     ranged: 0
