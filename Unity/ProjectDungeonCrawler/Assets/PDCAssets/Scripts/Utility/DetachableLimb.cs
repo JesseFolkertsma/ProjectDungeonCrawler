@@ -28,7 +28,7 @@ public class DetachableLimb : MonoBehaviour, IHitable{
     {
         GameManager.SoundObj obj = new GameManager.SoundObj();
         obj.clip = GameManager.instance.boneHit;
-        obj.volume = 1;
+        obj.volume = 100;
         GameManager.instance.SpawnSound(obj, transform.position);
         if (!isDetached)
         {
