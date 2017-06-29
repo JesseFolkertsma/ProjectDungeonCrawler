@@ -36,16 +36,15 @@ public class MapManager : MonoBehaviour
         StartMoving(Input.mousePosition, false);
     }
 
-    public void PressIcon()
+    public void PressIcon(Transform trans)
     {
-        StartMoving(Input.mousePosition, true);
+        StartMoving(trans, true);
     }
 
     public void StartMoving(Transform trans, bool load)
     {
         //saloon check
         movingTowardsSaloon = saloon == trans ? true : false;
-
         StartMoving(trans.position, load);
     }
 
