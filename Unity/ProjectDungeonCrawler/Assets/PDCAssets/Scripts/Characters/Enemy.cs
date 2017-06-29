@@ -40,6 +40,13 @@ namespace PDC.Characters {
         [SerializeField]
         private float raycastOffsetHeight = 1.5f;
 
+        #region Sound
+
+        [SerializeField]
+        private GameManager.SoundObj soundStep, soundAttack, soundHit, soundDeath;
+
+        #endregion
+
         public class PlayerReference
         {
             public PlayerCombat playerController;
@@ -300,6 +307,8 @@ namespace PDC.Characters {
             {
                 Instantiate(coin, ObjectCenter, transform.rotation);
             }
+
+            GameManager.instance.SpawnSound(soundDeath, transform.position);
             Destroy(gameObject);
         }
 
@@ -506,7 +515,8 @@ namespace PDC.Characters {
         {
             if (hit as Enemy != null)
                 return;
-            //check if attacking     
+
+            //check if attacking  
             hits.Add(hit);
             hit.GetHit(curAttack.damage, curAttack.type, curAttack.statusEffects, transform.position);
         }
@@ -523,7 +533,8 @@ namespace PDC.Characters {
                 return;
             if (!damages)
                 return;
-            //check if attacking     
+            //check if attacking  
+            GameManager.instance.SpawnSound(soundAttack, transform.position);
             hits.Add(hit);      
             hit.GetHit(curAttack.damage, curAttack.type, curAttack.statusEffects, transform.position);
         }
@@ -545,6 +556,7 @@ namespace PDC.Characters {
 
         public void GetHit(float damage, EffectType hitType, StatusEffect[] effects, Vector3 shotPosition)
         {
+            GameManager.instance.SpawnSound(soundHit, transform.position);
             Die(); //DIE DIE!
         }
     }

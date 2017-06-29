@@ -1429,6 +1429,18 @@ MonoBehaviour:
   walkAnimValue: Movespeed
   attackAnim: Attack
   raycastOffsetHeight: 1
+  soundStep:
+    clip: {fileID: 8300000, guid: 48f0833ffcd77ce4da13a36689bebe60, type: 3}
+    volume: 40
+  soundAttack:
+    clip: {fileID: 8300000, guid: 3ff23b248ad27aa45866f42fd2f0ae49, type: 3}
+    volume: 40
+  soundHit:
+    clip: {fileID: 8300000, guid: 7a297b0107faf6046a49fc799db2e96b, type: 3}
+    volume: 40
+  soundDeath:
+    clip: {fileID: 8300000, guid: 3a42e515dc6c43e4bb672b4add0056e9, type: 3}
+    volume: 40
   enemy:
     fastUpdate: 1
     slowUpdate: 10

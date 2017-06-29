@@ -24,6 +24,21 @@ public class GameManager : MonoBehaviour
     public int vuileviezeint;
     public bool dungeonClear = false;
 
+    [System.Serializable]
+    public class SoundObj
+    {
+        public AudioClip clip;
+        [Range(0,100)]
+        public float volume;
+    }
+    [SerializeField]
+    private GameObject soundObject;
+    public void SpawnSound(SoundObj obj, Vector3 pos)
+    {
+        AudioObject aO = Instantiate(soundObject, pos, Quaternion.identity).GetComponent<AudioObject>();
+        aO.Play(obj.clip, obj.volume);
+    }
+
     private void Awake()
     {
         if(instance == null)
