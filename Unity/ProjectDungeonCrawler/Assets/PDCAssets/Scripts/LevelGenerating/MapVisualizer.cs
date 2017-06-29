@@ -15,9 +15,9 @@ namespace PDC
             private float roomWidth;
             [SerializeField]
             private float roomHeight;
-            [SerializeField, Range(0,20)]
+            [SerializeField]
             private int densityInteriorMin, densityInteriorMax;
-            [SerializeField, Range(0, 20)]
+            [SerializeField]
             private int densityEnemyMin, densityEnemyMax;
             private int difficulty;
             [SerializeField]
