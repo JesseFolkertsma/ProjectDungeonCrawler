@@ -60,6 +60,7 @@ namespace PDC.Weapons
                             {
                                 if (rHit.collider == col)
                                 {
+                                    HitIndicator.instance.Hit();
                                     foreach (IHitable h in col.GetComponents<IHitable>())
                                         h.GetHit(damage, EffectType.Normal, weaponEffects, cam.transform.position);
                                 }

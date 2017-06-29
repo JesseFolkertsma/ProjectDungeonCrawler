@@ -29,27 +29,37 @@ namespace PDC.UI
                 instance = this;
             else
                 Destroy(gameObject);
+        }
+
+        private void Start()
+        {
             PlayerCombat.onSpawnEvent += OnPlayerSpawn;
         }
 
+        bool spawned = false;
         private void OnPlayerSpawn()
         {
-            spawnedCanvas = Instantiate(canvasRef);
-            for (int i = 0; i < GameManager.instance.gameData.availableSlots; i++)
+            if (!spawned)
             {
-                spawnedCanvas.SpawnNewSlot();
+                spawned = true;
+                spawnedCanvas = Instantiate(canvasRef);
+                for (int i = 0; i < GameManager.instance.gameData.availableSlots; i++)
+                {
+                    spawnedCanvas.SpawnNewSlot();
+                }
+                PlayerCombat.onDeathEvent += OnPlayerDeath;
+                GameManager.instance.gameData.onWeaponDataChange += UpdateWeaponVisual;
+                PlayerCombat.instance.onAmmoDataChange += spawnedCanvas.SetAmmoVisuals;
+                GameManager.instance.gameData.onConsumableChange += UpdateConsumable;
+                PlayerCombat.instance.onHPChange += spawnedCanvas.SetHp;
+                PlayerCombat.instance.onGiveStatusEffect += spawnedCanvas.AddStatusEffect;
+                SetupUI(PlayerCombat.instance);
             }
-            PlayerCombat.onDeathEvent += OnPlayerDeath;
-            GameManager.instance.gameData.onWeaponDataChange += UpdateWeaponVisual;
-            PlayerCombat.instance.onAmmoDataChange += spawnedCanvas.SetAmmoVisuals;
-            GameManager.instance.gameData.onConsumableChange += UpdateConsumable;
-            PlayerCombat.instance.onHPChange += spawnedCanvas.SetHp;
-            PlayerCombat.instance.onGiveStatusEffect += spawnedCanvas.AddStatusEffect;
-            SetupUI(PlayerCombat.instance);
         }
 
         private void OnPlayerDeath()
         {
+            spawned = false;
             PlayerCombat.onDeathEvent -= OnPlayerDeath;
             GameManager.instance.gameData.onWeaponDataChange -= UpdateWeaponVisual;
             PlayerCombat.instance.onAmmoDataChange -= spawnedCanvas.SetAmmoVisuals;

@@ -179,7 +179,10 @@ namespace PDC.Weapons
                 if (iHits != null)
                 {
                     foreach (IHitable h in iHits)
+                    {
+                        HitIndicator.instance.Hit();
                         h.GetHit(damage, EffectType.Normal, weaponEffects, cam.transform.position);
+                    }
                 }
 
                 GameManager.instance.SpawnDecal(hit.transform.tag, hit.point, Quaternion.LookRotation(hit.normal), hit.transform);

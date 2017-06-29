@@ -16,6 +16,8 @@ namespace PDC.Characters
         public static PlayerCombat instance;
         PlayerController pc;
 
+        public LayerMask hitableLayers;
+
         //Private variables
         PlayerData data;
         [SerializeField] Transform weaponPos;
@@ -75,7 +77,10 @@ namespace PDC.Characters
             GatherWeaponData();
 
             if (onSpawnEvent != null)
+            {
+                print("Spawnbich");
                 onSpawnEvent();
+            }
 
             GameManager.instance.onSceneExit += OnSceneExit;
             setup = true;
@@ -224,7 +229,7 @@ namespace PDC.Characters
 
         void LeftMouse()
         {
-            data.EquippedWeapon.Fire1Hold(pc.playerCam, pc.playerLayer);
+            data.EquippedWeapon.Fire1Hold(pc.playerCam, hitableLayers);
         }
 
         void RightMouse()
