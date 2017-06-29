@@ -6,14 +6,6 @@ using UnityEngine;
 [RequireComponent(typeof(Pathfinding_Visualizer))]
 public class PathFinding : MonoBehaviour {
 
-    //FOUTEN:
-    //baket soms vanaf oude kamer
-    //enemy ienumerator kost heel veel
-
-    //make a 3d grid (visually in the editor) from the object this stands on
-
-    //get all static objects in scene
-
     //reference
     public static PathFinding self;
     public static Pathfinding_Visualizer visualizer;
