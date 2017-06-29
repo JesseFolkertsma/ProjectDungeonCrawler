@@ -30,7 +30,6 @@ namespace PDC.UI
             else
                 Destroy(gameObject);
             PlayerCombat.onSpawnEvent += OnPlayerSpawn;
-            PlayerCombat.onDeathEvent += OnPlayerDeath;
         }
 
         private void OnPlayerSpawn()
@@ -40,6 +39,7 @@ namespace PDC.UI
             {
                 spawnedCanvas.SpawnNewSlot();
             }
+            PlayerCombat.onDeathEvent += OnPlayerDeath;
             GameManager.instance.gameData.onWeaponDataChange += UpdateWeaponVisual;
             PlayerCombat.instance.onAmmoDataChange += spawnedCanvas.SetAmmoVisuals;
             GameManager.instance.gameData.onConsumableChange += UpdateConsumable;
@@ -50,6 +50,7 @@ namespace PDC.UI
 
         private void OnPlayerDeath()
         {
+            PlayerCombat.onDeathEvent -= OnPlayerDeath;
             GameManager.instance.gameData.onWeaponDataChange -= UpdateWeaponVisual;
             PlayerCombat.instance.onAmmoDataChange -= spawnedCanvas.SetAmmoVisuals;
             GameManager.instance.gameData.onConsumableChange -= UpdateConsumable;

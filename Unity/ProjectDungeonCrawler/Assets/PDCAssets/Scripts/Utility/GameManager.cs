@@ -45,11 +45,24 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    int id;
     public void LoadScene(int sceneID)
     {
+        foreach(Enemy e in FindObjectsOfType<Enemy>())
+        {
+            Destroy(e.gameObject);
+        }
         if (onSceneExit != null)
             onSceneExit();
-        SceneManager.LoadScene(sceneID);
+
+        id = sceneID;
+        Invoke("Load", 1);
+    }
+
+    void Load()
+    {
+        PlayerCombat.instance = null;
+        SceneManager.LoadScene(id);
     }
 
     //public void GatherGameData()
@@ -92,8 +105,6 @@ public class GameManager : MonoBehaviour
     {
         switch (tag)
         {
-            case "Untagged":
-                return Instantiate(untaggedHitdecal, position, rotation);
             case "Wood":
                 return Instantiate(woodHitdecal, position, rotation);
             case "Stone":
