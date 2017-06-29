@@ -143,7 +143,6 @@ GameObject:
   - component: {fileID: 20314678339526302}
   - component: {fileID: 114620243840264468}
   - component: {fileID: 114456450937817808}
-  - component: {fileID: 114946273731028366}
   - component: {fileID: 114320924223711170}
   m_Layer: 11
   m_Name: Camera
@@ -591,7 +590,7 @@ MonoBehaviour:
   m_Tonemapping:
     enabled: 1
     tonemapper: 6
-    exposure: 1.07
+    exposure: 0.73
     curve:
       serializedVersion: 2
       m_Curve:
@@ -852,27 +851,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86f44ec7119b53e45a1c7e5fa83a4329, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114946273731028366
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1684437391196304}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32187365ced0c42219cde2b57c99b323, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  settings:
-    threshold: 1.1
-    softKnee: 0.74
-    radius: 2.43
-    intensity: 0.75
-    highQuality: 1
-    antiFlicker: 1
-    dirtTexture: {fileID: 0}
-    dirtIntensity: 2.5
-  m_Shader: {fileID: 4800000, guid: e45d4f28262b04d10a075856ab5fdb5e, type: 3}
 --- !u!114 &114957312870417138
 MonoBehaviour:
   m_ObjectHideFlags: 1
