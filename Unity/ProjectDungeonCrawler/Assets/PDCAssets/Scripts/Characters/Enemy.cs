@@ -456,12 +456,12 @@ namespace PDC.Characters {
             curAttack = eA;
 
             damages = false;
-            hits.Clear();
             anim.SetInteger(attackAnim, eA.index);
         }
 
         public virtual void EndAttack()
         {
+            hits.Clear();
             //continue while still in range
             if (GetPlayerDistance() <= curAttack.range)
                 return;
