@@ -153,12 +153,12 @@ namespace PDC.Characters {
             while (!PathFinding.pathfindable)
                 yield return null;
 
+            RotateContinual(pC.transform);
             StartIdle();
         }
 
         protected void StartIdle()
         {
-            RotateContinual(pC.transform);
             StartCoroutine(Idle());
         }
 
