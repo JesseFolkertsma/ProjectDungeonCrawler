@@ -153,7 +153,7 @@ namespace PDC.Characters {
             while (!PathFinding.pathfindable)
                 yield return null;
 
-            RotateContinual(pC.transform);
+            RotateContinual();
             StartIdle();
         }
 
@@ -391,28 +391,35 @@ namespace PDC.Characters {
 
         private Vector3 targetDir, newDir;
         private float step;
-        private void Rotate(Vector3 des)
+        private void Rotate()
         {
-            targetDir = (des - transform.position).normalized;
+            /*
+            targetDir = (pC.transform.position - transform.position).normalized;
             step = rotateSpeed * Time.deltaTime;
             newDir = Vector3.RotateTowards(transform.forward, targetDir, step, 0.0F);
             //Debug.DrawRay(transform.position, newDir, Color.red);
             Quaternion rot = transform.rotation;
             rot.y = Quaternion.LookRotation(newDir).y;
             transform.rotation = rot;
+            */
+            transform.LookAt(pC.transform);
+            Quaternion q = transform.rotation;
+            q.x = 0;
+            q.z = 0;
+            transform.rotation = q;
         }
 
         private Coroutine rotateCoroutine;
-        private void RotateContinual(Transform t)
+        private void RotateContinual()
         {
-            rotateCoroutine = StartCoroutine(_RotateContinual(t));
+            rotateCoroutine = StartCoroutine(_RotateContinual());
         }
 
-        private IEnumerator _RotateContinual(Transform t)
+        private IEnumerator _RotateContinual()
         {
             while (true)
             {
-                Rotate(t.position);
+                Rotate();
                 yield return null;
             }
         }
