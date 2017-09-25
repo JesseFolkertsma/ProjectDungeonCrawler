@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: eebc4c1a2630af748a054e2acf893ab5
-timeCreated: 1506084235
+timeCreated: 1506354603
 licenseType: Free
 SubstanceImporter:
   serializedVersion: 5
@@ -37,7 +37,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Cloth_Saturation
       value:
-        scalar[0]: 0.39
+        scalar[0]: 0.5
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -51,7 +51,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Cloth_Lightness
       value:
-        scalar[0]: 0.541
+        scalar[0]: 0.5
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -103,7 +103,7 @@ SubstanceImporter:
           scale: {x: 3, y: 3}
           offset: {x: 0, y: 0}
       floats:
-      - _BumpScale: 1
+      - _BumpScale: 3
       - _Cutoff: 0.5
       - _DetailNormalMapScale: 1
       - _DstBlend: 0
@@ -159,8 +159,8 @@ SubstanceImporter:
     buildTargetSettings:
     - serializedVersion: 2
       buildTarget: 
-      textureWidth: 64
-      textureHeight: 64
+      textureWidth: 32
+      textureHeight: 32
       textureFormat: 0
       loadingBehavior: 1
   deletedPrototypes: []
