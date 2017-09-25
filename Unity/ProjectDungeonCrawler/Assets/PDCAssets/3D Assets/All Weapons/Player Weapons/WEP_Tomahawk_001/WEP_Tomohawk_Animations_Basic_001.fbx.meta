@@ -1,0 +1,223 @@
+fileFormatVersion: 2
+guid: 35675db422723864e961119624631aa5
+timeCreated: 1496824958
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Armature.001
+    100002: WEP_Temah_001
+    100004: //RootNode
+    100006: WEP_Tomohawk_Handle
+    100008: WEP_Tomohawk_Handle_end
+    400000: Armature.001
+    400002: WEP_Temah_001
+    400004: //RootNode
+    400006: WEP_Tomohawk_Handle
+    400008: WEP_Tomohawk_Handle_end
+    4300000: WEP_Temah_001
+    7400000: Armature.001|WEP_Tomohawk_Animation_Idle
+    7400002: Armature.001|WEP_Tomohawk_Animations_002
+    7400004: Armature.001|WEP_Tomohawk_Animations_002.001
+    7400006: Armature.001|WEP_Tomohawk_Animations_Draw_001
+    7400008: Armature.001|WEP_Tomohawk_Animations_Draw_002
+    7400010: Armature.001|WEP_Tomohawk_Animations_Hit_001
+    7400012: Armature.001|WEP_Tomohawk_Animations_Hit_001.001
+    7400014: Armature.001|WEP_Tomohawk_Animations_Hit_002
+    7400016: Armature.001|WEP_Tomohawk_Animations_Throw_001
+    7400018: Armature.001|WEP_Tomohawk_Animations_Throw_002
+    9500000: //RootNode
+    13700000: WEP_Temah_001
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Armature.001|WEP_Tomohawk_Animations_Draw_001
+      takeName: Armature.001|WEP_Tomohawk_Animations_Draw_001
+      firstFrame: 0
+      lastFrame: 30
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature.001
+        weight: 1
+      - path: Armature.001/WEP_Tomohawk_Handle
+        weight: 1
+      - path: Armature.001/WEP_Tomohawk_Handle/WEP_Tomohawk_Handle_end
+        weight: 1
+      - path: WEP_Temah_001
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Armature.001|WEP_Tomohawk_Animations_Draw_002
+      takeName: Armature.001|WEP_Tomohawk_Animations_Draw_002
+      firstFrame: 0
+      lastFrame: 40
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: 0.9872969
+        functionName: PlaySound
+        data: 
+        objectReferenceParameter: {fileID: 8300000, guid: f0d6909da448f054d8819f7d31503712,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature.001
+        weight: 1
+      - path: Armature.001/WEP_Tomohawk_Handle
+        weight: 1
+      - path: Armature.001/WEP_Tomohawk_Handle/WEP_Tomohawk_Handle_end
+        weight: 1
+      - path: WEP_Temah_001
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Armature.001|WEP_Tomohawk_Animation_Idle
+      takeName: Armature.001|WEP_Tomohawk_ANimations
+      firstFrame: 0
+      lastFrame: 1
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Armature.001
+        weight: 1
+      - path: Armature.001/WEP_Tomohawk_Handle
+        weight: 1
+      - path: Armature.001/WEP_Tomohawk_Handle/WEP_Tomohawk_Handle_end
+        weight: 1
+      - path: WEP_Temah_001
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.01
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 1
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: 844df31d7017e434eb977c44d7bd8515,
+    type: 3}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
