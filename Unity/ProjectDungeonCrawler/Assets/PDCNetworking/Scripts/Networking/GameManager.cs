@@ -6,9 +6,9 @@ public class GameManager : MonoBehaviour {
 
     const string PLAYER_ID_PREFIX = "Player ";
 
-    static Dictionary<string, PlayerController> players = new Dictionary<string, PlayerController>();
+    static Dictionary<string, NetworkedController> players = new Dictionary<string, NetworkedController>();
 
-    public static void RegisterPlayer(string playerID, PlayerController player)
+    public static void RegisterPlayer(string playerID, NetworkedController player)
     {
         string id = PLAYER_ID_PREFIX + playerID;
         players.Add(id  , player);
@@ -21,9 +21,9 @@ public class GameManager : MonoBehaviour {
         players.Remove(playerID);
     }
 
-    public static PlayerController GetPlayer(string playerID)
+    public static NetworkedController GetPlayer(string playerID)
     {
-        PlayerController pc = players[playerID];
+        NetworkedController pc = players[playerID];
         return pc;
     }
 }

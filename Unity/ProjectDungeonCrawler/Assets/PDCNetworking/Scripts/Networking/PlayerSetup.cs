@@ -32,7 +32,7 @@ public class PlayerSetup : NetworkBehaviour {
     {
         base.OnStartClient();
         string id = GetComponent<NetworkIdentity>().netId.ToString();
-        PlayerController pc = GetComponent<PlayerController>();
+        NetworkedController pc = GetComponent<NetworkedController>();
         GameManager.RegisterPlayer(id, pc);
     }
 
