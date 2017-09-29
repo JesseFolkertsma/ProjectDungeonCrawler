@@ -33,6 +33,10 @@ public class ClampedCamera : MonoBehaviour
     {
         if (isEnabled)
         {
+            if (Input.GetButtonDown("LockMouse"))
+            {
+                lockCursor = !lockCursor;
+            }
             // Ensure the cursor is always locked when set
             Screen.lockCursor = lockCursor;
 
