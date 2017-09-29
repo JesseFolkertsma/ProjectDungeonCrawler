@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class PlayerController : NetworkBehaviour
+public class TestingController : MonoBehaviour
 {
     //Public variables
     public bool isEnabled;
@@ -244,17 +244,5 @@ public class PlayerController : NetworkBehaviour
         {
             acc = Mathf.Lerp(acc, 0f, Time.fixedDeltaTime * acceleration * 2);
         }
-    }
-    
-    public void GetForce(Vector3 dirAndForce)
-    {
-        RpcGetForce(dirAndForce);
-    }
-
-    [ClientRpc]
-    public void RpcGetForce(Vector3 dirAndForce)
-    {
-        rb.AddForce(dirAndForce);
-        Debug.Log(transform.name + ": Halp im gettin slipperdipperd");
     }
 }

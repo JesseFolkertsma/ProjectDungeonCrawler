@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-[RequireComponent(typeof(PlayerController))]
+[RequireComponent(typeof(NetworkedController))]
 public class PlayerInteraction : NetworkBehaviour {
     [SerializeField]
     Camera playerCam;
