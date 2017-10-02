@@ -27,11 +27,9 @@ public class TestingController : MonoBehaviour
     //Private variables
     RaycastHit feethit;
     Vector3 direction;
-    Vector3 forward;
     float bobY;
     float bobX;
     float moveValue;
-    float groundAngle;
     bool bobUp;
     bool obstacle;
 
@@ -88,7 +86,7 @@ public class TestingController : MonoBehaviour
             CheckInput();
             Checks();
             CameraEffects();
-            ApplyGravity();
+            Debug.DrawRay(transform.position + transform.up, Forward() * 3);
         }
     }
 
@@ -236,15 +234,10 @@ public class TestingController : MonoBehaviour
             rb.velocity += Vector3.up * jumpForce;
     }
 
-    void ApplyGravity()
+    Vector3 Forward()
     {
-        if (grounded)
-            transform.position += Physics.gravity * Time.deltaTime;
-    }
-
-    void CalculateForward()
-    {
-
+        if (!grounded) return transform.forward;
+        return Vector3.Cross(feethit.normal, -transform.right);
     }
 
     float GroundAngle()
