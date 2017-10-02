@@ -15,23 +15,6 @@ public class PlayerInteraction : NetworkBehaviour {
 
     private void Update()
     {
-        if (Input.GetButtonDown("Push"))
-        {
-            Push();
-        }
-        if (Input.GetButtonDown("Interact"))
-        {
-            Interact();
-        }
-    }
-
-    void Push()
-    {
-        RaycastHit hit;
-        if(Physics.Raycast(playerCam.transform.position, playerCam.transform.forward, out hit, interactRange, remoteplayerLayer))
-        {
-            CmdPushPlayer(hit.transform.name);
-        }
     }
 
     void Interact()
@@ -65,11 +48,5 @@ public class PlayerInteraction : NetworkBehaviour {
             }
             objectID.AssignClientAuthority(myID.connectionToClient);
         }
-    }
-
-    [Command]
-    void CmdPushPlayer(string playerID)
-    {
-        GameManager.GetPlayer(playerID).GetForce((playerCam.transform.forward + playerCam.transform.up) * 10000);
     }
 }
