@@ -161,7 +161,17 @@ Prefab:
     - target: {fileID: 114922974254950606, guid: 0dd8499b117e60040ae2383ec0a0e91d,
         type: 2}
       propertyPath: jumpForce
-      value: 4
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 54757400246782288, guid: 0dd8499b117e60040ae2383ec0a0e91d,
+        type: 2}
+      propertyPath: m_UseGravity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 54757400246782288, guid: 0dd8499b117e60040ae2383ec0a0e91d,
+        type: 2}
+      propertyPath: m_IsKinematic
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0dd8499b117e60040ae2383ec0a0e91d, type: 2}

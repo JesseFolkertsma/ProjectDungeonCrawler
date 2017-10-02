@@ -1,0 +1,224 @@
+<Project>
+  <Name>PDC</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>InGame</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>GameManager</Name>
+        <Access>Public</Access>
+        <Location left="1579" top="721" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">public Dictionairy&lt;string, PlayerCombat&gt; players</Member>
+        <Member type="Method">public void GetPlayer(string playerID)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>PlayerController</Name>
+        <Access>Public</Access>
+        <Location left="1618" top="1579" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">void Crouch()</Member>
+        <Member type="Method">public void Jump()</Member>
+        <Member type="Method">public void DetectSlopes()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IHitable</Name>
+        <Access>Public</Access>
+        <Location left="1210" top="1031" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">void GetHit()</Member>
+        <Member type="Method">void GetStatusEffect(StatusEffect effect)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>PlayerCombat</Name>
+        <Access>Public</Access>
+        <Location left="1618" top="1318" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void Attack()</Member>
+        <Member type="Method">public void Throw()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Inventory</Name>
+        <Access>Public</Access>
+        <Location left="1831" top="1318" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">int availableSlots</Member>
+        <Member type="Field">list&lt;Weapon&gt; weapons</Member>
+        <Member type="Field">list&lt;Consumable&gt; consumables</Member>
+        <Member type="Method">public void PickupItem(Pickup item)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>PlayerStats</Name>
+        <Access>Public</Access>
+        <Location left="1404" top="1318" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">int health</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>UIManger</Name>
+        <Access>Public</Access>
+        <Location left="2183" top="1318" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void UpdateUI()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Enemy</Name>
+        <Access>Public</Access>
+        <Location left="1075" top="1318" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">EnemyStats stats</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Dummy</Name>
+        <Access>Public</Access>
+        <Location left="807" top="1318" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void GetHitEffect()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EnemyManager</Name>
+        <Access>Public</Access>
+        <Location left="1794" top="721" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">public Dictionairy&lt;string, Enemy&gt; enemies</Member>
+        <Member type="Method">public void GetEnemy(string enemyID)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Bottle</Name>
+        <Access>Public</Access>
+        <Location left="1426" top="1031" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void Flip()</Member>
+        <Member type="Method">public void Explode()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>WeaponData</Name>
+        <Access>Public</Access>
+        <Location left="1728" top="1031" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">string name</Member>
+        <Member type="Field">int id</Member>
+        <Member type="Field">string description</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>WeaponVisuals</Name>
+        <Access>Public</Access>
+        <Location left="1942" top="1031" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void ShootVisuals()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ItemDatabase</Name>
+        <Access>Public</Access>
+        <Location left="1365" top="721" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">public Dictionairy&lt;string, WeaponData&gt; weapons</Member>
+        <Member type="Field">Dictionairy&lt;string, Consumable&gt; consumables</Member>
+        <Member type="Method">public void GetItemByID(string ID)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Word ingespawned samen met de canvas en door gebruik van delegates de UI update</Text>
+        <Location left="2183" top="1183" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Class">
+        <Name>StatusEffect</Name>
+        <Access>Public</Access>
+        <Location left="852" top="793" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void Effect()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Association" first="5" second="3">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="7" second="8">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="2" second="7">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="2" second="10">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1291</X>
+          <Y>1272</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="2" second="3">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="14" second="6">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>2265</X>
+          <Y>1293</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="11" second="12">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>
