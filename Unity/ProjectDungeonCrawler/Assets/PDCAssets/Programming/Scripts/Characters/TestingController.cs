@@ -22,6 +22,7 @@ public class TestingController : MonoBehaviour
     public float movementModifier;
     public float mouseSensitivity;
     public float jumpForce;
+    public float maxSlope = 130;
     public AudioClip[] footSteps;
 
     //Private variables
@@ -32,6 +33,7 @@ public class TestingController : MonoBehaviour
     float moveValue;
     bool bobUp;
     bool obstacle;
+    bool onSurface;
 
     //Hidden public variables
     [HideInInspector]
@@ -42,7 +44,6 @@ public class TestingController : MonoBehaviour
     public float xInput;
     [HideInInspector]
     public float yInput;
-
 
     [Serializable]
     public struct HeadBobVariables
@@ -63,6 +64,15 @@ public class TestingController : MonoBehaviour
         public float fovBonus;
         [Header("Interpolate speed between FOV")]
         public float changeFOVSpeed;
+    }
+
+    bool IsInAngle
+    {
+        get
+        {
+            if (maxSlope >= GroundAngle()) return true;
+            else return false;
+        }
     }
 
     void Start()
@@ -86,6 +96,7 @@ public class TestingController : MonoBehaviour
             CheckInput();
             Checks();
             CameraEffects();
+            GroundAngle();
             Debug.DrawRay(transform.position + transform.up, Forward() * 3);
         }
     }
@@ -128,7 +139,8 @@ public class TestingController : MonoBehaviour
 
     void Checks()
     {
-        if(Physics.SphereCast(transform.position + Vector3.up, 0.20f, Vector3.down, out feethit, 1.1f, playerLayer))
+        RaycastHit ground;
+        if (Physics.SphereCast(transform.position + Vector3.up, 0.20f, Vector3.down, out ground, 1.1f, playerLayer) && IsInAngle)
         {
             grounded = true;
         }
@@ -136,8 +148,16 @@ public class TestingController : MonoBehaviour
         {
             grounded = false;
         }
+        if (Physics.SphereCast(transform.position + Vector3.up, 0.20f, Vector3.down, out feethit, 1.2f, playerLayer))
+        {
+            onSurface = true;
+        }
+        else
+        {
+            onSurface = false;
+        }
 
-        if(direction != Vector3.zero)
+        if (direction != Vector3.zero)
         {
             if(Physics.Raycast(transform.position + Vector3.up, direction, .3f, blockPath) || Physics.Raycast(transform.position + Vector3.up /2, direction, .3f, blockPath))
             {
@@ -236,22 +256,24 @@ public class TestingController : MonoBehaviour
 
     Vector3 Forward()
     {
-        if (!grounded) return transform.forward;
+        if (!onSurface) return transform.forward;
         return Vector3.Cross(feethit.normal, -transform.right);
     }
 
     float GroundAngle()
     {
-        if (!grounded) return 90;
-        return Vector3.Angle(feethit.normal, transform.forward);
+        if (!onSurface) return 90;
+        print(Vector3.Angle(feethit.normal, direction));
+        return Vector3.Angle(feethit.normal, direction);
     }
 
     public void Move()
     {
-        if(direction != Vector3.zero && !obstacle)
+        if(direction != Vector3.zero && !obstacle && IsInAngle)
         {
             acc = Mathf.Lerp(acc, movementModifier, Time.fixedDeltaTime * acceleration);
-            rb.MovePosition(rb.position + (direction * Time.fixedDeltaTime * movementSpeed * acc));
+            Vector3 newDir = new Vector3(direction.x, Forward().y, direction.z);
+            rb.MovePosition(rb.position + (newDir * Time.fixedDeltaTime * movementSpeed * acc));
         }
         else
         {
