@@ -27,7 +27,7 @@ GameObject:
   - component: {fileID: 114539081937160478}
   - component: {fileID: 114876252717827222}
   - component: {fileID: 114460470535258938}
-  m_Layer: 9
+  m_Layer: 17
   m_Name: PlayerController
   m_TagString: Player
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 4323814022559474}
   - component: {fileID: 33916293365818394}
   - component: {fileID: 23764603180093884}
-  m_Layer: 9
+  m_Layer: 17
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60,7 +60,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4939220917456416}
   - component: {fileID: 114978034932212936}
-  m_Layer: 9
+  m_Layer: 17
   m_Name: CamHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -76,7 +76,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4750375687892324}
   - component: {fileID: 95210221700041736}
-  m_Layer: 9
+  m_Layer: 17
   m_Name: WeaponPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4366895131145312}
-  m_Layer: 9
+  m_Layer: 17
   m_Name: WeaponOffset
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 4736567164677208}
   - component: {fileID: 33585103236917510}
   - component: {fileID: 23451794000737670}
-  m_Layer: 0
+  m_Layer: 17
   m_Name: CHAR_FBX_GezichtCube_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4052827548273130}
   - component: {fileID: 136457335432702720}
-  m_Layer: 9
+  m_Layer: 17
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -143,7 +143,7 @@ GameObject:
   - component: {fileID: 124112171864783476}
   - component: {fileID: 92667667954400026}
   - component: {fileID: 81333990134087694}
-  m_Layer: 9
+  m_Layer: 17
   m_Name: PlayerCamera
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -159,7 +159,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4699199570273980}
   - component: {fileID: 20879051186849200}
-  m_Layer: 9
+  m_Layer: 17
   m_Name: WeaponCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -498,7 +498,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6aba61798b112df4297ddbb87e6378ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testController: 0
   compToDisable:
   - {fileID: 114454382125572154}
   - {fileID: 20221471269542032}
@@ -570,12 +569,13 @@ MonoBehaviour:
     m_Bits: 4294966527
   blockPath:
     serializedVersion: 2
-    m_Bits: 0
-  movementSpeed: 5
+    m_Bits: 1
+  movementSpeed: 4
   acceleration: 2
   movementModifier: 2
   mouseSensitivity: 150
-  jumpForce: 7
+  jumpForce: 5
+  maxSlope: 130
   footSteps:
   - {fileID: 8300000, guid: 8d4406feafb5bd94799534918c81e575, type: 3}
   acc: 0

@@ -43,7 +43,7 @@ public class Inventory : NetworkBehaviour {
 
     private void Update()
     {
-        if (Input.GetButtonDown("Inventory"))
+        if (Input.GetButtonDown("LockMouse"))
         {
             invActive = !invActive;
             content.gameObject.SetActive(invActive);
