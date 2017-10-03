@@ -25,6 +25,7 @@ public class TestingController : MonoBehaviour
     public AudioClip[] footSteps;
 
     //Private variables
+    RaycastHit feethit;
     Vector3 direction;
     float bobY;
     float bobX;
@@ -85,6 +86,7 @@ public class TestingController : MonoBehaviour
             CheckInput();
             Checks();
             CameraEffects();
+            Debug.DrawRay(transform.position + transform.up, Forward() * 3);
         }
     }
 
@@ -126,7 +128,6 @@ public class TestingController : MonoBehaviour
 
     void Checks()
     {
-        RaycastHit feethit;
         if(Physics.SphereCast(transform.position + Vector3.up, 0.20f, Vector3.down, out feethit, 1.1f, playerLayer))
         {
             grounded = true;
@@ -231,6 +232,18 @@ public class TestingController : MonoBehaviour
     {
         if(grounded)
             rb.velocity += Vector3.up * jumpForce;
+    }
+
+    Vector3 Forward()
+    {
+        if (!grounded) return transform.forward;
+        return Vector3.Cross(feethit.normal, -transform.right);
+    }
+
+    float GroundAngle()
+    {
+        if (!grounded) return 90;
+        return Vector3.Angle(feethit.normal, transform.forward);
     }
 
     public void Move()
