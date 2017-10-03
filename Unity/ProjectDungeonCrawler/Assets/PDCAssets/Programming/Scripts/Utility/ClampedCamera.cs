@@ -46,7 +46,6 @@ public class ClampedCamera : MonoBehaviour
 
             // Get raw mouse input for a cleaner reading on more sensitive mice.
             var mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
-            print(mouseDelta.ToString());
 
             // Scale input against the sensitivity setting and multiply that against the smoothing value.
             mouseDelta = Vector2.Scale(mouseDelta, new Vector2(sensitivity.x, sensitivity.y));

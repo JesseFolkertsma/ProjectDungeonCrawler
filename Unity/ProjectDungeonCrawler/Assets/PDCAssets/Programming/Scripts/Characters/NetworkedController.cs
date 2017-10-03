@@ -5,8 +5,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class NetworkedController : NetworkBehaviour
-{
-    //Public variables
+{ //Public variables
     public bool isEnabled;
     [HideInInspector]
     public Rigidbody rb;
@@ -22,15 +21,18 @@ public class NetworkedController : NetworkBehaviour
     public float movementModifier;
     public float mouseSensitivity;
     public float jumpForce;
+    public float maxSlope = 130;
     public AudioClip[] footSteps;
 
     //Private variables
+    RaycastHit feethit;
     Vector3 direction;
     float bobY;
     float bobX;
     float moveValue;
     bool bobUp;
     bool obstacle;
+    bool onSurface;
 
     //Hidden public variables
     [HideInInspector]
@@ -41,7 +43,6 @@ public class NetworkedController : NetworkBehaviour
     public float xInput;
     [HideInInspector]
     public float yInput;
-
 
     [Serializable]
     public struct HeadBobVariables
@@ -62,6 +63,15 @@ public class NetworkedController : NetworkBehaviour
         public float fovBonus;
         [Header("Interpolate speed between FOV")]
         public float changeFOVSpeed;
+    }
+
+    bool IsInAngle
+    {
+        get
+        {
+            if (maxSlope >= GroundAngle()) return true;
+            else return false;
+        }
     }
 
     void Start()
@@ -85,6 +95,8 @@ public class NetworkedController : NetworkBehaviour
             CheckInput();
             Checks();
             CameraEffects();
+            GroundAngle();
+            Debug.DrawRay(transform.position + transform.up, Forward() * 3);
         }
     }
 
@@ -109,7 +121,7 @@ public class NetworkedController : NetworkBehaviour
     }
 
     void CheckInput()
-    {   
+    {
         #region MovementInput
         xInput = Input.GetAxisRaw("Horizontal");
         yInput = Input.GetAxisRaw("Vertical");
@@ -126,8 +138,8 @@ public class NetworkedController : NetworkBehaviour
 
     void Checks()
     {
-        RaycastHit feethit;
-        if(Physics.SphereCast(transform.position + Vector3.up, 0.20f, Vector3.down, out feethit, 1.1f, playerLayer))
+        RaycastHit ground;
+        if (Physics.SphereCast(transform.position + Vector3.up, 0.20f, Vector3.down, out ground, 1.1f, playerLayer) && IsInAngle)
         {
             grounded = true;
         }
@@ -135,10 +147,18 @@ public class NetworkedController : NetworkBehaviour
         {
             grounded = false;
         }
-
-        if(direction != Vector3.zero)
+        if (Physics.SphereCast(transform.position + Vector3.up, 0.20f, Vector3.down, out feethit, 1.2f, playerLayer))
         {
-            if(Physics.Raycast(transform.position + Vector3.up, direction, .3f, blockPath) || Physics.Raycast(transform.position + Vector3.up /2, direction, .3f, blockPath))
+            onSurface = true;
+        }
+        else
+        {
+            onSurface = false;
+        }
+
+        if (direction != Vector3.zero)
+        {
+            if (Physics.Raycast(transform.position + Vector3.up, direction, .3f, blockPath) || Physics.Raycast(transform.position + Vector3.up / 2, direction, .3f, blockPath))
             {
                 obstacle = true;
             }
@@ -148,11 +168,11 @@ public class NetworkedController : NetworkBehaviour
             }
         }
     }
-        
+
     void CameraEffects()
     {
         //HeadBobbing
-        if(direction != Vector3.zero && grounded)
+        if (direction != Vector3.zero && grounded)
         {
             Bobhead(1f);
         }
@@ -161,7 +181,7 @@ public class NetworkedController : NetworkBehaviour
         {
             //Stafe effects
             if (xInput != 0)
-            {   
+            {
                 Quaternion newRot = camHolder.rotation;
                 newRot.eulerAngles += new Vector3(0, 0, headbobVariables.maxCameraPan * -xInput);
                 playerCam.transform.rotation = Quaternion.Lerp(playerCam.transform.rotation, newRot, headbobVariables.panSpeed * Time.deltaTime);
@@ -229,32 +249,34 @@ public class NetworkedController : NetworkBehaviour
 
     void Jump()
     {
-        if(grounded)
+        if (grounded)
             rb.velocity += Vector3.up * jumpForce;
+    }
+
+    Vector3 Forward()
+    {
+        if (!onSurface) return transform.forward;
+        return Vector3.Cross(feethit.normal, -transform.right);
+    }
+
+    float GroundAngle()
+    {
+        if (!onSurface) return 90;
+        print(Vector3.Angle(feethit.normal, direction));
+        return Vector3.Angle(feethit.normal, direction);
     }
 
     public void Move()
     {
-        if(direction != Vector3.zero && !obstacle)
+        if (direction != Vector3.zero && !obstacle && IsInAngle)
         {
             acc = Mathf.Lerp(acc, movementModifier, Time.fixedDeltaTime * acceleration);
-            rb.MovePosition(rb.position + (direction * Time.fixedDeltaTime * movementSpeed * acc));
+            Vector3 newDir = new Vector3(direction.x, Forward().y, direction.z);
+            rb.MovePosition(rb.position + (newDir * Time.fixedDeltaTime * movementSpeed * acc));
         }
         else
         {
             acc = Mathf.Lerp(acc, 0f, Time.fixedDeltaTime * acceleration * 2);
         }
-    }
-    
-    public void GetForce(Vector3 dirAndForce)
-    {
-        RpcGetForce(dirAndForce);
-    }
-
-    [ClientRpc]
-    public void RpcGetForce(Vector3 dirAndForce)
-    {
-        rb.AddForce(dirAndForce);
-        Debug.Log(transform.name + ": Halp im gettin slipperdipperd");
     }
 }

@@ -316,11 +316,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 10
       objectReference: {fileID: 0}
-    - target: {fileID: 114454382125572154, guid: 0085af4a580137d48813c66bc45354e9,
-        type: 2}
-      propertyPath: blockPath.m_Bits
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0085af4a580137d48813c66bc45354e9, type: 2}
   m_IsPrefabParent: 0
@@ -334,7 +329,6 @@ GameObject:
   - component: {fileID: 707266948}
   - component: {fileID: 707266947}
   - component: {fileID: 707266946}
-  - component: {fileID: 707266949}
   m_Layer: 0
   m_Name: _NetworkManager
   m_TagString: Untagged
@@ -454,17 +448,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &707266949
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 707266945}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d193fa12460c41458a8dd01b59d50df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &720389174
 Prefab:
   m_ObjectHideFlags: 0
