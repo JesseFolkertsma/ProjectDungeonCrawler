@@ -14,12 +14,19 @@ public class MenuManager : MonoBehaviour {
         {
             if(i != currentMenu)
             {
-                DisableButtons(i);
+                DisableMenu(i);
             }
         }
-        EnableButtons(currentMenu);
+        EnableMenu(currentMenu);
 
 
+    }
+    public void Update() {
+        if (Input.GetButtonDown("Cancel")) {
+            if(previousMenus.Count > 0) {
+                NavigateBack();
+            }
+        }
     }
     public void EnableButtons(int i)
     {
@@ -28,22 +35,47 @@ public class MenuManager : MonoBehaviour {
             n.GetChild(0).GetComponent<Button>().interactable = true;
         }
     }
-    public void DisableButtons(int i)
-    {
-        foreach (Transform n in menus[i])
-        {
+    public void DisableButtons(int i) {
+        foreach (Transform n in menus[i]){
             n.GetChild(0).GetComponent<Button>().interactable = false;
             print("Disabled :" + menus[i].name);
         }
     }
-    public void Navigate(int i) {
+    public void DisableMenu(int i) {
+        if (menus[i].GetChild(0).name == "Parent") {
+            DisableButtons(i);
+        }
+        else {
+            menus[i].GetComponent<Animator>().SetBool("Open", false);
+
+        }
+    }
+    public void EnableMenu(int i) {
+        if (menus[i].GetChild(0).name == "Parent") {
+            EnableButtons(i);
+        }
+        else {
+            menus[i].GetComponent<Animator>().SetBool("Open", true);
+        }
+    }
+    public void NavigateBM(int i) {
         DisableButtons(currentMenu);
         EnableButtons(i);
         previousMenus.Add(currentMenu);
         currentMenu = i;
     }
-    public void NavigateBack()
-    {
-
+    public void NavigateM(int i) {
+        //Disable current menu
+        //Enable overloaded menu
+        DisableMenu(currentMenu);
+        EnableMenu(i);
+        previousMenus.Add(currentMenu);
+        currentMenu = i;
+    }
+    public void NavigateBack(){
+        DisableMenu(currentMenu);
+        EnableMenu(previousMenus[0]);
+        currentMenu = previousMenus[0];
+        previousMenus.RemoveAt(0);
     }
 }
