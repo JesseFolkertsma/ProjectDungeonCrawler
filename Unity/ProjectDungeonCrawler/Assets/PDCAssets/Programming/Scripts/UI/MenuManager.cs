@@ -74,8 +74,8 @@ public class MenuManager : MonoBehaviour {
     }
     public void NavigateBack(){
         DisableMenu(currentMenu);
-        EnableMenu(previousMenus[0]);
-        currentMenu = previousMenus[0];
-        previousMenus.RemoveAt(0);
+        EnableMenu(previousMenus[previousMenus.Count - 1]);
+        currentMenu = previousMenus[previousMenus.Count - 1];
+        previousMenus.RemoveAt(previousMenus.Count - 1);
     }
 }
