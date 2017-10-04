@@ -1,13 +1,13 @@
 fileFormatVersion: 2
-guid: 7e535310b00a3a64f8382f3262dd4d6d
-timeCreated: 1507109070
+guid: 8e9a09586219f174c9f88cce3d3f56c4
+timeCreated: 1507109057
 licenseType: Free
 SubstanceImporter:
   serializedVersion: 5
   materialInstances:
   - serializedVersion: 16
-    name: SSUB_Lava_001
-    prototypeName: SSUB_Lava_001
+    name: SSUB_Lava_Magma_001
+    prototypeName: SSUB_Lava_Magma_001
     shaderName: 
     shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
     shaderKeywords: _METALLICGLOSSMAP _NORMALMAP
@@ -30,63 +30,63 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: $randomseed
       value:
-        scalar[0]: 0
+        scalar[0]: 4699
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
-    - name: Lava_Pattern_Uniform_Scale
+    - name: Magma_Normal_Intensity
       value:
-        scalar[0]: 8
+        scalar[0]: 20
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
-    - name: Lava_Pattern_Disorder
+    - name: Magma_Pattern_Uniform_Scale
       value:
-        scalar[0]: 93.98
+        scalar[0]: 2.2
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
-    - name: Lava_Emission_Intensity
-      value:
-        scalar[0]: 0
-        scalar[1]: 0
-        scalar[2]: 0
-        scalar[3]: 0
-        texture: {instanceID: 0}
-    - name: Laval_Emission_Contrast
+    - name: Magma_Pattern_Disorder
       value:
         scalar[0]: 0
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
-    - name: Lava_Normal_Intensity
+    - name: Magma_Rock_Grunge_Intensity
       value:
-        scalar[0]: 3
+        scalar[0]: 2
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
-    - name: Lava_Hue
+    - name: Magma_Color_Hue
       value:
         scalar[0]: 0.5
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
-    - name: Lava_Saturation
+    - name: Magma_Color_Saturation
       value:
         scalar[0]: 0.5
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
-    - name: Lava_Lightness
+    - name: Magma_Color_Lightness
       value:
-        scalar[0]: 0.494
+        scalar[0]: 0.5
+        scalar[1]: 0
+        scalar[2]: 0
+        scalar[3]: 0
+        texture: {instanceID: 0}
+    - name: Magma_Emmision_Intensity
+      value:
+        scalar[0]: 1
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -97,7 +97,7 @@ SubstanceImporter:
       scale: {x: 3, y: 3}
       generateMipmaps: 1
       generateAllOutputs: 0
-      animationUpdateRate: 42
+      animationUpdateRate: 0
     materialProperties:
       serializedVersion: 3
       texEnvs:
@@ -119,7 +119,7 @@ SubstanceImporter:
           offset: {x: 0, y: 0}
       - _EmissionMap:
           texture: {instanceID: 0}
-          scale: {x: 3, y: 3}
+          scale: {x: 1, y: 1}
           offset: {x: 0, y: 0}
       - _MainTex:
           texture: {instanceID: 0}
@@ -156,41 +156,33 @@ SubstanceImporter:
       - _ZWrite: 1
       colors:
       - _Color: {r: 1, g: 1, b: 1, a: 1}
-      - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+      - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     textureParameters:
-    - name: SSUB_Lava_001_basecolor
+    - name: SSUB_Lava_Magma_001_basecolor
       alphaSource: 6
       filterMode: 0
       aniso: 0
       wrapMode: 0
-    - name: SSUB_Lava_001_normal
+    - name: SSUB_Lava_Magma_001_normal
       alphaSource: 0
       filterMode: 0
       aniso: 0
       wrapMode: 0
-    - name: SSUB_Lava_001_metallic
+    - name: SSUB_Lava_Magma_001_metallic
       alphaSource: 7
-      filterMode: 0
-      aniso: 0
-      wrapMode: 0
-    - name: SSUB_Lava_001_height
-      alphaSource: 0
       filterMode: 0
       aniso: 0
       wrapMode: 0
     textureAssignments:
     - shaderProp: _MainTex
       material: {instanceID: 0}
-      baseUID: 860167760
+      baseUID: 1781615603
     - shaderProp: _BumpMap
       material: {instanceID: 0}
-      baseUID: 860167762
-    - shaderProp: _EmissionMap
-      material: {instanceID: 0}
-      baseUID: 925512871
+      baseUID: 1781615601
     - shaderProp: _MetallicGlossMap
       material: {instanceID: 0}
-      baseUID: 860167766
+      baseUID: 1781615605
     buildTargetSettings:
     - serializedVersion: 2
       buildTarget: 
