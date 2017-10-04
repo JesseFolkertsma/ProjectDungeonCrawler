@@ -4,8 +4,14 @@ using UnityEngine;
 
 public static class WeaponUtility {
 
-    public static IHitable[] ShootWithRaycast(AttackType attackType, WeaponData weaponData)
+    public static IHitable[] ShootWithRaycast(AttackType attackType, EquippedWeapon weaponData)
     {
+        if (weaponData == null)
+        {
+            Debug.LogError("You little diptard you need to give me some weapondata!");
+            return new IHitable[0];
+        }
+
         switch (attackType)
         {
             case AttackType.Raycast:
@@ -16,13 +22,18 @@ public static class WeaponUtility {
         return new IHitable[0];
     }
 
-    static IHitable[] WUBoxCast(WeaponData weaponData)
+    static IHitable[] WUBoxCast(EquippedWeapon weaponData)
     {
         return new IHitable[0];
     }
 
-    static IHitable[] WURaycast(WeaponData weaponData)
+    static IHitable[] WURaycast(EquippedWeapon weaponData)
     {
+        RaycastHit hit;
+        if(Physics.Raycast(weaponData.visual.gunEnd.position, weaponData.visual.gunEnd.forward, out hit, weaponData.instance.stats.range))
+        {
+
+        }
         return new IHitable[0];
     }
 }
