@@ -11,6 +11,7 @@ public class Inventory : NetworkBehaviour {
     public int availableSlots = 3;
 }
 
+[System.Serializable]
 public class EquippedWeapon
 {
     public WeaponInstance instance;

@@ -25,8 +25,8 @@ GameObject:
   - component: {fileID: 114055477095980186}
   - component: {fileID: 114890435757337466}
   - component: {fileID: 114539081937160478}
-  - component: {fileID: 114876252717827222}
   - component: {fileID: 114460470535258938}
+  - component: {fileID: 114483275787847292}
   m_Layer: 17
   m_Name: PlayerController
   m_TagString: Player
@@ -124,6 +124,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4052827548273130}
   - component: {fileID: 136457335432702720}
+  - component: {fileID: 114882944083776160}
   m_Layer: 17
   m_Name: Collider
   m_TagString: Untagged
@@ -500,11 +501,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   compToDisable:
   - {fileID: 114454382125572154}
+  - {fileID: 114483275787847292}
   - {fileID: 20221471269542032}
+  - {fileID: 124112171864783476}
+  - {fileID: 92667667954400026}
   - {fileID: 81333990134087694}
-  - {fileID: 114978034932212936}
-  - {fileID: 114460470535258938}
-  - {fileID: 114876252717827222}
   mainCamera: {fileID: 0}
 --- !u!114 &114333890048503420
 MonoBehaviour:
@@ -593,7 +594,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 191b235d970e67b4e9b177f807236f99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weapons: []
+  equippedWeapon:
+    instance:
+      stats:
+        id: 0
+        weaponName: bpb
+        description: np
+        damage: 10
+        range: 200
+        maxAmmo: 0
+        attackType: 0
+      currentAmmo: 0
+    visual: {fileID: 0}
   availableSlots: 3
+--- !u!114 &114483275787847292
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1009196950182780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1035e7c60459bc41ad8a7c66b14b581, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  testHP: 100
+  inv: {fileID: 0}
+  isActive: 1
 --- !u!114 &114539081937160478
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -613,26 +641,18 @@ MonoBehaviour:
   m_MovementThreshold: 0.001
   m_InterpolateRotation: 0.3
   m_InterpolateMovement: 0
---- !u!114 &114876252717827222
+--- !u!114 &114882944083776160
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1009196950182780}
+  m_GameObject: {fileID: 1585366014910622}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 820c33993a2d46740a6788b4b237ff50, type: 3}
+  m_Script: {fileID: 11500000, guid: c9715a88a61c4e645b68e1429be6bdb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerCam: {fileID: 20221471269542032}
-  interactRange: 3
-  pushForce: 300
-  remoteplayerLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  pickupLayer:
-    serializedVersion: 2
-    m_Bits: 0
+  objectToDirectTo: {fileID: 1009196950182780}
 --- !u!114 &114890435757337466
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -666,8 +686,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isEnabled: 1
-  clampInDegrees: {x: 360, y: 160}
-  lockCursor: 1
+  clampInDegrees: {x: 360, y: 180}
+  lockCursor: 0
   sensitivity: {x: 2, y: 2}
   targetDirection: {x: 0, y: 0}
   targetCharacterDirection: {x: 0, y: 0}

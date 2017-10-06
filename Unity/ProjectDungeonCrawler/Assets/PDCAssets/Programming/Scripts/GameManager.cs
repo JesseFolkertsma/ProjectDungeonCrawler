@@ -6,13 +6,13 @@ public class GameManager : MonoBehaviour {
 
     const string PLAYER_ID_PREFIX = "Player ";
 
-    static Dictionary<string, NetworkedController> players = new Dictionary<string, NetworkedController>();
+    static Dictionary<string, NWPlayerCombat> players = new Dictionary<string, NWPlayerCombat>();
 
     [Header("Game Data")]
     [Tooltip("The layers that the player can hit with attacks")]
     public LayerMask hitableLayers;
 
-    public static void RegisterPlayer(string playerID, NetworkedController player)
+    public static void RegisterPlayer(string playerID, NWPlayerCombat player)
     {
         string id = PLAYER_ID_PREFIX + playerID;
         players.Add(id, player);
@@ -25,9 +25,9 @@ public class GameManager : MonoBehaviour {
         players.Remove(playerID);
     }
 
-    public static NetworkedController GetPlayer(string playerID)
+    public static NWPlayerCombat GetPlayer(string playerID)
     {
-        NetworkedController pc = players[playerID];
+        NWPlayerCombat pc = players[playerID];
         return pc;
     }
 }

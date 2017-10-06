@@ -262,7 +262,6 @@ public class NetworkedController : NetworkBehaviour
     float GroundAngle()
     {
         if (!onSurface) return 90;
-        print(Vector3.Angle(feethit.normal, direction));
         return Vector3.Angle(feethit.normal, direction);
     }
 

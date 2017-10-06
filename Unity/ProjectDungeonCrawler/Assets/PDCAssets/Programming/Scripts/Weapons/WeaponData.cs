@@ -10,6 +10,7 @@ public class WeaponData {
     public float damage;
     public float range;
     public int maxAmmo;
+    public AttackType attackType;
 }
 
 [System.Serializable]

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class WeaponUtility {
 
-    public static IHitable[] ShootWithRaycast(AttackType attackType, EquippedWeapon weaponData)
+    public static IHitable[] GetEnemiesInAttack(EquippedWeapon weaponData, Transform camera)
     {
         if (weaponData == null)
         {
@@ -12,27 +12,33 @@ public static class WeaponUtility {
             return new IHitable[0];
         }
 
-        switch (attackType)
+        switch (weaponData.instance.stats.attackType)
         {
             case AttackType.Raycast:
-                return WURaycast(weaponData);
+                return WURaycast(weaponData, camera);
             case AttackType.Hitbox:
-                return WUBoxCast(weaponData);
+                return WUBoxCast(weaponData, camera);
         }
         return new IHitable[0];
     }
 
-    static IHitable[] WUBoxCast(EquippedWeapon weaponData)
+    static IHitable[] WUBoxCast(EquippedWeapon wData, Transform cam)
     {
         return new IHitable[0];
     }
 
-    static IHitable[] WURaycast(EquippedWeapon weaponData)
+    static IHitable[] WURaycast(EquippedWeapon wData, Transform cam)
     {
         RaycastHit hit;
-        if(Physics.Raycast(weaponData.visual.gunEnd.position, weaponData.visual.gunEnd.forward, out hit, weaponData.instance.stats.range))
+        if(Physics.Raycast(cam.position, cam.forward, out hit, wData.instance.stats.range))
         {
-
+            IHitable rayHit = hit.transform.gameObject.GetComponent<IHitable>();
+            if (hit.transform.gameObject.GetComponent<IHitable>() != null)
+            {
+                IHitable[] rayhits = new IHitable[1];
+                rayhits[0] = rayHit;
+                return rayhits;
+            }
         }
         return new IHitable[0];
     }
