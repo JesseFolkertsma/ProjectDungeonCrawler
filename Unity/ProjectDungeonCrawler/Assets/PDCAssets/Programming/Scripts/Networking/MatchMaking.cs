@@ -2,15 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
+using UnityEngine.Networking.Match;
 
 public class MatchMaking : MonoBehaviour {
     public InputField name;
     public InputField ip;
     public Text error;
 
+    private NetworkManager networkManager;
+
     public string[] errorMessages;
+
+    public void Start() {
+        networkManager = NetworkManager.singleton;
+        if(networkManager.matchMaker == null) {
+            networkManager.StartMatchMaker();
+        }
+    }
     public void JoinGame() {
-        if(name.text.Length > 0 || ip.text.Length > 0) {
+        if(name.text != "" || ip.text != "") {
             Error(2);
         }
         else {
@@ -18,8 +29,8 @@ public class MatchMaking : MonoBehaviour {
         }
     }
     public void HostGame() {
-        if(name.text.Length > 0) {
-            Error(2);
+        if(name.text != "") {
+            //networkManager.matchMaker.CreateMatch("hary", 4, true, "", networkManager.OnMatchCreate);
         }
         else {
             Error(1);

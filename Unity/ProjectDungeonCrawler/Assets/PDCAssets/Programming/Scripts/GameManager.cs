@@ -8,6 +8,10 @@ public class GameManager : MonoBehaviour {
 
     static Dictionary<string, NetworkedController> players = new Dictionary<string, NetworkedController>();
 
+    [Header("Game Data")]
+    [Tooltip("The layers that the player can hit with attacks")]
+    public LayerMask hitableLayers;
+
     public static void RegisterPlayer(string playerID, NetworkedController player)
     {
         string id = PLAYER_ID_PREFIX + playerID;

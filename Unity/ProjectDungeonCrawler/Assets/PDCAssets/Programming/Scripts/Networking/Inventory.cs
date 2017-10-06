@@ -13,6 +13,6 @@ public class Inventory : NetworkBehaviour {
 
 public class EquippedWeapon
 {
-    public WeaponData data;
-    public GameObject visual;
+    public WeaponInstance instance;
+    public WeaponVisuals visual;
 }

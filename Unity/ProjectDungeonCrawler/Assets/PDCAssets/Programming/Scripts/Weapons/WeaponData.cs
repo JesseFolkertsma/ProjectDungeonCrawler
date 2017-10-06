@@ -11,3 +11,10 @@ public class WeaponData {
     public float range;
     public int maxAmmo;
 }
+
+[System.Serializable]
+public class WeaponInstance
+{
+    public WeaponData stats;
+    public int currentAmmo;
+}
