@@ -6,19 +6,23 @@ using UnityEngine.Networking;
 
 public class NWPlayerCombat : NetworkBehaviour, IHitable
 {
+    [SyncVar]
     public float testHP = 100;
     public Inventory inv;
     public bool isActive = true;
 
-    NetworkedController controller;
+    [SerializeField]
+    Behaviour[] disableOnDeath;
+    [SerializeField]
+    Collider[] playercolliders;
+    [SerializeField]
+    bool isDead;
+    bool[] wasEnabled;
+    RigidbodyConstraints originalRBC;
+    [SerializeField]
+    RigidbodyConstraints deadRBC;
 
-    public NetworkConnection networkConn
-    {
-        get
-        {
-            return connectionToClient;
-        }
-    }
+    NetworkedController controller;
 
     public NetworkInstanceId networkID
     {
@@ -36,14 +40,26 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
     }
 
-    private void Start()
+    public void Setup()
     {
         controller = GetComponent<NetworkedController>();
         inv = GetComponent<Inventory>();
+
+        //ComponentSetup
+        wasEnabled = new bool[disableOnDeath.Length];
+        for (int i = 0; i < disableOnDeath.Length; i++)
+        {
+            wasEnabled[i] = disableOnDeath[i].enabled; 
+        }
+        originalRBC = controller.rb.constraints;
+        SetDefaults();
     }
 
     private void Update()
     {
+        if (!isLocalPlayer)
+            return;
+
         if (!isActive)
             return;
 
@@ -69,10 +85,11 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             foreach (IHitable iHit in iHits)
             {
                 Debug.Log("hit");
-                NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(inv.equippedWeapon.instance.stats.damage);
-                if (iHit.networkConn != null)
+                NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(inv.equippedWeapon.instance.stats.damage, objectName);
+                if (GameManager.PlayerExists(iHit.objectName))
                 {
                     string playerID = iHit.objectName;
+                    Debug.Log("I wil damage: " + playerID.ToString());
                     CmdDamageClient(playerID, dPck);
                 }
                 else
@@ -86,26 +103,73 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     [Command]
     void CmdDamageServer(NetworkPackages.DamagePackage dmgPck, NetworkInstanceId objectID)
     {
-        NetworkServer.FindLocalObject(objectID).GetComponent<IHitable>().GetHit(dmgPck);
+        Debug.Log("cmdserver");
+        NetworkServer.FindLocalObject(objectID).GetComponent<IHitable>().RpcGetHit(dmgPck);
     }
 
     [Command]
     void CmdDamageClient(string playerID, NetworkPackages.DamagePackage dmgPck)
     {
         Debug.Log("cmdclient");
-        TargetGiveDamageToPlayer(GameManager.GetPlayer(playerID).connectionToClient, dmgPck);
+        GameManager.GetPlayer(playerID).RpcGetHit(dmgPck);
     }
 
-    [TargetRpc]
-    void TargetGiveDamageToPlayer(NetworkConnection conn, NetworkPackages.DamagePackage dmgPck)
+    [ClientRpc]
+    public void RpcGetHit(NetworkPackages.DamagePackage dmgPck)
     {
-        Debug.Log("target");
-        GetHit(dmgPck);
-    }
+        if (isDead)
+            return;
 
-    public void GetHit(NetworkPackages.DamagePackage dmgPck)
-    {
         testHP -= dmgPck.damage;
-        print("Mah god I got hit!");
+        print("Is me " + objectName + "! And i hit hit with " + dmgPck.damage.ToString() +" damage by " + dmgPck.hitter + "! I now have " + testHP.ToString() + " health.");
+        if(testHP <= 0)
+        {
+            Die();
+        }
+    }
+
+    void SetDefaults()
+    {
+        isDead = false;
+        testHP = 100;
+
+        for (int i = 0; i < disableOnDeath.Length; i++)
+        {
+            disableOnDeath[i].enabled = wasEnabled[i];
+        }
+
+        foreach(Collider col in playercolliders)
+        {
+            col.enabled = true;
+        }
+
+        controller.rb.constraints = originalRBC;
+    }
+
+    IEnumerator Respawn()
+    {
+        yield return new WaitForSeconds(3f);
+
+        SetDefaults();
+        Transform newSpawnLocation = NetworkManager.singleton.GetStartPosition();
+        transform.position = newSpawnLocation.position;
+        transform.rotation = newSpawnLocation.rotation;
+
+        Debug.Log(transform.name + "! I has respawned!");
+    }
+
+    void Die()
+    {
+        isDead = true;
+        
+        controller.rb.constraints = deadRBC;
+        controller.rb.AddExplosionForce(10000, transform.position - transform.up + new Vector3(UnityEngine.Random.Range(-1, 1), 0, UnityEngine.Random.Range(-1, 1)), 10);
+
+        for (int i = 0; i < disableOnDeath.Length; i++)
+        {
+            disableOnDeath[i].enabled = false;
+        }
+
+        StartCoroutine(Respawn());
     }
 }

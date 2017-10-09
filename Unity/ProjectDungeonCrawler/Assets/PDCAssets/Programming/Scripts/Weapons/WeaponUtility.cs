@@ -30,7 +30,7 @@ public static class WeaponUtility {
     static IHitable[] WURaycast(EquippedWeapon wData, Transform cam)
     {
         RaycastHit hit;
-        if(Physics.Raycast(cam.position, cam.forward, out hit, wData.instance.stats.range))
+        if(Physics.Raycast(cam.position, cam.forward, out hit, wData.instance.stats.range, -LayerMask.NameToLayer("RemotePlayer")))
         {
             IHitable rayHit = hit.transform.gameObject.GetComponent<IHitable>();
             if (hit.transform.gameObject.GetComponent<IHitable>() != null)

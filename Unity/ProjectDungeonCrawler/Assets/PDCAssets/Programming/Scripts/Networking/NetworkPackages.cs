@@ -8,10 +8,12 @@ public class NetworkPackages {
     public class DamagePackage
     {
         public float damage;
+        public string hitter;
 
-        public DamagePackage(float _damage)
+        public DamagePackage(float _damage, string _hitter)
         {
             damage = _damage;
+            hitter = _hitter;
         }
 
         public DamagePackage() { }
