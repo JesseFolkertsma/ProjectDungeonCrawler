@@ -30,7 +30,7 @@ public class Destroyable : NetworkBehaviour, IHitable
         }
     }
 
-    public void GetHit(NetworkPackages.DamagePackage dmgPck)
+    public void RpcGetHit(NetworkPackages.DamagePackage dmgPck)
     {
         Debug.Log("FUCK MAN U HIT ME MAH NEM IS: " + gameObject.name + " HE DID " + dmgPck.ToString() + " DAMAGE!");
     }

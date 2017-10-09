@@ -30,4 +30,10 @@ public class GameManager : MonoBehaviour {
         NWPlayerCombat pc = players[playerID];
         return pc;
     }
+
+    public static bool PlayerExists(string playerID)
+    {
+        if (players.ContainsKey(playerID)) return true;
+        return false;
+    }
 }

@@ -501,11 +501,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   compToDisable:
   - {fileID: 114454382125572154}
-  - {fileID: 114483275787847292}
   - {fileID: 20221471269542032}
   - {fileID: 124112171864783476}
   - {fileID: 92667667954400026}
   - {fileID: 81333990134087694}
+  - {fileID: 114978034932212936}
   mainCamera: {fileID: 0}
 --- !u!114 &114333890048503420
 MonoBehaviour:
@@ -622,6 +622,13 @@ MonoBehaviour:
   testHP: 100
   inv: {fileID: 0}
   isActive: 1
+  disableOnDeath:
+  - {fileID: 114454382125572154}
+  - {fileID: 114978034932212936}
+  - {fileID: 114882944083776160}
+  playercolliders: []
+  isDead: 0
+  deadRBC: 0
 --- !u!114 &114539081937160478
 MonoBehaviour:
   m_ObjectHideFlags: 1

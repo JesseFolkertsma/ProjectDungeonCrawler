@@ -15,14 +15,6 @@ public class RedirectHit : MonoBehaviour, IHitable {
         iHit = objectToDirectTo.GetComponent<IHitable>();
     }
 
-    public NetworkConnection networkConn
-    {
-        get
-        {
-            return iHit.networkConn;
-        }
-    }
-
     public NetworkInstanceId networkID
     {
         get
@@ -39,8 +31,8 @@ public class RedirectHit : MonoBehaviour, IHitable {
         }
     }
 
-    public void GetHit(NetworkPackages.DamagePackage dmgPck)
+    public void RpcGetHit(NetworkPackages.DamagePackage dmgPck)
     {
-        iHit.GetHit(dmgPck);
+        iHit.RpcGetHit(dmgPck);
     }
 }
