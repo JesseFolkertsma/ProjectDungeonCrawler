@@ -9,11 +9,17 @@ public class LobbyItemHelper : MonoBehaviour {
     [SerializeField]
     Text lobbyName;
 
+    public delegate void JoinLobbyDelegate(MatchInfoSnapshot match);
+    public JoinLobbyDelegate joinLobbyCallBack;
+
     private MatchInfoSnapshot match;
 
-    public void Setup(MatchInfoSnapshot _match) {
+    public void Setup(MatchInfoSnapshot _match, JoinLobbyDelegate _joinRoomCallBack) {
         match = _match;
-
+        joinLobbyCallBack = _joinRoomCallBack;
         lobbyName.text = match.name;
+    }
+    public void JoinLobby() {
+        joinLobbyCallBack.Invoke(match);
     }
 }
