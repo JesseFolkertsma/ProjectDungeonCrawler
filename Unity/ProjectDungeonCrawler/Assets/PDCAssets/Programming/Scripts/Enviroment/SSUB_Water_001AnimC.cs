@@ -14,7 +14,7 @@ public class SSUB_Water_001AnimC : MonoBehaviour
     void Start()
     {
         curSpeed = speed;
-        substance = GetComponent<Renderer>().sharedMaterial as ProceduralMaterial;
+        //substance = GetComponent<Renderer>().sharedMaterial as ProceduralMaterial;
     }
 
     void LateUpdate()
