@@ -21,6 +21,7 @@ public class Joining : MonoBehaviour {
         if (networkManager.matchMaker == null) {
             MatchMakerOn();
         }
+        RefreshLobbyList(); 
     }
     public void MatchMakerOn() {
         networkManager.StartMatchMaker();
