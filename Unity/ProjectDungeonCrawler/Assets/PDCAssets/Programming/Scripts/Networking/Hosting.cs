@@ -17,10 +17,21 @@ public class Hosting : MonoBehaviour {
     public void Start() {
         networkManager = NetworkManager.singleton;
         if (networkManager.matchMaker == null) {
+            MatchMakerOn();
+        }
+    }
+    public void MatchMakerOn() {
+        networkManager.StartMatchMaker();
+    }
+    public void Update() {
+        if (Input.GetButtonDown("Jump")) {
             networkManager.StartMatchMaker();
         }
     }
     public void HostGame() {
+        if(networkManager.matchMaker == null) {
+            MatchMakerOn();
+        }
         if (roomName != "") {
             networkManager.matchMaker.CreateMatch(roomName, 4, true, "", "", "", 0, 0, networkManager.OnMatchCreate);
             print("Creating a room named: " + roomName);

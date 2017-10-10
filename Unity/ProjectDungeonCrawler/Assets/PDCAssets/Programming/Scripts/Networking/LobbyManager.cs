@@ -58,7 +58,6 @@ public class LobbyManager : MonoBehaviour {
         networkManager.StopHost();
         PlayerClear();
         Debug.Log("Closed Lobby");
-        
     }
 
 }
