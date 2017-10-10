@@ -58,6 +58,9 @@ public class Joining : MonoBehaviour {
     }
     public void JoinLobby(MatchInfoSnapshot _match) {
         Debug.Log("Joining :" + _match.name);
+        networkManager.matchMaker.JoinMatch(_match.networkId, "", "", "", 0, 0, networkManager.OnMatchJoined);
+        ClearLobbyList();
+        statusText.text = "Joining...";
     }
 
 }
