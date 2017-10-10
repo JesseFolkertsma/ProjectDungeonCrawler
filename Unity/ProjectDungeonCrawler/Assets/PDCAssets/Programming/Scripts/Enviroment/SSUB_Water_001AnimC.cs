@@ -20,9 +20,9 @@ public class SSUB_Water_001AnimC : MonoBehaviour
     void LateUpdate()
     {
         flow = flow + (curSpeed* Time.smoothDeltaTime);
-        if (flow >= 2000 || flow <= 0) Flip()   ;
+        if (flow >= 2000 || flow <= 0) Flip();
+        substance.SetProceduralFloat("Water_Pattern 1 Disorder", flow);
         substance.SetProceduralFloat("Water Pattern 2 Disorder", flow);
-        substance.SetProceduralFloat("Water Pattern 1 Disorder", flow);
         substance.RebuildTextures();
     }
 
