@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class WeaponUtility {
 
-    public static IHitable[] GetEnemiesInAttack(EquippedWeapon weaponData, Transform camera)
+    public static IHitable[] GetEnemiesInAttack(WeaponData weaponData, Transform camera)
     {
         if (weaponData == null)
         {
@@ -12,7 +12,7 @@ public static class WeaponUtility {
             return new IHitable[0];
         }
 
-        switch (weaponData.instance.stats.attackType)
+        switch (weaponData.attackType)
         {
             case AttackType.Raycast:
                 return WURaycast(weaponData, camera);
@@ -22,15 +22,15 @@ public static class WeaponUtility {
         return new IHitable[0];
     }
 
-    static IHitable[] WUBoxCast(EquippedWeapon wData, Transform cam)
+    static IHitable[] WUBoxCast(WeaponData wData, Transform cam)
     {
         return new IHitable[0];
     }
 
-    static IHitable[] WURaycast(EquippedWeapon wData, Transform cam)
+    static IHitable[] WURaycast(WeaponData wData, Transform cam)
     {
         RaycastHit hit;
-        if(Physics.Raycast(cam.position, cam.forward, out hit, wData.instance.stats.range, -LayerMask.NameToLayer("RemotePlayer")))
+        if(Physics.Raycast(cam.position, cam.forward, out hit, wData.range, -LayerMask.NameToLayer("RemotePlayer")))
         {
             IHitable rayHit = hit.transform.gameObject.GetComponent<IHitable>();
             if (hit.transform.gameObject.GetComponent<IHitable>() != null)

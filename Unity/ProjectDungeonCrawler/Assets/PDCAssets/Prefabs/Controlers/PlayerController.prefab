@@ -25,7 +25,6 @@ GameObject:
   - component: {fileID: 114055477095980186}
   - component: {fileID: 114890435757337466}
   - component: {fileID: 114539081937160478}
-  - component: {fileID: 114460470535258938}
   - component: {fileID: 114483275787847292}
   m_Layer: 17
   m_Name: PlayerController
@@ -583,31 +582,6 @@ MonoBehaviour:
   grounded: 0
   xInput: 0
   yInput: 0
---- !u!114 &114460470535258938
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1009196950182780}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 191b235d970e67b4e9b177f807236f99, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weapons: []
-  equippedWeapon:
-    instance:
-      stats:
-        id: 0
-        weaponName: bpb
-        description: np
-        damage: 10
-        range: 200
-        maxAmmo: 0
-        attackType: 0
-      currentAmmo: 0
-    visual: {fileID: 0}
-  availableSlots: 3
 --- !u!114 &114483275787847292
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -620,8 +594,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   testHP: 100
-  inv: {fileID: 0}
+  inv:
+    weapons: 01000000
+    availableSlots: 3
   isActive: 1
+  weaponHolder: {fileID: 4366895131145312}
   disableOnDeath:
   - {fileID: 114454382125572154}
   - {fileID: 114978034932212936}

@@ -4,12 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour {
+    public static MenuManager thisManager;
     public  Transform[] menus;
     int currentMenu;
     public List<int> previousMenus;
 
     public void Start()
     {
+        thisManager = this;
         for(int i = 0; i < menus.Length; i++)
         {
             if(i != currentMenu)

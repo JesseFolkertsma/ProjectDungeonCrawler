@@ -6,9 +6,11 @@ public class WeaponVisuals : MonoBehaviour {
     public Transform gunEnd;
 
     public GameObject muzzleFlash;
+    public Animator anim;
 
     public void ShootVisuals()
     {
-        Instantiate(muzzleFlash, gunEnd.position, gunEnd.rotation);
+        anim.SetTrigger("Shoot");
+        //Instantiate(muzzleFlash, gunEnd.position, gunEnd.rotation);
     }
 }
