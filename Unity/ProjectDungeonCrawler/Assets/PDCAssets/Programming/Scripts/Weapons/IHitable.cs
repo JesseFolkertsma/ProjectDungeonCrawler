@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public interface IHitable {
     string objectName { get; }
-    NetworkConnection networkConn { get; }
     NetworkInstanceId networkID { get; }
-    void GetHit(NetworkPackages.DamagePackage dmgPck);
+    [ClientRpc]
+    void RpcGetHit(NetworkPackages.DamagePackage dmgPck);
 }

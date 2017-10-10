@@ -26,6 +26,12 @@ public class PlayerSetup : NetworkBehaviour {
             if (mainCamera != null)
                 mainCamera.gameObject.SetActive(false);
         }
+
+        NWPlayerCombat pc = GetComponent<NWPlayerCombat>();
+        if (pc != null)
+        {
+            pc.Setup();
+        }
     }
 
     public override void OnStartClient()
