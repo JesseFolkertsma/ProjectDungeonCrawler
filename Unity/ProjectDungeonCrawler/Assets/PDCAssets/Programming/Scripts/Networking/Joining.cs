@@ -19,23 +19,28 @@ public class Joining : MonoBehaviour {
     public void Start() {
         networkManager = NetworkManager.singleton;
         if (networkManager.matchMaker == null) {
-            networkManager.StartMatchMaker();
+            MatchMakerOn();
         }
     }
+    public void MatchMakerOn() {
+        networkManager.StartMatchMaker();
+    }
     public void RefreshLobbyList() {
+        if(networkManager.matchMaker == null) {
+            MatchMakerOn();
+        }
         networkManager.matchMaker.ListMatches(0, 20, "", true, 0, 0, OnMatchList);
         statusText.text = "Loading...";
     }
 
     public void OnMatchList(bool succes, string extendedInfo, List<MatchInfoSnapshot> matches) {
         statusText.text = "";
-
+        ClearLobbyList();
         if (matches.Count == 0) {
             statusText.text = "No lobbies available";
             print("No lobbies available");
             return;
         }
-        ClearLobbyList();
         foreach (MatchInfoSnapshot i in matches) {
             print("Found a match with the name:" + i.name);
             GameObject _newLobby = Instantiate(lobbyPref);
@@ -45,6 +50,7 @@ public class Joining : MonoBehaviour {
         }
     }
     public void ClearLobbyList() {
+        print("Clearing Lobby List");
         for (int i = 0; i < lobbyList.Count; i++) {
             Destroy(lobbyList[i]);
         }
@@ -52,6 +58,9 @@ public class Joining : MonoBehaviour {
     }
     public void JoinLobby(MatchInfoSnapshot _match) {
         Debug.Log("Joining :" + _match.name);
+        networkManager.matchMaker.JoinMatch(_match.networkId, "", "", "", 0, 0, networkManager.OnMatchJoined);
+        ClearLobbyList();
+        statusText.text = "Joining...";
     }
 
 }
