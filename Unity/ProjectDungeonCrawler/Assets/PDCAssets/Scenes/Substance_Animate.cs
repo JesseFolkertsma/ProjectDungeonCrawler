@@ -9,7 +9,7 @@ public class SSUB_Water_001AnimC : MonoBehaviour
 
     void Start()
     {
-        substance = renderer.sharedMaterial as ProceduralMaterial;
+        substance = GetComponent<Renderer>().sharedMaterial as ProceduralMaterial;
     }
 
     void LateUpdate()
