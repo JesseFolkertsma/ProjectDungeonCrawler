@@ -10,6 +10,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     public float testHP = 100;
     public Inventory inv;
     public bool isActive = true;
+    public Transform weaponHolder;
+
+    int equippedWeapon;
+    List<WeaponVisuals> weaponVisuals;
 
     [SerializeField]
     Behaviour[] disableOnDeath;
@@ -43,7 +47,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     public void Setup()
     {
         controller = GetComponent<NetworkedController>();
-        inv = GetComponent<Inventory>();
 
         //ComponentSetup
         wasEnabled = new bool[disableOnDeath.Length];
@@ -53,6 +56,21 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
         originalRBC = controller.rb.constraints;
         SetDefaults();
+
+        weaponVisuals = new List<WeaponVisuals>();
+
+        for (int i = 0; i < inv.weapons.Count; i++)
+        {
+            GameObject wepGO = WeaponDatabase.instance.GetWeaponPrefab(inv.weapons[i]);
+            wepGO = Instantiate(wepGO, weaponHolder.position, weaponHolder.rotation, weaponHolder);
+            weaponVisuals.Add(wepGO.GetComponent<WeaponVisuals>());
+            weaponVisuals[i].gameObject.SetActive(false);
+        }
+
+        if (equippedWeapon < 0 || equippedWeapon > inv.availableSlots - 1)
+            equippedWeapon = 0;
+
+        weaponVisuals[equippedWeapon].gameObject.SetActive(true);
     }
 
     private void Update()
@@ -77,15 +95,17 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     void Attack()
     {
-        if(inv.equippedWeapon != null)
+        if(weaponVisuals[equippedWeapon] != null)
         {
-            IHitable[] iHits = WeaponUtility.GetEnemiesInAttack(inv.equippedWeapon, controller.playerCam.transform);
+            weaponVisuals[equippedWeapon].ShootVisuals();
+            WeaponData weaponData = WeaponDatabase.instance.GetWeapon(inv.weapons[equippedWeapon]);
+            IHitable[] iHits = WeaponUtility.GetEnemiesInAttack(weaponData, controller.playerCam.transform);
 
             Debug.Log("haswep");
             foreach (IHitable iHit in iHits)
             {
                 Debug.Log("hit");
-                NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(inv.equippedWeapon.instance.stats.damage, objectName);
+                NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(weaponData.damage, objectName);
                 if (GameManager.PlayerExists(iHit.objectName))
                 {
                     string playerID = iHit.objectName;

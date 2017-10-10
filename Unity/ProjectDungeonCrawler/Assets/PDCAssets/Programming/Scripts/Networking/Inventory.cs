@@ -4,16 +4,14 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System;
 
-public class Inventory : NetworkBehaviour {
-    public List<EquippedWeapon> weapons;
-    public EquippedWeapon equippedWeapon;
+[System.Serializable]
+public class Inventory {
+    public List<int> weapons;
 
     public int availableSlots = 3;
-}
 
-[System.Serializable]
-public class EquippedWeapon
-{
-    public WeaponInstance instance;
-    public WeaponVisuals visual;
+    public void AddWeapon(int id)
+    {
+
+    }
 }
