@@ -65,6 +65,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             wepGO = Instantiate(wepGO, weaponHolder.position, weaponHolder.rotation, weaponHolder);
             weaponVisuals.Add(wepGO.GetComponent<WeaponVisuals>());
             weaponVisuals[i].gameObject.SetActive(false);
+            NetworkServer.SpawnWithClientAuthority(wepGO, gameObject);
         }
 
         if (equippedWeapon < 0 || equippedWeapon > inv.availableSlots - 1)
@@ -97,7 +98,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     {
         if(weaponVisuals[equippedWeapon] != null)
         {
-            weaponVisuals[equippedWeapon].ShootVisuals();
+            weaponVisuals[equippedWeapon].CmdShootVisuals();
             WeaponData weaponData = WeaponDatabase.instance.GetWeapon(inv.weapons[equippedWeapon]);
             IHitable[] iHits = WeaponUtility.GetEnemiesInAttack(weaponData, controller.playerCam.transform);
 
