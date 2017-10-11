@@ -8,11 +8,10 @@ public class WeaponVisuals : NetworkBehaviour {
 
     public GameObject muzzleFlash;
     public Animator anim;
-
-    [Command]
-    public void CmdShootVisuals()
+    
+    public void ShootVisuals()
     {
         anim.SetTrigger("Shoot");
-        GameManager.instance.SpawnObjectOnServer(muzzleFlash, gunEnd);
+        Instantiate(muzzleFlash, gunEnd.position, gunEnd.rotation);
     }
 }
