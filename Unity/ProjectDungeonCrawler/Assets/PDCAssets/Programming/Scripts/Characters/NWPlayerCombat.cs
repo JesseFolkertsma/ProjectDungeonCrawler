@@ -63,9 +63,11 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             GameObject wepGO = WeaponDatabase.instance.GetWeaponPrefab(inv.weapons[i]);
             wepGO = Instantiate(wepGO, weaponHolder.position, weaponHolder.rotation, weaponHolder);
-            weaponVisuals.Add(wepGO.GetComponent<WeaponVisuals>());
+            NetworkServer.Spawn(wepGO);
+            WeaponVisuals wv = wepGO.GetComponent<WeaponVisuals>();
+            CmdSetAuthority(wv.GetComponent<NetworkIdentity>());
+            weaponVisuals.Add(wv);
             weaponVisuals[i].gameObject.SetActive(false);
-            NetworkServer.SpawnWithClientAuthority(wepGO, gameObject);
         }
 
         if (equippedWeapon < 0 || equippedWeapon > inv.availableSlots - 1)
@@ -192,5 +194,11 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
 
         StartCoroutine(Respawn());
+    }
+
+    [Command]
+    void CmdSetAuthority(NetworkIdentity id)
+    {
+        id.AssignClientAuthority(connectionToClient);
     }
 }
