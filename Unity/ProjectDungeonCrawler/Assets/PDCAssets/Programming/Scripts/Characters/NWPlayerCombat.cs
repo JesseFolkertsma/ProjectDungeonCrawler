@@ -106,7 +106,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             {
                 Debug.Log("hit");
                 NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(weaponData.damage, objectName);
-                if (GameManager.PlayerExists(iHit.objectName))
+                if (GameManager.instance.PlayerExists(iHit.objectName))
                 {
                     string playerID = iHit.objectName;
                     Debug.Log("I wil damage: " + playerID.ToString());
@@ -131,7 +131,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     void CmdDamageClient(string playerID, NetworkPackages.DamagePackage dmgPck)
     {
         Debug.Log("cmdclient");
-        GameManager.GetPlayer(playerID).RpcGetHit(dmgPck);
+        GameManager.instance.GetPlayer(playerID).RpcGetHit(dmgPck);
     }
 
     [ClientRpc]
