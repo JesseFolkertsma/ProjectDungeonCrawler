@@ -63,7 +63,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             GameObject wepGO = WeaponDatabase.instance.GetWeaponPrefab(inv.weapons[i]);
             wepGO = Instantiate(wepGO, weaponHolder.position, weaponHolder.rotation, weaponHolder);
-            weaponVisuals.Add(wepGO.GetComponent<WeaponVisuals>());
+            NetworkServer.Spawn(wepGO);
+            WeaponVisuals wv = wepGO.GetComponent<WeaponVisuals>();
+            CmdSetAuthority(wv.GetComponent<NetworkIdentity>());
+            weaponVisuals.Add(wv);
             weaponVisuals[i].gameObject.SetActive(false);
         }
 
@@ -97,7 +100,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     {
         if(weaponVisuals[equippedWeapon] != null)
         {
-            weaponVisuals[equippedWeapon].ShootVisuals();
+            weaponVisuals[equippedWeapon].CmdShootVisuals();
             WeaponData weaponData = WeaponDatabase.instance.GetWeapon(inv.weapons[equippedWeapon]);
             IHitable[] iHits = WeaponUtility.GetEnemiesInAttack(weaponData, controller.playerCam.transform);
 
@@ -191,5 +194,11 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
 
         StartCoroutine(Respawn());
+    }
+
+    [Command]
+    void CmdSetAuthority(NetworkIdentity id)
+    {
+        id.AssignClientAuthority(connectionToClient);
     }
 }
