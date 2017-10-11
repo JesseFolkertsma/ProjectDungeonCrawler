@@ -59,21 +59,37 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
         weaponVisuals = new List<WeaponVisuals>();
 
-        for (int i = 0; i < inv.weapons.Count; i++)
+        if (NetworkServer.active)
         {
-            GameObject wepGO = WeaponDatabase.instance.GetWeaponPrefab(inv.weapons[i]);
-            wepGO = Instantiate(wepGO, weaponHolder.position, weaponHolder.rotation, weaponHolder);
-            NetworkServer.Spawn(wepGO);
-            WeaponVisuals wv = wepGO.GetComponent<WeaponVisuals>();
-            CmdSetAuthority(wv.GetComponent<NetworkIdentity>());
-            weaponVisuals.Add(wv);
-            weaponVisuals[i].gameObject.SetActive(false);
+            Debug.Log("ACTIVE SERVER!");
         }
+        else
+        {
+            Debug.LogError("SERVER NOT ACTIVE KILL YOURSELF!");
+        }
+
+        CmdSpawnWeaponsForPlayer(inv.weapons.ToArray(), gameObject.name);
 
         if (equippedWeapon < 0 || equippedWeapon > inv.availableSlots - 1)
             equippedWeapon = 0;
 
         weaponVisuals[equippedWeapon].gameObject.SetActive(true);
+    }
+
+    [Command]
+    void CmdSpawnWeaponsForPlayer(int[] _inv, string playerID)
+    {
+
+        for (int i = 0; i < _inv.Length; i++)
+        {
+            GameObject wepGO = WeaponDatabase.instance.GetWeaponPrefab(_inv[i]);
+            wepGO = Instantiate(wepGO, weaponHolder.position, weaponHolder.rotation, weaponHolder);
+            NWPlayerCombat pc = GameManager.instance.GetPlayer(playerID);
+            NetworkServer.SpawnWithClientAuthority(wepGO, pc.gameObject);
+            WeaponVisuals wv = wepGO.GetComponent<WeaponVisuals>();
+            pc.weaponVisuals.Add(wv);
+            pc.weaponVisuals[i].gameObject.SetActive(false);
+        }
     }
 
     private void Update()
@@ -197,8 +213,13 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     }
 
     [Command]
-    void CmdSetAuthority(NetworkIdentity id)
+    void CmdSetAuthority(NetworkIdentity id, NetworkConnection conn)
     {
-        id.AssignClientAuthority(connectionToClient);
+        id.AssignClientAuthority(conn);
+    }
+
+    [Command]
+    void SpawnWeapons(Inventory _inv)
+    {
     }
 }
