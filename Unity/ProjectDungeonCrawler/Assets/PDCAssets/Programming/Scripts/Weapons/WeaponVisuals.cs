@@ -11,6 +11,6 @@ public class WeaponVisuals : MonoBehaviour {
     public void ShootVisuals()
     {
         anim.SetTrigger("Shoot");
-        //Instantiate(muzzleFlash, gunEnd.position, gunEnd.rotation);
+        GameManager.instance.SpawnObjectOnServer(muzzleFlash, gunEnd);
     }
 }
