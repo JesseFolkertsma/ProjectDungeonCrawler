@@ -80,4 +80,7 @@ public class MenuManager : MonoBehaviour {
         currentMenu = previousMenus[previousMenus.Count - 1];
         previousMenus.RemoveAt(previousMenus.Count - 1);
     }
+    public void CloseGame() {
+        Application.Quit();
+    }
 }
