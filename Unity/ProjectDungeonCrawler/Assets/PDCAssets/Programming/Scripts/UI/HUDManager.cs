@@ -9,9 +9,6 @@ public class HUDManager : MonoBehaviour {
 
 
     public void Update() {
-        if (Input.GetButtonDown("Jump")) {
-            HitMark();
-        }
     }
     public void UpdateHealth(float currentHP, float maxHP) {
         hp.fillAmount = (currentHP / (maxHP / 100)) / 100;
