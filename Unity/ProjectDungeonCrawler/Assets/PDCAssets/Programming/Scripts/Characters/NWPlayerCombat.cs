@@ -59,7 +59,16 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         SetDefaults();
 
         if (!isLocalPlayer)
+        {
+            weaponVisuals = new List<WeaponVisuals>();
+            GameObject wepGO = WeaponDatabase.instance.GetWeaponPrefab(inv.weapons[equippedWeapon]);
+            wepGO = Instantiate(wepGO, weaponHolder.position, weaponHolder.rotation, weaponHolder);
+            WeaponVisuals wv = wepGO.GetComponent<WeaponVisuals>();
+            weaponVisuals.Add(wv);
+            if (equippedWeapon < 0 || equippedWeapon > inv.availableSlots - 1)
+                equippedWeapon = 0;
             return;
+        }
 
         weaponVisuals = new List<WeaponVisuals>();
         for (int i = 0; i < inv.weapons.Count; i++)
@@ -70,6 +79,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             weaponVisuals.Add(wv);
             weaponVisuals[i].gameObject.SetActive(false);
         }
+        CmdSpawnClientWeps();
 
         if (equippedWeapon < 0 || equippedWeapon > inv.availableSlots - 1)
             equippedWeapon = 0;
@@ -98,17 +108,20 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     void Attack()
     {
-        if(weaponVisuals[equippedWeapon] != null)
+        if (!isLocalPlayer) return;
+
+        WeaponVisuals wv = weaponVisuals[equippedWeapon];
+        if(wv != null)
         {
-            //CmdNetworkVisuals(gameObject.name);
-            weaponVisuals[equippedWeapon].ShootVisuals();
+            CmdSendFX();
+            wv.ShootVisuals();
             WeaponData weaponData = WeaponDatabase.instance.GetWeapon(inv.weapons[equippedWeapon]);
             IHitable[] iHits = WeaponUtility.GetEnemiesInAttack(weaponData, controller.playerCam.transform);
             
             foreach (IHitable iHit in iHits)
             {
                 NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(weaponData.damage, objectName);
-                if (GameManager.instance.PlayerExists(iHit.objectName))
+                if (PlayerManager.PlayerExists(iHit.objectName))
                 {
                     string playerID = iHit.objectName;
                     Debug.Log("I wil damage: " + playerID.ToString());
@@ -122,10 +135,41 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
     }
 
-    [Command]
-    void CmdNetworkVisuals(string name)
+    [ClientRpc]
+    void RpcGetFX()
     {
-        networkFX.RpcVisuals(name);
+        weaponVisuals[equippedWeapon].ShootVisuals();
+    }
+
+    [Command]
+    void CmdSendFX()
+    {
+        RpcGetFX();
+    }
+
+    [Command]
+    void CmdSpawnClientWeps()
+    {
+        RpcSpawnClientWeps();
+    }
+
+    [ClientRpc]
+    void RpcSpawnClientWeps()
+    {
+        if (isLocalPlayer) return;
+        weaponVisuals = new List<WeaponVisuals>();
+        GameObject wepGO = WeaponDatabase.instance.GetWeaponPrefab(inv.weapons[equippedWeapon]);
+        wepGO = Instantiate(wepGO, weaponHolder.position, weaponHolder.rotation, weaponHolder);
+        WeaponVisuals wv = wepGO.GetComponent<WeaponVisuals>();
+        weaponVisuals.Add(wv);
+        if (equippedWeapon < 0 || equippedWeapon > inv.availableSlots - 1)
+            equippedWeapon = 0;
+    }
+
+    [Command]
+    public void CmdSpawnObjectOnServer(int objID, Vector3 position, Quaternion rotation)
+    {
+        GameManager.instance.SpawnObjectOnServer(objID, position, rotation);
     }
 
     [Command]
@@ -137,7 +181,13 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     [Command]
     void CmdDamageClient(string playerID, NetworkPackages.DamagePackage dmgPck)
     {
-        GameManager.instance.GetPlayer(playerID).RpcGetHit(dmgPck);
+        PlayerManager.GetPlayer(playerID).RpcGetHit(dmgPck);
+    }
+
+    [Command]
+    void CmdSendMessage(string message)
+    {
+
     }
 
     [ClientRpc]
