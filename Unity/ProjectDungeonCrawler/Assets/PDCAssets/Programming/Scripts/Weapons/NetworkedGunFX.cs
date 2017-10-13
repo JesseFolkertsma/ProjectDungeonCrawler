@@ -21,7 +21,7 @@ public class NetworkedGunFX : NetworkBehaviour {
         if (name == gameObject.name)
         {
             anim.SetTrigger("Shoot");
-            GameManager.instance.SpawnObjectOnServer(muzzleflash, gunEnd);
+            //GameManager.instance.SpawnObjectOnServer(muzzleflash, gunEnd);
         }
     }
     

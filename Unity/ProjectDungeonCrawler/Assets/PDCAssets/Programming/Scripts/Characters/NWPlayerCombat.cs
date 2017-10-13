@@ -90,6 +90,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     void CheckInput()
     {
+        if (GameManager.instance == null)
+        {
+            Debug.LogError("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+        }
         if (Input.GetButtonDown("Fire1"))
         {
             Attack();
@@ -98,10 +102,11 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     void Attack()
     {
-        if(weaponVisuals[equippedWeapon] != null)
+        WeaponVisuals wv = weaponVisuals[equippedWeapon];
+        if(wv != null)
         {
-            //CmdNetworkVisuals(gameObject.name);
-            weaponVisuals[equippedWeapon].ShootVisuals();
+            CmdSpawnObjectOnServer(0, wv.gunEnd.position, wv.gunEnd.rotation);
+            wv.ShootVisuals();
             WeaponData weaponData = WeaponDatabase.instance.GetWeapon(inv.weapons[equippedWeapon]);
             IHitable[] iHits = WeaponUtility.GetEnemiesInAttack(weaponData, controller.playerCam.transform);
             
@@ -123,9 +128,9 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     }
 
     [Command]
-    void CmdNetworkVisuals(string name)
+    public void CmdSpawnObjectOnServer(int objID, Vector3 position, Quaternion rotation)
     {
-        networkFX.RpcVisuals(name);
+        GameManager.instance.SpawnObjectOnServer(objID, position, rotation);
     }
 
     [Command]
@@ -137,7 +142,13 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     [Command]
     void CmdDamageClient(string playerID, NetworkPackages.DamagePackage dmgPck)
     {
-        GameManager.instance.GetPlayer(playerID).RpcGetHit(dmgPck);
+        GameManager.GetPlayer(playerID).RpcGetHit(dmgPck);
+    }
+
+    [Command]
+    void CmdSendMessage(string message)
+    {
+
     }
 
     [ClientRpc]
