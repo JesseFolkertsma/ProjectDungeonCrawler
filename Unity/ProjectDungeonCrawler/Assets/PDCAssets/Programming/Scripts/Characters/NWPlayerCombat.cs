@@ -202,14 +202,13 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
         testHP -= dmgPck.damage;
         print("Is me " + objectName + "! And i hit hit with " + dmgPck.damage.ToString() +" damage by " + dmgPck.hitter + "! I now have " + testHP.ToString() + " health.");
-        if(testHP <= 0)
+        if (isLocalPlayer)
+            hud.UpdateHealth(testHP, 100);
+        if (testHP <= 0)
         {
             Die();
-            hud.UpdateHealth(0, 100);
             return;
         }
-        if(isLocalPlayer)
-            hud.UpdateHealth(testHP, 100);
     }
 
     void SetDefaults()
