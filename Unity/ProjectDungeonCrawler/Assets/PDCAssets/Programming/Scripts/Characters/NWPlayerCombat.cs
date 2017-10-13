@@ -12,6 +12,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     public bool isActive = true;
     public Transform weaponHolder;
     public NetworkedGunFX networkFX;
+    public GameObject canvas;
 
     int equippedWeapon;
     List<WeaponVisuals> weaponVisuals;
@@ -28,6 +29,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     RigidbodyConstraints deadRBC;
 
     NetworkedController controller;
+    HUDManager hud;
 
     public NetworkInstanceId networkID
     {
@@ -85,6 +87,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             equippedWeapon = 0;
 
         weaponVisuals[equippedWeapon].gameObject.SetActive(true);
+        hud = Instantiate(canvas).GetComponent<HUDManager>();
     }
 
     private void Update()
@@ -123,6 +126,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
                 NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(weaponData.damage, objectName);
                 if (PlayerManager.PlayerExists(iHit.objectName))
                 {
+                    hud.HitMark();
                     string playerID = iHit.objectName;
                     Debug.Log("I wil damage: " + playerID.ToString());
                     CmdDamageClient(playerID, dPck);
@@ -201,7 +205,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         if(testHP <= 0)
         {
             Die();
+            hud.UpdateHealth(0, 100);
+            return;
         }
+        hud.UpdateHealth(testHP, 100);
     }
 
     void SetDefaults()
