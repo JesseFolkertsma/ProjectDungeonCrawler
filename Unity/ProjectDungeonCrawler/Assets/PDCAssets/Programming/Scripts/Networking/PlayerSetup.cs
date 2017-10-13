@@ -39,7 +39,7 @@ public class PlayerSetup : NetworkBehaviour {
         base.OnStartClient();
         string id = GetComponent<NetworkIdentity>().netId.ToString();
         NWPlayerCombat pc = GetComponent<NWPlayerCombat>();
-        GameManager.RegisterPlayer(id, pc);
+        PlayerManager.RegisterPlayer(id, pc);
     }
 
     void DisableComponents()
@@ -69,6 +69,6 @@ public class PlayerSetup : NetworkBehaviour {
         if (mainCamera != null)
             mainCamera.gameObject.SetActive(true);
 
-        GameManager.RemovePlayer(gameObject.name);
+        PlayerManager.RemovePlayer(gameObject.name);
     }
 }
