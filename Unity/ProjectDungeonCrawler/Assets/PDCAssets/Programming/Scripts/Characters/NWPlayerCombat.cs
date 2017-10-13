@@ -208,7 +208,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             hud.UpdateHealth(0, 100);
             return;
         }
-        if(!isLocalPlayer)
+        if(isLocalPlayer)
             hud.UpdateHealth(testHP, 100);
     }
 
