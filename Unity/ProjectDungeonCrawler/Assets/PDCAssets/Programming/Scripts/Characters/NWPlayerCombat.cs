@@ -208,7 +208,8 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             hud.UpdateHealth(0, 100);
             return;
         }
-        hud.UpdateHealth(testHP, 100);
+        if(!isLocalPlayer)
+            hud.UpdateHealth(testHP, 100);
     }
 
     void SetDefaults()
@@ -237,6 +238,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         Transform newSpawnLocation = NetworkManager.singleton.GetStartPosition();
         transform.position = newSpawnLocation.position;
         transform.rotation = newSpawnLocation.rotation;
+        hud.UpdateHealth(100, 100);
 
         Debug.Log(transform.name + "! I has respawned!");
     }
