@@ -7,9 +7,6 @@ public class HUDManager : MonoBehaviour {
     public Image hp;
     public Transform ch;
 
-
-    public void Update() {
-    }
     public void UpdateHealth(float currentHP, float maxHP) {
         hp.fillAmount = (currentHP / (maxHP / 100)) / 100;
     }
