@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class WeaponVisuals : NetworkBehaviour {
+public class WeaponVisuals : MonoBehaviour {
     public Transform gunEnd;
 
-    public GameObject muzzleFlash;
+    public MuzzleFlash muzzleFlash;
     public Animator anim;
-
-    [Command]
-    public void CmdShootVisuals()
+    
+    public void ShootVisuals()
     {
         anim.SetTrigger("Shoot");
-        GameManager.instance.SpawnObjectOnServer(muzzleFlash, gunEnd);
+        muzzleFlash.Play();
     }
 }

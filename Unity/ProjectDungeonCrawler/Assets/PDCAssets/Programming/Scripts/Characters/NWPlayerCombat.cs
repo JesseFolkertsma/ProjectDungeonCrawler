@@ -11,6 +11,8 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     public Inventory inv;
     public bool isActive = true;
     public Transform weaponHolder;
+    public NetworkedGunFX networkFX;
+    public GameObject canvas;
 
     int equippedWeapon;
     List<WeaponVisuals> weaponVisuals;
@@ -27,6 +29,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     RigidbodyConstraints deadRBC;
 
     NetworkedController controller;
+    HUDManager hud;
 
     public NetworkInstanceId networkID
     {
@@ -57,23 +60,34 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         originalRBC = controller.rb.constraints;
         SetDefaults();
 
-        weaponVisuals = new List<WeaponVisuals>();
+        if (!isLocalPlayer)
+        {
+            weaponVisuals = new List<WeaponVisuals>();
+            GameObject wepGO = WeaponDatabase.instance.GetWeaponPrefab(inv.weapons[equippedWeapon]);
+            wepGO = Instantiate(wepGO, weaponHolder.position, weaponHolder.rotation, weaponHolder);
+            WeaponVisuals wv = wepGO.GetComponent<WeaponVisuals>();
+            weaponVisuals.Add(wv);
+            if (equippedWeapon < 0 || equippedWeapon > inv.availableSlots - 1)
+                equippedWeapon = 0;
+            return;
+        }
 
+        weaponVisuals = new List<WeaponVisuals>();
         for (int i = 0; i < inv.weapons.Count; i++)
         {
             GameObject wepGO = WeaponDatabase.instance.GetWeaponPrefab(inv.weapons[i]);
             wepGO = Instantiate(wepGO, weaponHolder.position, weaponHolder.rotation, weaponHolder);
-            NetworkServer.Spawn(wepGO);
             WeaponVisuals wv = wepGO.GetComponent<WeaponVisuals>();
-            CmdSetAuthority(wv.GetComponent<NetworkIdentity>());
             weaponVisuals.Add(wv);
             weaponVisuals[i].gameObject.SetActive(false);
         }
+        CmdSpawnClientWeps();
 
         if (equippedWeapon < 0 || equippedWeapon > inv.availableSlots - 1)
             equippedWeapon = 0;
 
         weaponVisuals[equippedWeapon].gameObject.SetActive(true);
+        hud = Instantiate(canvas).GetComponent<HUDManager>();
     }
 
     private void Update()
@@ -92,25 +106,27 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         if (Input.GetButtonDown("Fire1"))
         {
             Attack();
-            Debug.Log("Click");
         }
     }
 
     void Attack()
     {
-        if(weaponVisuals[equippedWeapon] != null)
+        if (!isLocalPlayer) return;
+
+        WeaponVisuals wv = weaponVisuals[equippedWeapon];
+        if(wv != null)
         {
-            weaponVisuals[equippedWeapon].CmdShootVisuals();
+            CmdSendFX();
+            wv.ShootVisuals();
             WeaponData weaponData = WeaponDatabase.instance.GetWeapon(inv.weapons[equippedWeapon]);
             IHitable[] iHits = WeaponUtility.GetEnemiesInAttack(weaponData, controller.playerCam.transform);
-
-            Debug.Log("haswep");
+            
             foreach (IHitable iHit in iHits)
             {
-                Debug.Log("hit");
                 NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(weaponData.damage, objectName);
-                if (GameManager.instance.PlayerExists(iHit.objectName))
+                if (PlayerManager.PlayerExists(iHit.objectName))
                 {
+                    hud.HitMark();
                     string playerID = iHit.objectName;
                     Debug.Log("I wil damage: " + playerID.ToString());
                     CmdDamageClient(playerID, dPck);
@@ -123,18 +139,59 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
     }
 
+    [ClientRpc]
+    void RpcGetFX()
+    {
+        weaponVisuals[equippedWeapon].ShootVisuals();
+    }
+
+    [Command]
+    void CmdSendFX()
+    {
+        RpcGetFX();
+    }
+
+    [Command]
+    void CmdSpawnClientWeps()
+    {
+        RpcSpawnClientWeps();
+    }
+
+    [ClientRpc]
+    void RpcSpawnClientWeps()
+    {
+        if (isLocalPlayer) return;
+        weaponVisuals = new List<WeaponVisuals>();
+        GameObject wepGO = WeaponDatabase.instance.GetWeaponPrefab(inv.weapons[equippedWeapon]);
+        wepGO = Instantiate(wepGO, weaponHolder.position, weaponHolder.rotation, weaponHolder);
+        WeaponVisuals wv = wepGO.GetComponent<WeaponVisuals>();
+        weaponVisuals.Add(wv);
+        if (equippedWeapon < 0 || equippedWeapon > inv.availableSlots - 1)
+            equippedWeapon = 0;
+    }
+
+    [Command]
+    public void CmdSpawnObjectOnServer(int objID, Vector3 position, Quaternion rotation)
+    {
+        GameManager.instance.SpawnObjectOnServer(objID, position, rotation);
+    }
+
     [Command]
     void CmdDamageServer(NetworkPackages.DamagePackage dmgPck, NetworkInstanceId objectID)
     {
-        Debug.Log("cmdserver");
         NetworkServer.FindLocalObject(objectID).GetComponent<IHitable>().RpcGetHit(dmgPck);
     }
 
     [Command]
     void CmdDamageClient(string playerID, NetworkPackages.DamagePackage dmgPck)
     {
-        Debug.Log("cmdclient");
-        GameManager.instance.GetPlayer(playerID).RpcGetHit(dmgPck);
+        PlayerManager.GetPlayer(playerID).RpcGetHit(dmgPck);
+    }
+
+    [Command]
+    void CmdSendMessage(string message)
+    {
+
     }
 
     [ClientRpc]
@@ -145,9 +202,12 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
         testHP -= dmgPck.damage;
         print("Is me " + objectName + "! And i hit hit with " + dmgPck.damage.ToString() +" damage by " + dmgPck.hitter + "! I now have " + testHP.ToString() + " health.");
-        if(testHP <= 0)
+        if (isLocalPlayer)
+            hud.UpdateHealth(testHP, 100);
+        if (testHP <= 0)
         {
             Die();
+            return;
         }
     }
 
@@ -177,6 +237,8 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         Transform newSpawnLocation = NetworkManager.singleton.GetStartPosition();
         transform.position = newSpawnLocation.position;
         transform.rotation = newSpawnLocation.rotation;
+        if(isLocalPlayer)
+            hud.UpdateHealth(100, 100);
 
         Debug.Log(transform.name + "! I has respawned!");
     }
@@ -194,11 +256,5 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
 
         StartCoroutine(Respawn());
-    }
-
-    [Command]
-    void CmdSetAuthority(NetworkIdentity id)
-    {
-        id.AssignClientAuthority(connectionToClient);
     }
 }
