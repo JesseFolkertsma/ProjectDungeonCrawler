@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerInfo : MonoBehaviour {
-    string playerName;
 
+    public string playerName;
 
 	void Start () {
         DontDestroyOnLoad(transform);
