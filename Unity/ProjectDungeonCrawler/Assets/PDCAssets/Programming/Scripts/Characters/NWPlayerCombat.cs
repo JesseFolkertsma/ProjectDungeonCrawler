@@ -87,7 +87,8 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             equippedWeapon = 0;
 
         weaponVisuals[equippedWeapon].gameObject.SetActive(true);
-        hud = Instantiate(canvas).GetComponent<HUDManager>();
+        hud = Instantiate(canvas).GetComponentInChildren<HUDManager>();
+        CmdSendMessage("Ya Boiii " + objectName + " has joined mah man!", objectName, true);
     }
 
     private void Update()
@@ -189,9 +190,19 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     }
 
     [Command]
-    void CmdSendMessage(string message)
+    void CmdSendMessage(string message, string sender, bool dontSendToSender)
     {
+        foreach (KeyValuePair<string, NWPlayerCombat> kvp in PlayerManager.PlayerList())
+        {
+            if (kvp.Key == sender && dontSendToSender) continue;
+            kvp.Value.TargetRecieveMessage(kvp.Value.connectionToClient, message);
+        }
+    }
 
+    [TargetRpc]
+    void TargetRecieveMessage(NetworkConnection conn, string message)
+    {
+        hud.FeedMessage(message);
     }
 
     [ClientRpc]
@@ -207,7 +218,8 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         if (testHP <= 0)
         {
             Die();
-            return;
+            if (isLocalPlayer)
+                CmdSendMessage(dmgPck.hitter + " has killed " + objectName, objectName, false);
         }
     }
 
