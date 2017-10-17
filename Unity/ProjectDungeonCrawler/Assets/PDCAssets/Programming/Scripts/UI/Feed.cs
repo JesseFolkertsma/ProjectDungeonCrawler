@@ -11,9 +11,6 @@ public class Feed : MonoBehaviour {
 
 
     private void Update() {
-        if (Input.GetButtonDown("Jump")) {
-            FeedMessage("Hary gotz a kyl");
-        }
     }
     public void FeedMessage(string message) {
         GameObject newFM = Instantiate(feedPref);
