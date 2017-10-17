@@ -33,4 +33,9 @@ public class PlayerManager : MonoBehaviour
         if (players.ContainsKey(playerID)) return true;
         return false;
     }
+
+    static public Dictionary<string, NWPlayerCombat> PlayerList()
+    {
+        return players;
+    }
 }

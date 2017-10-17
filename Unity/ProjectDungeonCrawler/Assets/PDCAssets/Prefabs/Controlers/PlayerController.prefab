@@ -107,6 +107,8 @@ GameObject:
   - component: {fileID: 4736567164677208}
   - component: {fileID: 33585103236917510}
   - component: {fileID: 23451794000737670}
+  - component: {fileID: 65661344884087772}
+  - component: {fileID: 114803695422838846}
   m_Layer: 17
   m_Name: CHAR_FBX_GezichtCube_001
   m_TagString: Untagged
@@ -123,7 +125,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4052827548273130}
   - component: {fileID: 136457335432702720}
-  - component: {fileID: 114882944083776160}
+  - component: {fileID: 114008832921011300}
   m_Layer: 17
   m_Name: Collider
   m_TagString: Untagged
@@ -456,6 +458,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!65 &65661344884087772
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1579684545820282}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.0050000018, y: 0.0050000027, z: 0.0050000013}
+  m_Center: {x: -2.3283064e-10, y: -0.000000007450581, z: 0}
 --- !u!81 &81333990134087694
 AudioListener:
   m_ObjectHideFlags: 1
@@ -487,6 +501,19 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114008832921011300
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1585366014910622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9715a88a61c4e645b68e1429be6bdb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectToDirectTo: {fileID: 1009196950182780}
+  multiplier: 1
 --- !u!114 &114055477095980186
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -498,6 +525,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6aba61798b112df4297ddbb87e6378ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  goToDisable:
+  - {fileID: 1168151339296442}
+  - {fileID: 1579684545820282}
   compToDisable:
   - {fileID: 114454382125572154}
   - {fileID: 20221471269542032}
@@ -600,11 +630,10 @@ MonoBehaviour:
   isActive: 1
   weaponHolder: {fileID: 4366895131145312}
   networkFX: {fileID: 0}
-  canvas: {fileID: 1091773126962004, guid: 5eb2b0f049082134f93a44ff6fb73e60, type: 2}
+  canvas: {fileID: 1181061323097180, guid: 3838a0bf3c8a25e42905b391b43b4945, type: 2}
   disableOnDeath:
   - {fileID: 114454382125572154}
   - {fileID: 114978034932212936}
-  - {fileID: 114882944083776160}
   playercolliders: []
   isDead: 0
   deadRBC: 0
@@ -627,18 +656,19 @@ MonoBehaviour:
   m_MovementThreshold: 0.001
   m_InterpolateRotation: 1
   m_InterpolateMovement: 0
---- !u!114 &114882944083776160
+--- !u!114 &114803695422838846
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1585366014910622}
+  m_GameObject: {fileID: 1579684545820282}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c9715a88a61c4e645b68e1429be6bdb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   objectToDirectTo: {fileID: 1009196950182780}
+  multiplier: 4
 --- !u!114 &114890435757337466
 MonoBehaviour:
   m_ObjectHideFlags: 1

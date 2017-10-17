@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class FeedHelper : MonoBehaviour {
     public void Kill() {
-        transform.parent.GetComponent<Feed>().KillMessage(gameObject);
+        transform.GetComponentInParent<HUDManager>().KillMessage(gameObject);
     }
 }
