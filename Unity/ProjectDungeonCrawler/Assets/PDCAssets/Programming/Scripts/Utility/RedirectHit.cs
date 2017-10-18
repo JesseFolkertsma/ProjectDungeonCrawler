@@ -24,11 +24,19 @@ public class RedirectHit : MonoBehaviour, IHitable {
         }
     }
 
-    public string objectName
+    public string objectID
     {
         get
         {
             return objectToDirectTo.name;
+        }
+    }
+
+    public string objectName
+    {
+        get
+        {
+            return iHit.objectName;
         }
     }
 

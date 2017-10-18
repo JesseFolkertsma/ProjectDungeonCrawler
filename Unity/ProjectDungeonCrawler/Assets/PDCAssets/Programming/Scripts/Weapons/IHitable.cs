@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public interface IHitable {
+    string objectID { get; }
     string objectName { get; }
     NetworkInstanceId networkID { get; }
     [ClientRpc]
