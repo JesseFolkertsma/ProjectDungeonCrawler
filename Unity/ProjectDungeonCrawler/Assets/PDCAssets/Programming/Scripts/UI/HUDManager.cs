@@ -7,6 +7,21 @@ public class HUDManager : MonoBehaviour {
     public Image hp;
     public Transform ch;
 
+
+    public void Update() {
+        if (Input.GetKey(KeyCode.Tab)) {
+            ToggleScoreBoard(true);
+        }
+        else {
+            ToggleScoreBoard(false);
+        }
+        if (Input.GetButtonDown("Jump")) {
+            AddScoreBoardEntry("COokiemonester", "Cooikeeue");
+            AddScoreBoardStat("Cooikeeue", 10, 11);
+        }
+    }
+
+
     public void UpdateHealth(float currentHP, float maxHP) {
         hp.fillAmount = (currentHP / (maxHP / 100)) / 100;
     }
@@ -40,6 +55,31 @@ public class HUDManager : MonoBehaviour {
             }
         }
         fmList.Remove(message);
+    }
+    // Scoreboard //
+    public Transform scoreBoard;
+    public Transform scoreBoardContent;
+    public Transform scoreBoardEntryPref;
+
+    public List<BoardEntryHelper> entries = new List<BoardEntryHelper>();
+
+    public void ToggleScoreBoard(bool foo) {
+        scoreBoard.gameObject.SetActive(foo);
+    }
+    public void AddScoreBoardEntry(string name, string playerID) {
+        Transform newEntry = Instantiate(scoreBoardEntryPref);
+        newEntry.SetParent(scoreBoardContent, false);
+        BoardEntryHelper n = newEntry.GetComponent<BoardEntryHelper>();
+        n.Setup(name, playerID);
+        entries.Add(n);
+    }
+    public void AddScoreBoardStat(string playerID, int kills, int deaths) {
+        foreach(BoardEntryHelper entry in entries) {
+            if(entry.playerID == playerID) {
+                entry.Add(kills, deaths);
+                return;
+            }
+        }
     }
 
 }
