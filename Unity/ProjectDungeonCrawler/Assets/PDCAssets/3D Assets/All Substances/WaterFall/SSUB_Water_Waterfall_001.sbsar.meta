@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: c8f3aca7b7d23f143a9891010fd1ebc9
-timeCreated: 1508227298
+timeCreated: 1508328758
 licenseType: Free
 SubstanceImporter:
   serializedVersion: 5
@@ -10,7 +10,7 @@ SubstanceImporter:
     prototypeName: SSUB_Water_Waterfall_001
     shaderName: 
     shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-    shaderKeywords: 
+    shaderKeywords: _METALLICGLOSSMAP _NORMALMAP _PARALLAXMAP
     renderQueue: -1
     lightmapFlags: 4
     inputs:
@@ -37,7 +37,7 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: Waterfall_Roughness_Intensity
       value:
-        scalar[0]: -0.9
+        scalar[0]: -0.948
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -96,7 +96,7 @@ SubstanceImporter:
       texEnvs:
       - _BumpMap:
           texture: {instanceID: 0}
-          scale: {x: 1, y: 1}
+          scale: {x: 5, y: 5}
           offset: {x: 0, y: 0}
       - _DetailAlbedoMap:
           texture: {instanceID: 0}
@@ -116,11 +116,11 @@ SubstanceImporter:
           offset: {x: 0, y: 0}
       - _MainTex:
           texture: {instanceID: 0}
-          scale: {x: 1, y: 1}
+          scale: {x: 5, y: 5}
           offset: {x: 0, y: 0}
       - _MetallicGlossMap:
           texture: {instanceID: 0}
-          scale: {x: 1, y: 1}
+          scale: {x: 5, y: 5}
           offset: {x: 0, y: 0}
       - _OcclusionMap:
           texture: {instanceID: 0}
@@ -128,7 +128,7 @@ SubstanceImporter:
           offset: {x: 0, y: 0}
       - _ParallaxMap:
           texture: {instanceID: 0}
-          scale: {x: 1, y: 1}
+          scale: {x: 5, y: 5}
           offset: {x: 0, y: 0}
       floats:
       - _BumpScale: 1
