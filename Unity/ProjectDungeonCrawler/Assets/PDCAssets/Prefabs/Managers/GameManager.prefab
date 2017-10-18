@@ -19,7 +19,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4761012453613942}
-  - component: {fileID: 114095000765886994}
   - component: {fileID: 114598919027241488}
   m_Layer: 0
   m_Name: GameManager
@@ -41,38 +40,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114095000765886994
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1326358655992842}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SceneId:
-    m_Value: 0
-  m_AssetId:
-    i0: 81
-    i1: 206
-    i2: 27
-    i3: 184
-    i4: 80
-    i5: 181
-    i6: 92
-    i7: 52
-    i8: 74
-    i9: 113
-    i10: 30
-    i11: 121
-    i12: 40
-    i13: 242
-    i14: 30
-    i15: 96
-  m_ServerOnly: 1
-  m_LocalPlayerAuthority: 0
 --- !u!114 &114598919027241488
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -86,7 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitableLayers:
     serializedVersion: 2
-    m_Bits: 4294836223
+    m_Bits: 4294820863
   audioObject: {fileID: 1861881628385484, guid: c40e354d663d0b046ad0a18c5febcbc8,
     type: 2}
   spawns:
