@@ -8,6 +8,9 @@ public class PlayerSetup : NetworkBehaviour {
     const string REMOTE_PLAYER_LAYER = "RemotePlayer";
 
     [SerializeField]
+    GameObject[] goToDisable;
+
+    [SerializeField]
     Behaviour[] compToDisable;
 
     [SerializeField]
@@ -22,6 +25,7 @@ public class PlayerSetup : NetworkBehaviour {
         }
         else
         {
+            DisableGameObjects();
             mainCamera = Camera.main;
             if (mainCamera != null)
                 mainCamera.gameObject.SetActive(false);
@@ -40,6 +44,14 @@ public class PlayerSetup : NetworkBehaviour {
         string id = GetComponent<NetworkIdentity>().netId.ToString();
         NWPlayerCombat pc = GetComponent<NWPlayerCombat>();
         PlayerManager.RegisterPlayer(id, pc);
+    }
+
+    void DisableGameObjects()
+    {
+        foreach(GameObject go in goToDisable)
+        {
+            go.SetActive(false);
+        }
     }
 
     void DisableComponents()

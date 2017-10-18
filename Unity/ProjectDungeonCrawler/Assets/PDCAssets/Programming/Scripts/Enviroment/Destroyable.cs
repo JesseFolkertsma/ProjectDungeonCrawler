@@ -22,6 +22,14 @@ public class Destroyable : NetworkBehaviour, IHitable
         }
     }
 
+    public string objectID
+    {
+        get
+        {
+            return gameObject.name;
+        }
+    }
+
     public string objectName
     {
         get

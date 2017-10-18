@@ -18,6 +18,8 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     List<WeaponVisuals> weaponVisuals;
 
     [SerializeField]
+    string playerName;
+    [SerializeField]
     Behaviour[] disableOnDeath;
     [SerializeField]
     Collider[] playercolliders;
@@ -39,11 +41,19 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
     }
 
-    public string objectName
+    public string objectID
     {
         get
         {
             return gameObject.name;
+        }
+    }
+
+    public string objectName
+    {
+        get
+        {
+            return playerName;
         }
     }
 
@@ -81,13 +91,15 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             weaponVisuals.Add(wv);
             weaponVisuals[i].gameObject.SetActive(false);
         }
+
+        CmdSetName(GameObject.FindObjectOfType<PlayerInfo>().playerName);
         CmdSpawnClientWeps();
 
         if (equippedWeapon < 0 || equippedWeapon > inv.availableSlots - 1)
             equippedWeapon = 0;
 
         weaponVisuals[equippedWeapon].gameObject.SetActive(true);
-        hud = Instantiate(canvas).GetComponent<HUDManager>();
+        hud = Instantiate(canvas).GetComponentInChildren<HUDManager>();
     }
 
     private void Update()
@@ -124,10 +136,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             foreach (IHitable iHit in iHits)
             {
                 NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(weaponData.damage, objectName);
-                if (PlayerManager.PlayerExists(iHit.objectName))
+                if (PlayerManager.PlayerExists(iHit.objectID))
                 {
                     hud.HitMark();
-                    string playerID = iHit.objectName;
+                    string playerID = iHit.objectID;
                     Debug.Log("I wil damage: " + playerID.ToString());
                     CmdDamageClient(playerID, dPck);
                 }
@@ -137,6 +149,19 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
                 }
             }
         }
+    }
+
+    [Command]
+    void CmdSetName(string name)
+    {
+        RpcSetName(name);
+    }
+
+    [ClientRpc]
+    void RpcSetName(string name)
+    {
+        playerName = name;
+        Debug.Log("ID: " + objectID + ", Name: " + objectName);
     }
 
     [ClientRpc]
@@ -189,9 +214,19 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     }
 
     [Command]
-    void CmdSendMessage(string message)
+    void CmdSendMessage(string message, string sender, bool dontSendToSender)
     {
+        foreach (KeyValuePair<string, NWPlayerCombat> kvp in PlayerManager.PlayerList())
+        {
+            if (kvp.Key == sender && dontSendToSender) continue;
+            kvp.Value.TargetRecieveMessage(kvp.Value.connectionToClient, message);
+        }
+    }
 
+    [TargetRpc]
+    void TargetRecieveMessage(NetworkConnection conn, string message)
+    {
+        hud.FeedMessage(message);
     }
 
     [ClientRpc]
@@ -201,13 +236,14 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             return;
 
         testHP -= dmgPck.damage;
-        print("Is me " + objectName + "! And i hit hit with " + dmgPck.damage.ToString() +" damage by " + dmgPck.hitter + "! I now have " + testHP.ToString() + " health.");
+        print("Is me " + playerName + "! And i hit hit with " + dmgPck.damage.ToString() +" damage by " + dmgPck.hitter + "! I now have " + testHP.ToString() + " health.");
         if (isLocalPlayer)
             hud.UpdateHealth(testHP, 100);
         if (testHP <= 0)
         {
             Die();
-            return;
+            if (isLocalPlayer)
+                CmdSendMessage(dmgPck.hitter + " has killed " + objectName, objectID, false);
         }
     }
 
