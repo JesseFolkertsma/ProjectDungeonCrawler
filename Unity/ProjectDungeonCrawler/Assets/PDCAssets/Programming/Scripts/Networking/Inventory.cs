@@ -14,4 +14,11 @@ public class Inventory {
     {
 
     }
+
+    public Inventory() { }
+
+    public Inventory(int _availableSlots)
+    {
+        availableSlots = _availableSlots;
+    }
 }

@@ -236,12 +236,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     }
 
     [Command]
-    public void CmdSpawnObjectOnServer(int objID, Vector3 position, Quaternion rotation)
-    {
-        GameManager.instance.SpawnObjectOnServer(objID, position, rotation);
-    }
-
-    [Command]
     void CmdDamageServer(NetworkPackages.DamagePackage dmgPck, NetworkInstanceId objectID)
     {
         NetworkServer.FindLocalObject(objectID).GetComponent<IHitable>().RpcGetHit(dmgPck);
@@ -250,16 +244,16 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     [Command]
     void CmdDamageClient(string playerID, NetworkPackages.DamagePackage dmgPck)
     {
-        PlayerManager.GetPlayer(playerID).RpcGetHit(dmgPck);
+        PlayerManager.GetPlayer(playerID).pCombat.RpcGetHit(dmgPck);
     }
 
     [Command]
     void CmdSendMessage(string message, string sender, bool dontSendToSender)
     {
-        foreach (KeyValuePair<string, NWPlayerCombat> kvp in PlayerManager.PlayerList())
+        foreach (KeyValuePair<string, Player> kvp in PlayerManager.PlayerList())
         {
             if (kvp.Key == sender && dontSendToSender) continue;
-            kvp.Value.TargetRecieveMessage(kvp.Value.connectionToClient, message);
+            kvp.Value.pCombat.TargetRecieveMessage(kvp.Value.connectionToClient, message);
         }
     }
 

@@ -32,6 +32,8 @@ public class NetworkedController : NetworkBehaviour
     float bobY;
     float bobX;
     float moveValue;
+    bool canMove;
+    bool canLook;
     bool bobUp;
     bool obstacle;
     bool onSurface;
@@ -96,6 +98,8 @@ public class NetworkedController : NetworkBehaviour
     {
         rb = GetComponent<Rigidbody>();
         audioS = GetComponent<AudioSource>();
+        canMove = true;
+        canLook = true;
 
         if (headbobVariables.mikeMode)
         {
@@ -124,6 +128,24 @@ public class NetworkedController : NetworkBehaviour
         if (isEnabled)
         {
             Move();
+        }
+    }
+    
+    /// <summary>
+    /// Enable or disable controls
+    /// </summary>
+    /// <param name="value">Enable or disable</param>
+    /// <param name="movement">Apply on movement</param>
+    /// <param name="camera">Apply on rotation and camera controls</param>
+    public void EnableControls(bool value, bool movement, bool camera)
+    {
+        if (movement)
+        {
+            canMove = value;
+        }
+        if (camera)
+        {
+            canLook = value;
         }
     }
 

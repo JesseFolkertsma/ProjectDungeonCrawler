@@ -11,10 +11,6 @@ public class GameManager : MonoBehaviour {
     [Tooltip("The layers that the player can hit with attacks")]
     public LayerMask hitableLayers;
 
-    [Header("Prefabs")]
-    public GameObject audioObject;
-    public GameObject[] spawns;
-
     private void Awake()
     {
         if (instance == null)
@@ -23,19 +19,16 @@ public class GameManager : MonoBehaviour {
             DontDestroyOnLoad(gameObject);
         }
         else
+        {
             Destroy(gameObject);
+        }
     }
 
-    public void SpawnObjectOnServer(int id, Vector3 position, Quaternion rotation)
+    public void GameSceneEnter(Player _oldPlayer, GameObject _newPlayer)
     {
-        GameObject _obj = Instantiate(spawns[id], position, rotation);
-        NetworkServer.Spawn(_obj);
-    }
+        var conn = _oldPlayer.connectionToClient;
+        var newPlayer = Instantiate<GameObject>(_newPlayer);
 
-    public void SpawnAudioObject(AudioClip audio, float volume, Transform position)
-    {
-        AudioObject ao = Instantiate(audioObject, position.position, position.rotation).GetComponent<AudioObject>();
-        ao.Play(audio, volume);
-        NetworkServer.Spawn(ao.gameObject);
+        NetworkServer.ReplacePlayerForConnection(conn, newPlayer, _oldPlayer.playerControllerId);
     }
 }
