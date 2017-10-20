@@ -186,7 +186,7 @@ public class NetworkedController : NetworkBehaviour
 
         if (direction != Vector3.zero)
         {
-            if (Physics.Raycast(transform.position + Vector3.up, direction, .3f, blockPath) || Physics.Raycast(transform.position + Vector3.up / 2, direction, .3f, blockPath))
+            if (Physics.Raycast(camHolder.position, direction, .3f, blockPath) || Physics.Raycast(camHolder.position - (Vector3.up * (pLength / 2)), direction, .3f, blockPath)) 
             {
                 obstacle = true;
             }
