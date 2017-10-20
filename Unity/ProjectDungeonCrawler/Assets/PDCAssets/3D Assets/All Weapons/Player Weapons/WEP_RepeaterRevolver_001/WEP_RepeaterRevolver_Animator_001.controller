@@ -8,7 +8,7 @@ AnimatorController:
   m_Name: WEP_RepeaterRevolver_Animator_001
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: Shoot
+  - m_Name: Attack
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -35,7 +35,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: Shoot
+    m_ConditionEvent: Attack
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 1102494279161127854}
@@ -92,7 +92,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_Motion: {fileID: 7400000, guid: 7d5ab377206c35546a11b540913ae5fb, type: 3}
-  m_Tag: 
+  m_Tag: Base
   m_SpeedParameter: 
   m_MirrorParameter: 
   m_CycleOffsetParameter: 

@@ -22,6 +22,8 @@ public class NetworkedController : NetworkBehaviour
     public float mouseSensitivity;
     public float jumpForce;
     public float maxSlope = 130;
+    public float playerLength = 1f;
+    public float playerLengthCrouched = .5f;
     public AudioClip[] footSteps;
 
     //Private variables
@@ -33,6 +35,7 @@ public class NetworkedController : NetworkBehaviour
     bool bobUp;
     bool obstacle;
     bool onSurface;
+    bool crouching;
 
     //Hidden public variables
     [HideInInspector]
@@ -74,6 +77,21 @@ public class NetworkedController : NetworkBehaviour
         }
     }
 
+    float pLength
+    {
+        get
+        {
+            if (crouching)
+            {
+                return playerLengthCrouched;
+            }
+            else
+            {
+                return playerLength;
+            }
+        }
+    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -96,6 +114,7 @@ public class NetworkedController : NetworkBehaviour
             Checks();
             CameraEffects();
             GroundAngle();
+            HandleCrouching();
             Debug.DrawRay(transform.position + transform.up, Forward() * 3);
         }
     }
@@ -134,12 +153,21 @@ public class NetworkedController : NetworkBehaviour
         {
             Jump();
         }
+
+        if (Input.GetButton("Crouch"))
+        {
+            crouching = true;
+        }
+        else
+        {
+            crouching = false;
+        }
     }
 
     void Checks()
     {
         RaycastHit ground;
-        if (Physics.SphereCast(transform.position + Vector3.up, 0.20f, Vector3.down, out ground, 1.1f, playerLayer) && IsInAngle)
+        if (Physics.SphereCast(transform.position + Vector3.up, 0.20f, Vector3.down, out ground, pLength + 0.1f, playerLayer) && IsInAngle)
         {
             grounded = true;
         }
@@ -147,7 +175,7 @@ public class NetworkedController : NetworkBehaviour
         {
             grounded = false;
         }
-        if (Physics.SphereCast(transform.position + Vector3.up, 0.20f, Vector3.down, out feethit, 1.2f, playerLayer))
+        if (Physics.SphereCast(transform.position + Vector3.up, 0.20f, Vector3.down, out feethit, pLength + 0.2f, playerLayer))
         {
             onSurface = true;
         }
@@ -233,6 +261,18 @@ public class NetworkedController : NetworkBehaviour
         //Apply bob position
         Vector3 newPos = new Vector3(bobX, bobY, 0);
         playerCam.transform.localPosition = Vector3.MoveTowards(playerCam.transform.localPosition, newPos, (Time.deltaTime * headbobVariables.maxBobSpeed / movementModifier * acc) * multiplier);
+    }
+
+    void HandleCrouching()
+    {
+        if (crouching)
+        {
+            GetComponent<Animator>().SetBool("Crouch", true);
+        }
+        else
+        {
+            GetComponent<Animator>().SetBool("Crouch", false);
+        }
     }
 
     void Step()
