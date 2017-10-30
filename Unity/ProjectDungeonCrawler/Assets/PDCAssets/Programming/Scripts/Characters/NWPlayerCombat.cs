@@ -105,6 +105,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             GameObject wepGO = WeaponDatabase.instance.GetWeaponPrefab(inv.weapons[i]);
             wepGO = Instantiate(wepGO, weaponHolder.position, weaponHolder.rotation, weaponHolder);
+            wepGO.layer = LayerMask.NameToLayer("Weapon");
             GunVisuals wv = wepGO.GetComponent<GunVisuals>();
             weaponVisuals.Add(wv);
             weaponVisuals[i].gameObject.SetActive(false);
@@ -123,6 +124,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     
         weaponVisuals[equippedWeapon].gameObject.SetActive(true);
         hud = Instantiate(canvas).GetComponentInChildren<HUDManager>();
+        hud.Init(this);
     }
 
     private void Update()
@@ -134,6 +136,20 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             return;
 
         CheckInput();
+
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            if (!string.IsNullOrEmpty(hud.inputField.text) && Input.GetKey(KeyCode.Return))
+            {
+                SendChatMessage(hud.inputField.text);
+                hud.inputField.text = "";
+                hud.ToggleChat();
+            }
+            else
+            {
+                hud.ToggleChat();
+            }
+        }
     }
 
     void CheckInput()
@@ -236,12 +252,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     }
 
     [Command]
-    public void CmdSpawnObjectOnServer(int objID, Vector3 position, Quaternion rotation)
-    {
-        GameManager.instance.SpawnObjectOnServer(objID, position, rotation);
-    }
-
-    [Command]
     void CmdDamageServer(NetworkPackages.DamagePackage dmgPck, NetworkInstanceId objectID)
     {
         NetworkServer.FindLocalObject(objectID).GetComponent<IHitable>().RpcGetHit(dmgPck);
@@ -250,23 +260,43 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     [Command]
     void CmdDamageClient(string playerID, NetworkPackages.DamagePackage dmgPck)
     {
-        PlayerManager.GetPlayer(playerID).RpcGetHit(dmgPck);
+        PlayerManager.GetPlayer(playerID).pCombat.RpcGetHit(dmgPck);
     }
 
     [Command]
-    void CmdSendMessage(string message, string sender, bool dontSendToSender)
+    void CmdSendPopup(string message, string sender, bool dontSendToSender)
     {
-        foreach (KeyValuePair<string, NWPlayerCombat> kvp in PlayerManager.PlayerList())
+        foreach (KeyValuePair<string, Player> kvp in PlayerManager.PlayerList())
         {
             if (kvp.Key == sender && dontSendToSender) continue;
-            kvp.Value.TargetRecieveMessage(kvp.Value.connectionToClient, message);
+            kvp.Value.pCombat.TargetReceivePopup(kvp.Value.connectionToClient, message);
+        }
+    }
+
+    [TargetRpc]
+    void TargetReceivePopup(NetworkConnection conn, string message)
+    {
+        hud.FeedMessage(message);
+    }
+
+    public void SendChatMessage(string message)
+    {
+        CmdSendMessage(playerName + ": " + message);
+    }
+
+    [Command]
+    void CmdSendMessage(string message)
+    {
+        foreach (KeyValuePair<string, Player> kvp in PlayerManager.PlayerList())
+        {
+            kvp.Value.pCombat.TargetRecieveMessage(kvp.Value.connectionToClient, message);
         }
     }
 
     [TargetRpc]
     void TargetRecieveMessage(NetworkConnection conn, string message)
     {
-        hud.FeedMessage(message);
+        hud.SendMessage(message);
     }
 
     [ClientRpc]
@@ -283,7 +313,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             Die();
             if (isLocalPlayer)
-                CmdSendMessage(dmgPck.hitter + " has killed " + objectName, objectID, false);
+                CmdSendPopup(dmgPck.hitter + " has killed " + objectName, objectID, false);
         }
     }
 

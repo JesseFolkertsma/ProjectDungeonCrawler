@@ -14,6 +14,7 @@ public class NetworkedController : NetworkBehaviour
     public Transform camHolder;
     public Camera playerCam;
     public HeadBobVariables headbobVariables;
+    public CollisionVariables collisionVariables;
     public LayerMask playerLayer;
     public LayerMask blockPath;
     public float movementSpeed;
@@ -24,6 +25,7 @@ public class NetworkedController : NetworkBehaviour
     public float maxSlope = 130;
     public float playerLength = 1f;
     public float playerLengthCrouched = .5f;
+    public float playerFeetThickness = .2f;
     public AudioClip[] footSteps;
 
     //Private variables
@@ -32,6 +34,8 @@ public class NetworkedController : NetworkBehaviour
     float bobY;
     float bobX;
     float moveValue;
+    bool canMove;
+    bool canLook;
     bool bobUp;
     bool obstacle;
     bool onSurface;
@@ -68,6 +72,14 @@ public class NetworkedController : NetworkBehaviour
         public float changeFOVSpeed;
     }
 
+    [Serializable]
+    public struct CollisionVariables
+    {
+        public float blockRayLenght;
+        public float blockRayThickness;
+        public RaycastHit colHitInfo;
+    }
+
     bool IsInAngle
     {
         get
@@ -96,6 +108,8 @@ public class NetworkedController : NetworkBehaviour
     {
         rb = GetComponent<Rigidbody>();
         audioS = GetComponent<AudioSource>();
+        canMove = true;
+        canLook = true;
 
         if (headbobVariables.mikeMode)
         {
@@ -124,6 +138,24 @@ public class NetworkedController : NetworkBehaviour
         if (isEnabled)
         {
             Move();
+        }
+    }
+    
+    /// <summary>
+    /// Enable or disable controls
+    /// </summary>
+    /// <param name="value">Enable or disable</param>
+    /// <param name="movement">Apply on movement</param>
+    /// <param name="camera">Apply on rotation and camera controls</param>
+    public void EnableControls(bool value, bool movement, bool camera)
+    {
+        if (movement)
+        {
+            canMove = value;
+        }
+        if (camera)
+        {
+            canLook = value;
         }
     }
 
@@ -167,7 +199,7 @@ public class NetworkedController : NetworkBehaviour
     void Checks()
     {
         RaycastHit ground;
-        if (Physics.SphereCast(transform.position + Vector3.up, 0.20f, Vector3.down, out ground, pLength + 0.1f, playerLayer) && IsInAngle)
+        if (Physics.SphereCast(transform.position + Vector3.up, playerFeetThickness, Vector3.down, out ground, pLength + 0.1f, playerLayer) && IsInAngle)
         {
             grounded = true;
         }
@@ -175,7 +207,7 @@ public class NetworkedController : NetworkBehaviour
         {
             grounded = false;
         }
-        if (Physics.SphereCast(transform.position + Vector3.up, 0.20f, Vector3.down, out feethit, pLength + 0.2f, playerLayer))
+        if (Physics.SphereCast(transform.position + Vector3.up, playerFeetThickness, Vector3.down, out feethit, pLength + 0.2f, playerLayer))
         {
             onSurface = true;
         }
@@ -186,7 +218,7 @@ public class NetworkedController : NetworkBehaviour
 
         if (direction != Vector3.zero)
         {
-            if (Physics.Raycast(camHolder.position, direction, .3f, blockPath) || Physics.Raycast(camHolder.position - (Vector3.up * (pLength / 2)), direction, .3f, blockPath)) 
+            if (Physics.SphereCast(camHolder.position, collisionVariables.blockRayThickness, direction, out collisionVariables.colHitInfo, collisionVariables.blockRayLenght, blockPath) || Physics.SphereCast(camHolder.position - (Vector3.up * (pLength / 1.5f)), collisionVariables.blockRayThickness, direction, out collisionVariables.colHitInfo, collisionVariables.blockRayLenght, blockPath)) 
             {
                 obstacle = true;
             }

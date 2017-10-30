@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-
     const string PLAYER_ID_PREFIX = "Player ";
 
-    static Dictionary<string, NWPlayerCombat> players = new Dictionary<string, NWPlayerCombat>();
+    static Dictionary<string, Player> players = new Dictionary<string, Player>();
 
-    static public void RegisterPlayer(string playerID, NWPlayerCombat player)
+    static public void RegisterPlayer(string playerID, Player player)
     {
         string id = PLAYER_ID_PREFIX + playerID;
         players.Add(id, player);
@@ -22,9 +21,9 @@ public class PlayerManager : MonoBehaviour
         players.Remove(playerID);
     }
 
-    static public NWPlayerCombat GetPlayer(string playerID)
+    static public Player GetPlayer(string playerID)
     {
-        NWPlayerCombat pc = players[playerID];
+        Player pc = players[playerID];
         return pc;
     }
 
@@ -34,7 +33,7 @@ public class PlayerManager : MonoBehaviour
         return false;
     }
 
-    static public Dictionary<string, NWPlayerCombat> PlayerList()
+    static public Dictionary<string, Player> PlayerList()
     {
         return players;
     }
