@@ -38,8 +38,7 @@ public class Player : NetworkBehaviour {
     {
         base.OnStartClient();
         string id = GetComponent<NetworkIdentity>().netId.ToString();
-        Player pc = GetComponent<Player>();
-        PlayerManager.RegisterPlayer(id, pc);
+        PlayerManager.RegisterPlayer(id, this);
     }
 
     #region GameSceneEnter
@@ -57,12 +56,13 @@ public class Player : NetworkBehaviour {
     [ClientRpc]
     void RpcGameSceneEnter()
     {
-        instance_PlayerPrefab = Instantiate(playerPrefab, transform.position, transform.rotation, transform).GetComponent<PlayerPrefabData>();
+        instance_PlayerPrefab = GetComponent<PlayerPrefabData>();
+        //instance_PlayerPrefab = Instantiate(playerPrefab, transform.position, transform.rotation, transform).GetComponent<PlayerPrefabData>();
 
-        if (!isLocalPlayer)
-            return;
+        //if (!isLocalPlayer)
+        //    return;
 
-        onGameSceneEnter();
+        //onGameSceneEnter();
     }
     #endregion
 
