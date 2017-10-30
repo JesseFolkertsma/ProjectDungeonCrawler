@@ -42,6 +42,7 @@ public class PlayerPrefabData : NetworkBehaviour {
         {
             combat.Setup();
         }
+        GetComponent<Player>().GameSceneEnter();
     }
 
     void DisableGameObjects()
