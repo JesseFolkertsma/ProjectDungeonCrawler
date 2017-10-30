@@ -87,7 +87,7 @@ LightmapSettings:
     m_PVRFilteringAtrousColorSigma: 1
     m_PVRFilteringAtrousNormalSigma: 1
     m_PVRFilteringAtrousPositionSigma: 1
-  m_LightingDataAsset: {fileID: 112000574, guid: ba97ab55d4323e746bc885e826ef420f,
+  m_LightingDataAsset: {fileID: 112000572, guid: ba97ab55d4323e746bc885e826ef420f,
     type: 2}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -13218,6 +13218,78 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1174087327}
   m_Mesh: {fileID: 4300000, guid: 55d8bb26262956c469a0033116b38156, type: 3}
+--- !u!1001 &1176053302
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 400000, guid: 345fef48a0756274e9619d306116635a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 42.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 345fef48a0756274e9619d306116635a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 25.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 345fef48a0756274e9619d306116635a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -66.98
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 345fef48a0756274e9619d306116635a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 345fef48a0756274e9619d306116635a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 345fef48a0756274e9619d306116635a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 345fef48a0756274e9619d306116635a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 345fef48a0756274e9619d306116635a, type: 3}
+      propertyPath: m_RootOrder
+      value: 228
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 345fef48a0756274e9619d306116635a, type: 3}
+      propertyPath: m_Name
+      value: SRPOP_Rock_003 (18)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 345fef48a0756274e9619d306116635a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 49bc7e4c1f9e4d5459ca361f49b92d36, type: 2}
+    - target: {fileID: 100000, guid: 345fef48a0756274e9619d306116635a, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 345fef48a0756274e9619d306116635a, type: 3}
+  m_IsPrefabParent: 0
+--- !u!1 &1176053303 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 100000, guid: 345fef48a0756274e9619d306116635a, type: 3}
+  m_PrefabInternal: {fileID: 1176053302}
+--- !u!64 &1176053304
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1176053303}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 1
+  m_InflateMesh: 0
+  m_SkinWidth: 0.01
+  m_Mesh: {fileID: 4300000, guid: 345fef48a0756274e9619d306116635a, type: 3}
 --- !u!1001 &1178219841
 Prefab:
   m_ObjectHideFlags: 0
