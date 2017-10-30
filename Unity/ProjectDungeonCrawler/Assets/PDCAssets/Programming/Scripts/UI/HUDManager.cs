@@ -6,7 +6,12 @@ using UnityEngine.UI;
 public class HUDManager : MonoBehaviour {
     public Image hp;
     public Transform ch;
+    public NWPlayerCombat pc;
 
+    public void Init(NWPlayerCombat _pc)
+    {
+        pc = _pc;
+    }
 
     public void Update() {
         ScoreBoardControls();
@@ -141,14 +146,6 @@ public class HUDManager : MonoBehaviour {
     }
 
     public void FieldEndEdit() {
-        if (!string.IsNullOrEmpty(inputField.text) && Input.GetKey(KeyCode.Return)) {
-            SendMessage(inputField.text);
-            inputField.text = "";
-            ToggleChat();
-        }
-        else {
-            ToggleChat();
-        }
 
     }
 }
