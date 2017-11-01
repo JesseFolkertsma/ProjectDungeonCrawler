@@ -52,7 +52,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76325276fc988c34a99c35f8141d549e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nickname: Karla
+  data:
+    playerName: New Player
+    playerID: Empty ID
+    playerInv:
+      weapons: 
+      availableSlots: 3
+  playerPrefab: {fileID: 1009196950182780, guid: 0085af4a580137d48813c66bc45354e9,
+    type: 2}
+  gameState: 0
 --- !u!114 &114863219741360662
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -84,4 +92,4 @@ MonoBehaviour:
     i14: 85
     i15: 204
   m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
+  m_LocalPlayerAuthority: 1

@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class NWPlayerCombat : NetworkBehaviour, IHitable
+public class NWPlayerCombat : NetworkBehaviour
 {
-
     //public variables
     [SyncVar] public float testHP = 100;
     public Inventory inv;
@@ -31,6 +30,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     bool mouseDown = false;
     float timer;
 
+    Player player;
     NetworkedController controller;
     HUDManager hud;
 
@@ -73,8 +73,9 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
     }
 
-    public void Setup()
+    public void Init(bool _isLocal)
     {
+        player = GetComponent<Player>();
         //Setup for every instance of the player on all clients
         controller = GetComponent<NetworkedController>();
 
@@ -87,7 +88,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         originalRBC = controller.rb.constraints;
         SetDefaults();
 
-        if (!isLocalPlayer)
+        if (!_isLocal)
         {
             weaponVisuals = new List<GunVisuals>();
             GameObject wepGO = WeaponDatabase.instance.GetWeaponPrefab(inv.weapons[equippedWeapon]);
@@ -105,7 +106,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             GameObject wepGO = WeaponDatabase.instance.GetWeaponPrefab(inv.weapons[i]);
             wepGO = Instantiate(wepGO, weaponHolder.position, weaponHolder.rotation, weaponHolder);
-            wepGO.layer = LayerMask.NameToLayer("Weapon");
+            StaticFunctions.SetLayerRecursively(wepGO.transform, "Weapon");
             GunVisuals wv = wepGO.GetComponent<GunVisuals>();
             weaponVisuals.Add(wv);
             weaponVisuals[i].gameObject.SetActive(false);
@@ -113,8 +114,8 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
 
         //Setup name and weapon for all instances of the player
-        CmdSetName(GameObject.FindObjectOfType<PlayerInfo>().playerName);
-        CmdSpawnClientWeps();
+        //CmdSetName(GameObject.FindObjectOfType<PlayerInfo>().playerName);
+        //CmdSpawnClientWeps();
 
         if (equippedWeapon < 0 || equippedWeapon > inv.availableSlots - 1)
             equippedWeapon = 0;
@@ -125,6 +126,8 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         weaponVisuals[equippedWeapon].gameObject.SetActive(true);
         hud = Instantiate(canvas).GetComponentInChildren<HUDManager>();
         hud.Init(this);
+        if(player.onGameSceneEnter != null)
+            player.onGameSceneEnter.Invoke();
     }
 
     private void Update()
@@ -136,20 +139,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             return;
 
         CheckInput();
-
-        if (Input.GetKeyDown(KeyCode.Return))
-        {
-            if (!string.IsNullOrEmpty(hud.inputField.text) && Input.GetKey(KeyCode.Return))
-            {
-                SendChatMessage(hud.inputField.text);
-                hud.inputField.text = "";
-                hud.ToggleChat();
-            }
-            else
-            {
-                hud.ToggleChat();
-            }
-        }
     }
 
     void CheckInput()
@@ -184,8 +173,8 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     {
         if (!isLocalPlayer)
             return;
-        
-        CmdSendFX();
+        // Effects
+        //CmdSendFX();
         IHitable[] iHits = WeaponUtility.GetEnemiesInAttack(equippedData, controller.playerCam.transform);
 
         foreach (IHitable iHit in iHits)
@@ -196,124 +185,13 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
                 hud.HitMark();
                 string playerID = iHit.objectID;
                 Debug.Log("I wil damage: " + playerID.ToString());
-                CmdDamageClient(playerID, dPck);
+                //Damage player
+                //CmdDamageClient(playerID, dPck);
             }
             else
             {
-                CmdDamageServer(dPck, iHit.networkID);
+                //CmdDamageServer(dPck, iHit.networkID);
             }
-        }
-    }
-
-    [Command]
-    void CmdSetName(string name)
-    {
-        RpcSetName(name);
-    }
-
-    [ClientRpc]
-    void RpcSetName(string name)
-    {
-        playerName = name;
-        Debug.Log("ID: " + objectID + ", Name: " + objectName);
-    }
-
-    [ClientRpc]
-    void RpcGetFX()
-    {
-        weaponVisuals[equippedWeapon].RemotePlayerEffectVisuals();
-    }
-
-    [Command]
-    void CmdSendFX()
-    {
-        RpcGetFX();
-    }
-
-    [Command]
-    void CmdSpawnClientWeps()
-    {
-        RpcSpawnClientWeps();
-    }
-
-    [ClientRpc]
-    void RpcSpawnClientWeps()
-    {
-        if (isLocalPlayer) return;
-        if (weaponVisuals != null) return;
-
-        weaponVisuals = new List<GunVisuals>();
-        GameObject wepGO = WeaponDatabase.instance.GetWeaponPrefab(inv.weapons[equippedWeapon]);
-        wepGO = Instantiate(wepGO, weaponHolder.position, weaponHolder.rotation, weaponHolder);
-        GunVisuals wv = wepGO.GetComponent<GunVisuals>();
-        weaponVisuals.Add(wv);
-        if (equippedWeapon < 0 || equippedWeapon > inv.availableSlots - 1)
-            equippedWeapon = 0;
-    }
-
-    [Command]
-    void CmdDamageServer(NetworkPackages.DamagePackage dmgPck, NetworkInstanceId objectID)
-    {
-        NetworkServer.FindLocalObject(objectID).GetComponent<IHitable>().RpcGetHit(dmgPck);
-    }
-
-    [Command]
-    void CmdDamageClient(string playerID, NetworkPackages.DamagePackage dmgPck)
-    {
-        PlayerManager.GetPlayer(playerID).pCombat.RpcGetHit(dmgPck);
-    }
-
-    [Command]
-    void CmdSendPopup(string message, string sender, bool dontSendToSender)
-    {
-        foreach (KeyValuePair<string, Player> kvp in PlayerManager.PlayerList())
-        {
-            if (kvp.Key == sender && dontSendToSender) continue;
-            kvp.Value.pCombat.TargetReceivePopup(kvp.Value.connectionToClient, message);
-        }
-    }
-
-    [TargetRpc]
-    void TargetReceivePopup(NetworkConnection conn, string message)
-    {
-        hud.FeedMessage(message);
-    }
-
-    public void SendChatMessage(string message)
-    {
-        CmdSendMessage(playerName + ": " + message);
-    }
-
-    [Command]
-    void CmdSendMessage(string message)
-    {
-        foreach (KeyValuePair<string, Player> kvp in PlayerManager.PlayerList())
-        {
-            kvp.Value.pCombat.TargetRecieveMessage(kvp.Value.connectionToClient, message);
-        }
-    }
-
-    [TargetRpc]
-    void TargetRecieveMessage(NetworkConnection conn, string message)
-    {
-        hud.SendMessage(message);
-    }
-
-    [ClientRpc]
-    public void RpcGetHit(NetworkPackages.DamagePackage dmgPck)
-    {
-        if (isDead)
-            return;
-
-        testHP -= dmgPck.damage;
-        print("Is me " + playerName + "! And i hit hit with " + dmgPck.damage.ToString() +" damage by " + dmgPck.hitter + "! I now have " + testHP.ToString() + " health.");
-        if (isLocalPlayer)
-            hud.UpdateHealth(testHP, 100);
-        if (testHP <= 0)
-        {
-            Die();
-            if (isLocalPlayer)
-                CmdSendPopup(dmgPck.hitter + " has killed " + objectName, objectID, false);
         }
     }
 
