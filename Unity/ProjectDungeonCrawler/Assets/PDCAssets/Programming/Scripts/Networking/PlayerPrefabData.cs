@@ -7,23 +7,13 @@ public class PlayerPrefabData : NetworkBehaviour {
 
     const string REMOTE_PLAYER_LAYER = "RemotePlayer";
 
-    //Public variables
-    public NetworkedController controls;
-    public NWPlayerCombat combat;
-
-    //Private variables
-
     //Private serializable variables
-    [SerializeField]
-    GameObject[] goToDisable;
-    [SerializeField]
-    Behaviour[] compToDisable;
-    [SerializeField]
-    Camera mainCamera;
+    public GameObject[] goToDisable;
+    public Behaviour[] compToDisable;
 
-    private void Start()
+    public virtual void Init(bool isLocal)
     {
-        if (!isLocalPlayer)
+        if (!isLocal)
         {
             DisableComponents();
             SetAsRemotePlayer();
@@ -31,23 +21,12 @@ public class PlayerPrefabData : NetworkBehaviour {
         else
         {
             DisableGameObjects();
-            mainCamera = Camera.main;
-            if (mainCamera != null)
-                mainCamera.gameObject.SetActive(false);
         }
-
-        combat = GetComponent<NWPlayerCombat>();
-        controls = GetComponent<NetworkedController>();
-        if (combat != null)
-        {
-            combat.Setup();
-        }
-        GetComponent<Player>().GameSceneEnter();
     }
 
     void DisableGameObjects()
     {
-        foreach(GameObject go in goToDisable)
+        foreach (GameObject go in goToDisable)
         {
             go.SetActive(false);
         }
@@ -63,23 +42,6 @@ public class PlayerPrefabData : NetworkBehaviour {
 
     void SetAsRemotePlayer()
     {
-        SetLayerRecursively(transform, REMOTE_PLAYER_LAYER);
-    }
-
-    void SetLayerRecursively(Transform objectToSet, string layerName)
-    {
-        objectToSet.gameObject.layer = LayerMask.NameToLayer(layerName);
-        foreach (Transform t in objectToSet)
-        {
-            SetLayerRecursively(t, layerName);
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (mainCamera != null)
-            mainCamera.gameObject.SetActive(true);
-
-        PlayerManager.RemovePlayer(gameObject.name);
+        StaticFunctions.SetLayerRecursively(transform, REMOTE_PLAYER_LAYER);
     }
 }
