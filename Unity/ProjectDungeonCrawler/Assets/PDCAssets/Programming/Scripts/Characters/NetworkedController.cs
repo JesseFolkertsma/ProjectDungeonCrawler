@@ -104,7 +104,7 @@ public class NetworkedController : NetworkBehaviour
         }
     }
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
         audioS = GetComponent<AudioSource>();
