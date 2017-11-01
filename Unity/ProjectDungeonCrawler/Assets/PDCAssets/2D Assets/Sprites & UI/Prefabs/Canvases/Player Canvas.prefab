@@ -1381,6 +1381,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: {fileID: 114355886522344214}
   ch: {fileID: 224681880674979426}
+  pc: {fileID: 0}
   feedPref: {fileID: 1595931352941994, guid: 20703aba060499f4ab9b8553c6322c61, type: 2}
   feedWindow: {fileID: 224102888334116502}
   scoreBoard: {fileID: 224456448107198080}
@@ -1510,7 +1511,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 114748402949220856}
         m_MethodName: FieldEndEdit
         m_Mode: 1
         m_Arguments:

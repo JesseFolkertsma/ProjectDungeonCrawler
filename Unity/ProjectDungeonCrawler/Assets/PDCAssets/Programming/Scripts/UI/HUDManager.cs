@@ -114,6 +114,11 @@ public class HUDManager : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.T) && !inputField.isFocused) {
             ToggleChat();
         }
+        if (chatOpen) {
+            if (Input.GetButtonDown("Cancel")) {
+                ToggleChat();
+            }
+        }
     }
 
     // Spawns a message in the local chat window

@@ -36,7 +36,6 @@ public class Hosting : MonoBehaviour {
             networkManager.matchMaker.CreateMatch(roomName, 4, true, "", "", "", 0, 0, networkManager.OnMatchCreate);
             print("Creating a room named: " + roomName);
             LobbyMenu.GetComponent<LobbyManager>().StartLobby(nickName);
-            MenuManager.thisManager.NavigateM(4);
         }
         else {
             print("An error occured hosting a game : No room name put in");
