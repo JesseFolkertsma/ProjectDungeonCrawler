@@ -27,7 +27,6 @@ GameObject:
   - component: {fileID: 114539081937160478}
   - component: {fileID: 114483275787847292}
   - component: {fileID: 95579193520591850}
-  - component: {fileID: 114248271022367210}
   m_Layer: 17
   m_Name: PlayerController
   m_TagString: Player
@@ -544,8 +543,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6aba61798b112df4297ddbb87e6378ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controls: {fileID: 0}
-  combat: {fileID: 0}
   goToDisable:
   - {fileID: 1168151339296442}
   - {fileID: 1579684545820282}
@@ -556,26 +553,9 @@ MonoBehaviour:
   - {fileID: 92667667954400026}
   - {fileID: 81333990134087694}
   - {fileID: 114978034932212936}
+  controls: {fileID: 0}
+  combat: {fileID: 0}
   mainCamera: {fileID: 0}
---- !u!114 &114248271022367210
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1009196950182780}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76325276fc988c34a99c35f8141d549e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data:
-    playerName: New Player
-    playerID: Empty ID
-    playerInv:
-      weapons: 
-      availableSlots: 3
-  playerPrefab: {fileID: 0}
-  instance_PlayerPrefab: {fileID: 0}
 --- !u!114 &114333890048503420
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -19,8 +19,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4570909144777312}
-  - component: {fileID: 114324830263140500}
   - component: {fileID: 114863219741360662}
+  - component: {fileID: 114324830263140500}
+  - component: {fileID: 114351505829236492}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -56,11 +57,23 @@ MonoBehaviour:
     playerName: New Player
     playerID: Empty ID
     playerInv:
-      weapons: 
+      weapons: 01000000
       availableSlots: 3
   playerPrefab: {fileID: 1009196950182780, guid: 0085af4a580137d48813c66bc45354e9,
     type: 2}
   gameState: 0
+  instance_PlayerPrefab: {fileID: 0}
+--- !u!114 &114351505829236492
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1397883577052442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84fe53e14092934459588439e1bad04d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114863219741360662
 MonoBehaviour:
   m_ObjectHideFlags: 1
