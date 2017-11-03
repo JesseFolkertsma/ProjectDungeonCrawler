@@ -75,6 +75,7 @@ public class NWPlayerCombat : NetworkBehaviour
 
     public void Init(bool _isLocal)
     {
+        return;
         player = GetComponent<Player>();
         //Setup for every instance of the player on all clients
         controller = GetComponent<NetworkedController>();

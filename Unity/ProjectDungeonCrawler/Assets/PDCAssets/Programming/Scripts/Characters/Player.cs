@@ -38,24 +38,16 @@ public class Player : NetworkBehaviour {
     public delegate void OnMapSceneEnter();
     public OnMapSceneEnter onMapSceneEnter;
 
-    //Shortcuts
-    public NWPlayerCombat pCombat
+    //Private variables
+    PlayerGameplayFunctions gameplayFunctions;
+
+    private void Start()
     {
-        get
-        {
-            if (gameState == GameState.Gameplay)
-                return gameplay_PlayerPrefab.combat;
-            else return null;
-        }
-    }
-    public NetworkedController pControls
-    {
-        get
-        {
-            if (gameState == GameState.Gameplay)
-                return gameplay_PlayerPrefab.controls;
-            else return null;
-        }
+        Debug.Log("SPAWN MEH PLES");
+        gameplayFunctions = GetComponent<PlayerGameplayFunctions>();
+        if (!isLocalPlayer)
+            return;
+        GameSceneEnter();
     }
 
     public override void OnStartClient()
@@ -63,9 +55,6 @@ public class Player : NetworkBehaviour {
         base.OnStartClient();
         string id = GetComponent<NetworkIdentity>().netId.ToString();
         PlayerManager.RegisterPlayer(id, this);
-        gameState = GameState.Gameplay;
-        Debug.Log("Am i local? answser: " + isLocalPlayer.ToString());
-        GameSceneEnter();
     }
 
     private void OnDisable()
@@ -76,7 +65,28 @@ public class Player : NetworkBehaviour {
     #region GameSceneEnter
     public void GameSceneEnter()
     {
+        gameState = GameState.Gameplay;
+        CmdSpawnPlayerPrefab(GetComponent<NetworkIdentity>(), playerPrefab);
+    }
 
+    [Command]
+    void CmdSpawnPlayerPrefab(NetworkIdentity id, GameObject prefab)
+    {
+        Debug.Log("IMMA SPAWN");
+        Transform newTrans = NetworkManager.singleton.GetStartPosition();
+        GameObject newPlayer = Instantiate(playerPrefab, newTrans.position, newTrans.rotation);
+        string gameObjectName = gameObject.name + "'s Prefab";
+        newPlayer.name = gameObjectName;
+        NetworkServer.SpawnWithClientAuthority(newPlayer, id.connectionToClient);
+        RpcInitPrefab(newPlayer);
+    }
+
+    [ClientRpc]
+    void RpcInitPrefab(GameObject prefab)
+    {
+        GameplayPrefabData prefabData = prefab.GetComponent<GameplayPrefabData>();
+        instance_PlayerPrefab = prefabData;
+        prefabData.Init(isLocalPlayer);
     }
     #endregion
 
