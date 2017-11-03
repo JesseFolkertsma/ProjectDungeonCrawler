@@ -15,6 +15,7 @@ public class GunShoot : MonoBehaviour {
 	public GameObject sandHitEffect;
 	public GameObject stoneHitEffect;
 	public GameObject waterLeakEffect;
+    public GameObject waterLeakExtinguishEffect;
 	public GameObject[] fleshHitEffects;
 	public GameObject woodHitEffect;
 
@@ -76,7 +77,11 @@ public class GunShoot : MonoBehaviour {
 				case "Character":
 					SpawnDecal(hit, fleshHitEffects[Random.Range(0, fleshHitEffects.Length)]);
 					break;
-			}
+                case "WaterFilledExtinguish":
+                    SpawnDecal(hit, waterLeakExtinguishEffect);
+                    SpawnDecal(hit, metalHitEffect);
+                    break;
+            }
 		}
 	}
 
