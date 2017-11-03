@@ -120,7 +120,11 @@ public class GeneralCanvas : MonoBehaviour {
     }
 
     public void FieldEndEdit() {
-        
+        if(Input.GetKeyDown(KeyCode.Return)) {
+            SendMessage(inputField.text);
+            inputField.text = "";
+            ToggleChat();
+        }
     }
     #endregion
 
