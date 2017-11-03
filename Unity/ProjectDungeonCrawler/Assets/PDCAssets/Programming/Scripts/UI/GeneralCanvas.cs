@@ -7,8 +7,6 @@ using UnityEngine.UI;
 public class GeneralCanvas : MonoBehaviour {
     #region General
     private void Start() {
-        FeedMessage("Hary");
-        SendMessage("Hary");
     }
     private void Update() {
         Controls();
@@ -124,6 +122,7 @@ public class GeneralCanvas : MonoBehaviour {
             SendMessage(inputField.text);
             inputField.text = "";
             ToggleChat();
+           
         }
     }
     #endregion

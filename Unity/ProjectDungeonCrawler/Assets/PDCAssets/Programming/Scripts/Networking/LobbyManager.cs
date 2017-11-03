@@ -6,6 +6,8 @@ using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
 
 public class LobbyManager : MonoBehaviour {
+
+    //Variables//
     public static LobbyManager thisManager;
 
     public Transform playerContent;
@@ -30,7 +32,9 @@ public class LobbyManager : MonoBehaviour {
     }
     public void StartLobby(string name) {
         lobby = true;
-        PlayerAdd(name);
+        foreach (KeyValuePair<string, Player> n in PlayerManager.PlayerList()) {
+            PlayerAdd(n.Value.gameObject.name);
+        }
     }
     public void PlayerAdd(string name) {
         GameObject _newPlayer = Instantiate(playerPref);
