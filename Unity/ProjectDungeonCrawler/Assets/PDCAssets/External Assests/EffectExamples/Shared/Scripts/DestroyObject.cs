@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DestroyObject : MonoBehaviour {
+public class DecalDestroyer : MonoBehaviour {
 
-	public float delay = 5.0f;
+	public float lifeTime = 5.0f;
 
-	private void Start()
+	private IEnumerator Start()
 	{
-		//Destroy(gameObject, delay);
+		yield return new WaitForSeconds(lifeTime);
+		Destroy(gameObject);
 	}
 }
