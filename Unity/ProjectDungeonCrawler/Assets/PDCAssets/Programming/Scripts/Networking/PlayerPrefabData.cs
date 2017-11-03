@@ -36,6 +36,7 @@ public class PlayerPrefabData : NetworkBehaviour {
     {
         for (int i = 0; i < compToDisable.Length; i++)
         {
+            Debug.Log("Is a me: " + gameObject.name + " yes and i will disable component: " + compToDisable[i].GetType());
             compToDisable[i].enabled = false;
         }
     }
