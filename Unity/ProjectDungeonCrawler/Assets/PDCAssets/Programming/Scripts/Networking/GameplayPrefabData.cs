@@ -6,6 +6,8 @@ using UnityEngine.Networking;
 public class GameplayPrefabData : PlayerPrefabData {
 
     //Public variables
+    [SyncVar]
+    public string parentName;
     public NetworkedController controls;
     public NWPlayerCombat combat;
 

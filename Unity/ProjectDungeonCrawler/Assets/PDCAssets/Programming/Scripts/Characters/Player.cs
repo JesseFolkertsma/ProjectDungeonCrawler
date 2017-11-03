@@ -67,6 +67,28 @@ public class Player : NetworkBehaviour {
     {
         gameState = GameState.Gameplay;
         CmdSpawnPlayerPrefab(GetComponent<NetworkIdentity>(), playerPrefab);
+        SetupRemotes();
+    }
+
+    void SetupRemotes()
+    {
+        foreach (KeyValuePair<string, Player> kvp in PlayerManager.PlayerList())
+        {
+            if (kvp.Value != this)
+            {
+                Debug.Log("Trying to init " + kvp.Value.gameObject.name + " with bool" + isLocalPlayer);
+                foreach(GameplayPrefabData gpd in GameObject.FindObjectsOfType<GameplayPrefabData>())
+                {
+                    if (gpd.parentName == kvp.Value.gameObject.name)
+                    {
+                        kvp.Value.instance_PlayerPrefab = gpd;
+                    }
+                }
+                if (kvp.Value.instance_PlayerPrefab != null)
+                    kvp.Value.instance_PlayerPrefab.Init(false);
+            }
+        }
+
     }
 
     [Command]
@@ -85,6 +107,7 @@ public class Player : NetworkBehaviour {
     void RpcInitPrefab(GameObject prefab)
     {
         GameplayPrefabData prefabData = prefab.GetComponent<GameplayPrefabData>();
+        prefabData.parentName = gameObject.name;
         instance_PlayerPrefab = prefabData;
         prefabData.Init(isLocalPlayer);
     }
