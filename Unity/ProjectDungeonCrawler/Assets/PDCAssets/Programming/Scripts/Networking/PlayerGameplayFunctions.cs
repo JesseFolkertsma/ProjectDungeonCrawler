@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 
 public class PlayerGameplayFunctions : NetworkBehaviour {
 
+    public bool active = false;
     Player p;
     NWPlayerCombat combat;
     NetworkedController controller;

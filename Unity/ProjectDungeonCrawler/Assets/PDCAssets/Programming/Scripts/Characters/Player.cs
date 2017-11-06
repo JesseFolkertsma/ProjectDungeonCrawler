@@ -110,6 +110,7 @@ public class Player : NetworkBehaviour {
         prefabData.parentName = gameObject.name;
         instance_PlayerPrefab = prefabData;
         prefabData.Init(isLocalPlayer);
+        gameplayFunctions.active = true;
     }
     #endregion
 
