@@ -77,6 +77,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
 
         //Setup for local player
+        foreach(Weapon w in weapons)
+        {
+            w.Setup(this);
+        }
 
         //Setup name and weapon for all instances of the player
         CmdSetName(GameObject.FindObjectOfType<PlayerInfo>().playerName);
