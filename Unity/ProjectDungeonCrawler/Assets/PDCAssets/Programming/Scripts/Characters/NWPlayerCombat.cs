@@ -83,7 +83,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
 
         //Setup name and weapon for all instances of the player
-        CmdSetName(GameObject.FindObjectOfType<PlayerInfo>().playerName);
+        CmdSetName(PlayerInfo.instance.playerName);
         hud = Instantiate(canvas).GetComponentInChildren<GeneralCanvas>();
         netUI = GetComponent<NetworkedUI>();
         netUI.Init(this);
