@@ -13,14 +13,18 @@ public class NetworkedUI : NetworkBehaviour {
     }
     NWPlayerCombat pc;
 
-    private void Update() {
+    private void Update()
+    { 
+        if (!isLocalPlayer)
+            return;
         FieldEndEdit();
     }
 
     public void Init(NWPlayerCombat _pc){
+        if (!isLocalPlayer)
+            return;
         CmdFeedMessage(gameObject.name + " has joined the lobby!");
         pc = _pc;
-
     }
 #endregion
     #region Feed/Notifications
