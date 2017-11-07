@@ -77,12 +77,17 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
 
         //Setup for local player
+        foreach(Weapon w in weapons)
+        {
+            w.Setup(this);
+        }
 
         //Setup name and weapon for all instances of the player
-        CmdSetName(GameObject.FindObjectOfType<PlayerInfo>().playerName);
+        playerName = PlayerInfo.instance.playerName;
+        CmdSetName(PlayerInfo.instance.playerName);
         hud = Instantiate(canvas).GetComponentInChildren<GeneralCanvas>();
         netUI = GetComponent<NetworkedUI>();
-        netUI.Init();
+        netUI.Init(this);
     }
 
     private void Update()
@@ -114,8 +119,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         if (!isLocalPlayer)
             return;
 
-        if (weapons[equippedWeapon].data.canHoldMouseDown && mouseDown)
+        if (!weapons[equippedWeapon].data.canHoldMouseDown && mouseDown)
             return;
+
+        weapons[equippedWeapon].Attack();
     }
 
     public void DoAttackEffect()
@@ -279,7 +286,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             Die();
             if (isLocalPlayer)
-                CmdSendPopup(dmgPck.hitter + " has killed " + objectName, objectID, false);
+                netUI.CmdFeedMessage(dmgPck.hitter + " has killed " + objectName + "!");
         }
     }
 

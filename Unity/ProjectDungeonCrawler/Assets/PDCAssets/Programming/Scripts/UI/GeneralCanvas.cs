@@ -10,7 +10,8 @@ public class GeneralCanvas : MonoBehaviour {
     #region General
     //Variables//
     public static GeneralCanvas canvas;
-    private void Awake() {
+    private void Awake () {
+        chatAnim = chatContent.parent.GetComponent<Animator>();
         canvas = this;
     }
     private void Update() {
@@ -82,6 +83,7 @@ public class GeneralCanvas : MonoBehaviour {
     public Transform chatContent;
     public GameObject chatMessage;
     public InputField inputField;
+    public Animator chatAnim;
 
     public bool chatOpen;
 
@@ -100,7 +102,9 @@ public class GeneralCanvas : MonoBehaviour {
     public void SendMessage(string message) {
         if (message != "") {
             if (!chatOpen) {
-                chatContent.parent.GetComponent<Animator>().SetTrigger("ChatNew");
+                if (!chatAnim.GetBool("ChatNew")) {
+                    chatAnim.SetBool("ChatNew", true);
+                }
             }
             GameObject newMessage = Instantiate(chatMessage);
             newMessage.transform.SetParent(chatContent, false);
@@ -113,24 +117,18 @@ public class GeneralCanvas : MonoBehaviour {
             chatOpen = false;
             chat.GetComponent<CanvasGroup>().alpha = 0;
             inputField.DeactivateInputField();
+            inputField.interactable = false;
             chatContent.parent.GetComponent<Animator>().SetBool("ChatOpen", false);
         }
         else {
             chatOpen = true;
             chat.GetComponent<CanvasGroup>().alpha = 1;
+            inputField.interactable = true;
             inputField.ActivateInputField();
             chatContent.parent.GetComponent<Animator>().SetBool("ChatOpen", true);
         }
     }
 
-    public void FieldEndEdit() {
-        if(Input.GetKeyDown(KeyCode.Return)) {
-            SendMessage(inputField.text);
-            inputField.text = "";
-            ToggleChat();
-           
-        }
-    }
     #endregion
     #region Hitmarker
     //Variables//

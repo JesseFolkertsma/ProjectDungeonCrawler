@@ -5,11 +5,10 @@ using UnityEngine;
 public class PlayerInfo : MonoBehaviour {
 
     public string playerName;
+    public static PlayerInfo instance;
 
 	void Start () {
         DontDestroyOnLoad(transform);
+        instance = this;
 	}
-    public void UpdateName(string _name) {
-        playerName = _name;
-    }
 }
