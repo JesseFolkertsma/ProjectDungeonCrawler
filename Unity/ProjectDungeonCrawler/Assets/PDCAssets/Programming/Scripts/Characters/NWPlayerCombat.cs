@@ -82,7 +82,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         CmdSetName(GameObject.FindObjectOfType<PlayerInfo>().playerName);
         hud = Instantiate(canvas).GetComponentInChildren<GeneralCanvas>();
         netUI = GetComponent<NetworkedUI>();
-        netUI.Init();
+        netUI.Init(this);
     }
 
     private void Update()
