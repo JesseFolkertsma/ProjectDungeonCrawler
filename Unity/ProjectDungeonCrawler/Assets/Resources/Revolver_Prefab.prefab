@@ -551,9 +551,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4d48aa43fb2254418bf55a114524177, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data:
+    weaponName: Revolver
+    description: very nice pewpew
+    damage: 25
+    range: 1000
+    maxAmmo: 6
+    attackRate: 2
+    attackType: 0
+    canHoldMouseDown: 0
+    prefabName: 
+  anim: {fileID: 95857983311799076}
+  pc: {fileID: 0}
   gunEnd: {fileID: 4826017592730860}
   muzzleFlash: {fileID: 114404758633980750}
-  anim: {fileID: 95857983311799076}
 --- !u!137 &137899017081078988
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

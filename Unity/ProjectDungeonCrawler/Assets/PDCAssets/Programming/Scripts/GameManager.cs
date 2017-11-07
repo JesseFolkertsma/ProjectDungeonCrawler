@@ -23,12 +23,4 @@ public class GameManager : MonoBehaviour {
             Destroy(gameObject);
         }
     }
-
-    public void GameSceneEnter(Player _oldPlayer, GameObject _newPlayer)
-    {
-        var conn = _oldPlayer.connectionToClient;
-        var newPlayer = Instantiate<GameObject>(_newPlayer);
-
-        NetworkServer.ReplacePlayerForConnection(conn, newPlayer, _oldPlayer.playerControllerId);
-    }
 }
