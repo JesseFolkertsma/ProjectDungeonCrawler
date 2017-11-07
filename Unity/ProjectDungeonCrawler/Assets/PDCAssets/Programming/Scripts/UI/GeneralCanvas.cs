@@ -5,8 +5,13 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GeneralCanvas : MonoBehaviour {
+
+
     #region General
-    private void Start() {
+    //Variables//
+    public static GeneralCanvas canvas;
+    private void Awake() {
+        canvas = this;
     }
     private void Update() {
         Controls();
@@ -188,5 +193,4 @@ public class GeneralCanvas : MonoBehaviour {
         }
     }
     #endregion
-
 }
