@@ -45,8 +45,11 @@ public class NetworkedUI : NetworkBehaviour {
     }
     public void FieldEndEdit() {
         if (Input.GetKeyDown(KeyCode.Return) && !GC.inputField.isFocused) {
-            CmdChatMessage(pc.objectName + ": " + GC.inputField.text);
-            GC.inputField.text = "";
+            if (!string.IsNullOrEmpty(GC.inputField.text))
+            {
+                CmdChatMessage(pc.objectName + ": " + GC.inputField.text);
+                GC.inputField.text = "";
+            }
             GC.ToggleChat();
         }
     }
