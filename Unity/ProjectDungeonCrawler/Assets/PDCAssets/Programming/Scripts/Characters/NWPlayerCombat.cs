@@ -83,6 +83,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
 
         //Setup name and weapon for all instances of the player
+        playerName = PlayerInfo.instance.playerName;
         CmdSetName(PlayerInfo.instance.playerName);
         hud = Instantiate(canvas).GetComponentInChildren<GeneralCanvas>();
         netUI = GetComponent<NetworkedUI>();
@@ -285,7 +286,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             Die();
             if (isLocalPlayer)
-                CmdSendPopup(dmgPck.hitter + " has killed " + objectName, objectID, false);
+                netUI.CmdFeedMessage(dmgPck.hitter + " has killed " + objectName + "!");
         }
     }
 
