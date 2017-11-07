@@ -5,18 +5,24 @@ using UnityEngine.Networking;
 
 
 public class NetworkedUI : NetworkBehaviour {
-
+#region General
     GeneralCanvas GC {
         get {
             return GeneralCanvas.canvas;
         }
     }
     NWPlayerCombat pc;
+
+    private void Update() {
+        FieldEndEdit();
+    }
+
     public void Init(NWPlayerCombat _pc){
         CmdFeedMessage(gameObject.name + " has joined the lobby!");
         pc = _pc;
 
     }
+#endregion
     #region Feed/Notifications
     [Command]
     public void CmdFeedMessage(string message) {
@@ -38,7 +44,7 @@ public class NetworkedUI : NetworkBehaviour {
         GC.SendMessage(message);
     }
     public void FieldEndEdit() {
-        if (Input.GetKeyDown(KeyCode.Return)) {
+        if (Input.GetKeyDown(KeyCode.Return) && !GC.inputField.isFocused) {
             CmdChatMessage(pc.objectName + ": " + GC.inputField.text);
             GC.inputField.text = "";
             GC.ToggleChat();
