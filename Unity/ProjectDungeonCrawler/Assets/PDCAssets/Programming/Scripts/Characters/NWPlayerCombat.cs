@@ -114,8 +114,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         if (!isLocalPlayer)
             return;
 
-        if (weapons[equippedWeapon].data.canHoldMouseDown && mouseDown)
+        if (!weapons[equippedWeapon].data.canHoldMouseDown && mouseDown)
             return;
+
+        weapons[equippedWeapon].Attack();
     }
 
     public void DoAttackEffect()
