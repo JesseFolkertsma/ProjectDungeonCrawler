@@ -23,7 +23,7 @@ public class NetworkedUI : NetworkBehaviour {
     public void Init(NWPlayerCombat _pc){
         if (!isLocalPlayer)
             return;
-        CmdFeedMessage(gameObject.name + " has joined the lobby!");
+        CmdFeedMessage(_pc.objectName + " has joined the lobby!");
         pc = _pc;
     }
 #endregion
