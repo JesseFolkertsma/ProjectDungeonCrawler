@@ -6,8 +6,6 @@ using UnityEngine.Networking;
 using UnityEngine.Networking.Match;
 
 public class Hosting : MonoBehaviour {
-    public string nickName;
-
     public string roomName;
 
     public Transform LobbyMenu;
@@ -44,6 +42,6 @@ public class Hosting : MonoBehaviour {
         roomName = name;
     }
     public void Nickname(string _nickName) {
-        nickName = _nickName;
+        PlayerInfo.instance.playerName = _nickName;
     }
 }
