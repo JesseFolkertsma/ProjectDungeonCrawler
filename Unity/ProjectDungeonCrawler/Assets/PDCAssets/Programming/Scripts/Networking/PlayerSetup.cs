@@ -3,17 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class PlayerPrefabData : NetworkBehaviour {
+public class PlayerSetup : NetworkBehaviour {
 
     const string REMOTE_PLAYER_LAYER = "RemotePlayer";
-
-    //Private serializable variables
+    
+    //Public variables
+    public NetworkedController controls;
+    public NWPlayerCombat combat;
     public GameObject[] goToDisable;
     public Behaviour[] compToDisable;
 
-    public virtual void Init(bool isLocal)
+    //Private variables
+
+    //Private serializable variables
+    [SerializeField]
+    Camera mainCamera;
+
+    public void Awake()
     {
-        if (!isLocal)
+        if (!isLocalPlayer)
         {
             DisableComponents();
             SetAsRemotePlayer();
@@ -21,7 +29,24 @@ public class PlayerPrefabData : NetworkBehaviour {
         else
         {
             DisableGameObjects();
+            mainCamera = Camera.main;
+            if (mainCamera != null)
+                mainCamera.gameObject.SetActive(false);
         }
+
+        combat = GetComponent<NWPlayerCombat>();
+        controls = GetComponent<NetworkedController>();
+        if (combat != null)
+        {
+            Debug.Log("INIT COMBAT");
+            combat.Init();
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (mainCamera != null)
+            mainCamera.gameObject.SetActive(true);
     }
 
     void DisableGameObjects()

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class GunVisuals : WeaponVisuals {
+public class Gun : Weapon {
     public Transform gunEnd;
 
     public MuzzleFlash muzzleFlash;
@@ -19,16 +19,13 @@ public class GunVisuals : WeaponVisuals {
 
     public void MuzzleFlash()
     {
-        muzzleFlash.Play();
+        //PlayVisuals();
         pc.DoAttackEffect();
     }
 
-    public override void RemotePlayerEffectVisuals()
+    public override void PlayVisuals()
     {
+        base.PlayVisuals();
         muzzleFlash.Play();
-    }
-
-    public override void RemotePlayerStartVisuals()
-    {
     }
 }
