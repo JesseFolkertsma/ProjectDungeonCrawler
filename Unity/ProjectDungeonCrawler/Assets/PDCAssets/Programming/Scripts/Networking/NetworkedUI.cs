@@ -5,9 +5,17 @@ using UnityEngine.Networking;
 
 
 public class NetworkedUI : NetworkBehaviour {
-    public void Init()
-    {
+
+    GeneralCanvas GC {
+        get {
+            return GeneralCanvas.canvas;
+        }
+    }
+    NWPlayerCombat pc;
+    public void Init(NWPlayerCombat _pc){
         CmdFeedMessage(gameObject.name + " has joined the lobby!");
+        pc = _pc;
+
     }
     #region Feed/Notifications
     [Command]
@@ -16,7 +24,26 @@ public class NetworkedUI : NetworkBehaviour {
     }
     [ClientRpc]
     public void RpcFeedMessage(string message) {
-        GeneralCanvas.canvas.FeedMessage(message);
+        GC.FeedMessage(message);
     }
-#endregion
+    #endregion
+    #region Chat
+    //Variables//
+    [Command]
+    public void CmdChatMessage(string message) {
+        RpcChatMessage(message);
+    }
+    [ClientRpc]
+    public void RpcChatMessage(string message) {
+        GC.SendMessage(message);
+    }
+    public void FieldEndEdit() {
+        if (Input.GetKeyDown(KeyCode.Return)) {
+            CmdChatMessage(pc.objectName + ": " + GC.inputField.text);
+            GC.inputField.text = "";
+            GC.ToggleChat();
+        }
+    }
+    #endregion
+
 }
