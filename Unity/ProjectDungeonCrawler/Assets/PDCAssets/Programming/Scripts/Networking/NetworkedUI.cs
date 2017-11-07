@@ -44,8 +44,8 @@ public class NetworkedUI : NetworkBehaviour {
         GC.SendMessage(message);
     }
     public void FieldEndEdit() {
-        if (Input.GetKeyDown(KeyCode.Return) && !GC.inputField.isFocused) {
-            if (!string.IsNullOrEmpty(GC.inputField.text))
+        if (Input.GetKeyDown(KeyCode.Return)) {
+            if (!string.IsNullOrEmpty(GC.inputField.text) && !GC.inputField.isFocused)
             {
                 CmdChatMessage(pc.objectName + ": " + GC.inputField.text);
                 GC.inputField.text = "";
