@@ -13,7 +13,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     public GameObject canvas;
     public int equippedWeapon;
 
-    public NetworkedUI ui;
 
     //private serializable
     [SerializeField] string playerName;
@@ -26,9 +25,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     bool[] wasEnabled;
     bool mouseDown = false;
     float timer;
-    
+    GeneralCanvas hud;
+    NetworkedUI netUI;
+
     NetworkedController controller;
-    HUDManager hud;
 
     RigidbodyConstraints originalRBC;
 
@@ -69,7 +69,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
         originalRBC = controller.rb.constraints;
         SetDefaults();
-        SetEquippedWeapon(1, true);
+        SetEquippedWeapon(0, true);
 
         if (!isLocalPlayer)
         {
@@ -80,8 +80,9 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
         //Setup name and weapon for all instances of the player
         CmdSetName(GameObject.FindObjectOfType<PlayerInfo>().playerName);
-        hud = Instantiate(canvas).GetComponentInChildren<HUDManager>();
-        hud.Init(this);
+        hud = Instantiate(canvas).GetComponentInChildren<GeneralCanvas>();
+        netUI = GetComponent<NetworkedUI>();
+        netUI.Init();
     }
 
     private void Update()

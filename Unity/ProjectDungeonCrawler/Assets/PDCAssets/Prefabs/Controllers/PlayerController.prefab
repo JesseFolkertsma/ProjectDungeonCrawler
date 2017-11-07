@@ -27,6 +27,7 @@ GameObject:
   - component: {fileID: 114539081937160478}
   - component: {fileID: 114483275787847292}
   - component: {fileID: 95579193520591850}
+  - component: {fileID: 114011961504357110}
   m_Layer: 17
   m_Name: PlayerController
   m_TagString: Player
@@ -1022,6 +1023,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectToDirectTo: {fileID: 1009196950182780}
   multiplier: 1
+--- !u!114 &114011961504357110
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1009196950182780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b31577af5627274dbdcea3cbd1381a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114055477095980186
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1142,9 +1154,8 @@ MonoBehaviour:
   testHP: 100
   isActive: 1
   weaponHolder: {fileID: 0}
-  canvas: {fileID: 1181061323097180, guid: 3838a0bf3c8a25e42905b391b43b4945, type: 2}
+  canvas: {fileID: 1878224029624964, guid: d48bb95b21becec4cb5d62936c6e06de, type: 2}
   equippedWeapon: 0
-  ui: {fileID: 0}
   playerName: 
   disableOnDeath:
   - {fileID: 114454382125572154}

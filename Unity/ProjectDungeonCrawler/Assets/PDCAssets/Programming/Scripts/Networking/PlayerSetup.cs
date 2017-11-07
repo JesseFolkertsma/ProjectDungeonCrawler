@@ -19,7 +19,7 @@ public class PlayerSetup : NetworkBehaviour {
     [SerializeField]
     Camera mainCamera;
 
-    public void Awake()
+    public void Start()
     {
         if (!isLocalPlayer)
         {
@@ -43,10 +43,19 @@ public class PlayerSetup : NetworkBehaviour {
         }
     }
 
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        string id = GetComponent<NetworkIdentity>().netId.ToString();
+        PlayerManager.RegisterPlayer(id, GetComponent<NWPlayerCombat>());
+    }
+
     private void OnDisable()
     {
         if (mainCamera != null)
             mainCamera.gameObject.SetActive(true);
+
+        PlayerManager.RemovePlayer(gameObject.name);
     }
 
     void DisableGameObjects()
