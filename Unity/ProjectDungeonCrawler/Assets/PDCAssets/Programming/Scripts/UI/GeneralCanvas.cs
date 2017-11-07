@@ -14,21 +14,22 @@ public class GeneralCanvas : MonoBehaviour {
     #endregion
     #region Input
     private void Controls() {
-        if (Input.GetButtonDown("Cancel")) {
+        if (Input.GetKeyDown(KeyCode.Escape)) {
             IGMToggle();
         }
         ChatControls();
+        SBControls();
     }
     #endregion
     #region     Ingame Menu
     //Variables//
-    public CanvasGroup ingameMenu;
+    public Transform ingameMenu;
 
     //Toggles the IGM on or off depending on the state//
-    private void IGMToggle() {
-        ingameMenu.blocksRaycasts = !ingameMenu.blocksRaycasts;
-        transform.GetChild(0).GetComponent<Animator>().SetBool("Open", !transform.GetChild(0).GetComponent<Animator>().GetBool("Open"));
-        transform.GetComponent<Image>().enabled = !transform.GetComponent<Image>().IsActive();
+    public void IGMToggle() {
+        ingameMenu.GetComponent<CanvasGroup>().blocksRaycasts = !ingameMenu.GetComponent<CanvasGroup>().blocksRaycasts;
+        ingameMenu.GetChild(0).GetComponent<Animator>().SetBool("Open", !ingameMenu.GetChild(0).GetComponent<Animator>().GetBool("Open"));
+        ingameMenu.GetComponent<Image>().enabled = !ingameMenu.GetComponent<Image>().IsActive();
     }
     //Used to see wich option the player select in the IGM//
     public void IGMOptions(int i) {
@@ -123,6 +124,67 @@ public class GeneralCanvas : MonoBehaviour {
             inputField.text = "";
             ToggleChat();
            
+        }
+    }
+    #endregion
+    #region Hitmarker
+    //Variables//
+    public Transform hm;
+
+    //Enables hitmark animations//
+    public void HitMark() {
+        hm.GetChild(0).GetComponent<Animator>().SetTrigger("Hit");
+    }
+
+    #endregion
+    #region Health
+    //Variables/
+    public Image hp;
+    //Updates the health bar with the given data//
+    public void UpdateHealth(float currentHP, float maxHP) {
+        hp.fillAmount = (currentHP / (maxHP / 100)) / 100;
+    }
+    #endregion
+    #region Scoreboard
+    //Variables//
+
+    public Transform scoreBoard;
+    public Transform scoreBoardContent;
+    public Transform scoreBoardEntryPref;
+
+    public List<BoardEntryHelper> entries = new List<BoardEntryHelper>();
+
+    // Enables ScoreBoard Input
+    public void SBControls() {
+        if (Input.GetKey(KeyCode.Tab)) {
+            SBToggle(true);
+        }
+        else {
+            if (scoreBoard.gameObject.activeInHierarchy != false) {
+                SBToggle(false);
+
+            }
+        }
+    }
+    // Toggles the scoreboard
+    public void SBToggle(bool foo) {
+        scoreBoard.gameObject.SetActive(foo);
+    }
+    //Adds a new player to the scoreboard
+    public void AddScoreBoardEntry(string name, string playerID) {
+        Transform newEntry = Instantiate(scoreBoardEntryPref);
+        newEntry.SetParent(scoreBoardContent, false);
+        BoardEntryHelper n = newEntry.GetComponent<BoardEntryHelper>();
+        n.Setup(name, playerID);
+        entries.Add(n);
+    }
+    //Adds kills or deaths to the given player entry
+    public void AddScoreBoardStat(string playerID, int kills, int deaths) {
+        foreach (BoardEntryHelper entry in entries) {
+            if (entry.playerID == playerID) {
+                entry.Add(kills, deaths);
+                return;
+            }
         }
     }
     #endregion
