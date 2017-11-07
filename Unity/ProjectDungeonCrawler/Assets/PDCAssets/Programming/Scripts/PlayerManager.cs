@@ -6,9 +6,9 @@ public class PlayerManager : MonoBehaviour
 {
     const string PLAYER_ID_PREFIX = "Player ";
 
-    static Dictionary<string, Player> players = new Dictionary<string, Player>();
+    static Dictionary<string, NWPlayerCombat> players = new Dictionary<string, NWPlayerCombat>();
 
-    static public void RegisterPlayer(string playerID, Player player)
+    static public void RegisterPlayer(string playerID, NWPlayerCombat player)
     {
         string id = PLAYER_ID_PREFIX + playerID;
         players.Add(id, player);
@@ -21,9 +21,9 @@ public class PlayerManager : MonoBehaviour
         players.Remove(playerID);
     }
 
-    static public Player GetPlayer(string playerID)
+    static public NWPlayerCombat GetPlayer(string playerID)
     {
-        Player pc = players[playerID];
+        NWPlayerCombat pc = players[playerID];
         return pc;
     }
 
@@ -33,7 +33,7 @@ public class PlayerManager : MonoBehaviour
         return false;
     }
 
-    static public Dictionary<string, Player> PlayerList()
+    static public Dictionary<string, NWPlayerCombat> PlayerList()
     {
         return players;
     }

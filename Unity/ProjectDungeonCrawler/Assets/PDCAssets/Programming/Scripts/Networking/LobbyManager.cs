@@ -32,7 +32,7 @@ public class LobbyManager : MonoBehaviour {
     }
     public void StartLobby(string name) {
         lobby = true;
-        foreach (KeyValuePair<string, Player> n in PlayerManager.PlayerList()) {
+        foreach (KeyValuePair<string, NWPlayerCombat> n in PlayerManager.PlayerList()) {
             PlayerAdd(n.Value.gameObject.name);
         }
     }
