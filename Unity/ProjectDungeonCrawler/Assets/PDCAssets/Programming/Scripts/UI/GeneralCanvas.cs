@@ -114,6 +114,7 @@ public class GeneralCanvas : MonoBehaviour {
     // Toggles the chat window
     public void ToggleChat() {
         if (chatOpen) {
+
             chatOpen = false;
             chat.GetComponent<CanvasGroup>().alpha = 0;
             inputField.DeactivateInputField();
@@ -121,6 +122,7 @@ public class GeneralCanvas : MonoBehaviour {
             chatContent.parent.GetComponent<Animator>().SetBool("ChatOpen", false);
         }
         else {
+
             chatOpen = true;
             chat.GetComponent<CanvasGroup>().alpha = 1;
             inputField.interactable = true;
