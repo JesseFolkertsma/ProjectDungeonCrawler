@@ -93,7 +93,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             if (kvp.Value.Equals(this)) return;
 
-            GeneralCanvas.canvas.AddScoreBoardEntry(kvp.Value.objectID, kvp.Key);
+            GeneralCanvas.canvas.AddScoreBoardEntry(kvp.Value.objectName, kvp.Key);
         }
     }
 
@@ -230,7 +230,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     void Die()
     {
-        netUI.UpdateEntry(gameObject.name, 0, 1);
         isDead = true;
         
         controller.rb.constraints = deadRBC;
@@ -296,6 +295,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             if (isLocalPlayer)
             {
                 netUI.CmdFeedMessage(dmgPck.hitter + " has killed " + objectName + "!");
+                netUI.UpdateEntry(gameObject.name, 0, 1);
                 netUI.UpdateEntry(dmgPck.hitterID, 1, 0);
             }
         }
