@@ -59,4 +59,38 @@ public class NetworkedUI : NetworkBehaviour {
     }
     #endregion
 
+    public void AddEntry(string name, string id)
+    {
+        CmdAddEntry(name, id);
+    }
+
+    [Command]
+    public void CmdAddEntry(string name, string id)
+    {
+        RpcAddEntry(name, id);
+    }
+
+    [ClientRpc]
+    public void RpcAddEntry(string name, string id)
+    {
+        GeneralCanvas.canvas.AddScoreBoardEntry(name, id);
+    }
+
+    public void UpdateEntry(string id, int kills, int deaths)
+    {
+        CmdUpdateEntry(id, kills, deaths);
+    }
+
+    [Command]
+    public void CmdUpdateEntry(string id, int kills, int deaths)
+    {
+        RpcUpdateEntry(id, kills, deaths);
+    }
+
+    [ClientRpc]
+    public void RpcUpdateEntry(string id, int kills, int deaths)
+    {
+        GeneralCanvas.canvas.AddScoreBoardStat(id, kills, deaths);
+    }
+
 }

@@ -88,6 +88,13 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         hud = Instantiate(canvas).GetComponentInChildren<GeneralCanvas>();
         netUI = GetComponent<NetworkedUI>();
         netUI.Init(this);
+        netUI.AddEntry(playerName, gameObject.name);
+        foreach(KeyValuePair<string,NWPlayerCombat> kvp in PlayerManager.PlayerList())
+        {
+            if (kvp.Value.Equals(this)) return;
+
+            GeneralCanvas.canvas.AddScoreBoardEntry(kvp.Value.objectID, kvp.Key);
+        }
     }
 
     private void Update()
@@ -136,7 +143,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
         foreach (IHitable iHit in iHits)
         {
-            NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(weapons[equippedWeapon].data.damage, objectName);
+            NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(weapons[equippedWeapon].data.damage, objectName, gameObject.name);
             if (PlayerManager.PlayerExists(iHit.objectID))
             {
                 hud.HitMark();
@@ -223,6 +230,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     void Die()
     {
+        netUI.UpdateEntry(gameObject.name, 0, 1);
         isDead = true;
         
         controller.rb.constraints = deadRBC;
@@ -286,7 +294,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             Die();
             if (isLocalPlayer)
+            {
                 netUI.CmdFeedMessage(dmgPck.hitter + " has killed " + objectName + "!");
+                netUI.UpdateEntry(dmgPck.hitterID, 1, 0);
+            }
         }
     }
 
