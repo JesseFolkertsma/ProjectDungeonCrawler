@@ -223,9 +223,9 @@ public class GeneralCanvas : MonoBehaviour {
         foreach (BoardEntryHelper entry in entries) {
             if (entry.playerID == playerID) {
                 entry.Add(kills, deaths);
+                Arrange();
                 return;
             }
-            Arrange();
         }
     }
     public void Arrange() {
