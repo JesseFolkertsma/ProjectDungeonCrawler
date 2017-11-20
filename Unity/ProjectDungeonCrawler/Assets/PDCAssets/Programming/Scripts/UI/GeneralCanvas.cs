@@ -217,6 +217,7 @@ public class GeneralCanvas : MonoBehaviour {
                 entry.Add(kills, deaths);
                 return;
             }
+            Arrange();
         }
     }
     public void Arrange() {
@@ -231,6 +232,9 @@ public class GeneralCanvas : MonoBehaviour {
                 lowest = entry.kills;
                 newList.Insert(0, entry);
             }
+        }
+        for(int i = 0; i < newList.Count; i++) {
+            newList[i].ReChild(i);       
         }
     }
     #endregion

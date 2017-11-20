@@ -26,4 +26,7 @@ public class BoardEntryHelper : MonoBehaviour {
         deaths += _deaths;
         Fill();
     }
+    public void ReChild(int i) {
+        transform.SetSiblingIndex(i);
+    }
 }
