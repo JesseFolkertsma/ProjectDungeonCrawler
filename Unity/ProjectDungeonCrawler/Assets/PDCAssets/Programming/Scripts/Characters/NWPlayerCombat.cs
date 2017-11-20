@@ -26,7 +26,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     bool mouseDown = false;
     float timer;
     GeneralCanvas hud;
-    NetworkedUI netUI;
+    public NetworkedUI netUI;
 
     NetworkedController controller;
 
