@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,6 +17,9 @@ public class GeneralCanvas : MonoBehaviour {
     }
     private void Update() {
         Controls();
+    }
+    public void MatchDataUpdate(MatchData data) {
+        UpdateTimer(data.seconds);
     }
     #endregion
     #region Input
@@ -150,6 +154,29 @@ public class GeneralCanvas : MonoBehaviour {
         hp.fillAmount = (currentHP / (maxHP / 100)) / 100;
     }
     #endregion
+    #region Timers
+    //Variables//
+    public Text timerMatch;
+    public Text timerWarmup;
+    public void UpdateTimer(float i) {
+        timerMatch.text = TimeDiffuse(i)[0].ToString() + " :" + TimeDiffuse(i)[1];
+    }
+    public void UpdateWarmup(float i) {
+        timerWarmup.text = TimeDiffuse(i)[0].ToString() + " :" + TimeDiffuse(i)[1];
+    }
+    Vector2 TimeDiffuse(float i) {
+        Vector2 times;
+        double minutes = 0;
+        double seconds = 0;
+        if(i > 60) {
+            minutes = i / 60;
+            seconds = ((minutes - Math.Truncate(minutes)) * 60);
+            minutes = Math.Truncate(minutes);
+        }
+        times = new Vector2((float)minutes, (float)seconds);
+        return times;
+    }
+    #endregion
     #region Scoreboard
     //Variables//
 
@@ -189,6 +216,20 @@ public class GeneralCanvas : MonoBehaviour {
             if (entry.playerID == playerID) {
                 entry.Add(kills, deaths);
                 return;
+            }
+        }
+    }
+    public void Arrange() {
+        List<BoardEntryHelper> newList = new List<BoardEntryHelper>();
+        int lowest = 0;
+        
+        foreach(BoardEntryHelper entry in entries) {
+            if(entry.kills > 0) {
+                newList.Add(entry);
+            }
+            else {
+                lowest = entry.kills;
+                newList.Insert(0, entry);
             }
         }
     }

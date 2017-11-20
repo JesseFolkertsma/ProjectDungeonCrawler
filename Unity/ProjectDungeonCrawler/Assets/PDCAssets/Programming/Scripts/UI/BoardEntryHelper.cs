@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class BoardEntryHelper : MonoBehaviour {
     public string playerID;
-    int kills;
-    int deaths;
+    public int kills;
+    public int deaths;
 
     public Text[] stats;
     public Text name;
