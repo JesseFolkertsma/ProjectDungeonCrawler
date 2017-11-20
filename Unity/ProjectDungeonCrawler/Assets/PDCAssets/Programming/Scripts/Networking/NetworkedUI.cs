@@ -93,4 +93,10 @@ public class NetworkedUI : NetworkBehaviour {
         GeneralCanvas.canvas.AddScoreBoardStat(id, kills, deaths);
     }
 
+    [ClientRpc]
+    public void RpcUpdateMatch(MatchData data)
+    {
+        GeneralCanvas.canvas.MatchDataUpdate(data);
+    }
+
 }

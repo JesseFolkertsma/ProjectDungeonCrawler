@@ -11,19 +11,27 @@ public class MatchManager : NetworkBehaviour {
 
     int matchTimeLeft = 180;
 
+    private void Start()
+    {
+        matchTimeLeft = matchTime;
+        StartCoroutine(UpdateMatchDataRoutine());
+    }
+
     IEnumerator UpdateMatchDataRoutine()
     {
         while (true)
         {
-            matchTime -= updateTime;
-            UpdateMatchData(new MatchData(matchTimeLeft, playerData.ToArray()));
+            matchTimeLeft -= updateTime;
+            UpdateMatchData(new MatchData(matchTimeLeft, playerData.ToArray(), true));
             yield return new WaitForSeconds(1 / updateTime);
         }
     }
 
     void UpdateMatchData(MatchData matchData)
     {
-
+        NetworkedUI pc = FindObjectOfType<NetworkedUI>();
+        if (pc == null) return;
+        pc.RpcUpdateMatch(matchData);
     }
 }
 
@@ -32,12 +40,14 @@ public class MatchData
 {
     public int seconds;
     public PlayerMatchData[] playerData;
+    public bool warmup;
 
     public MatchData() { }
-    public MatchData(int _seconds, PlayerMatchData[] _playerData)
+    public MatchData(int _seconds, PlayerMatchData[] _playerData, bool _warmup)
     {
         seconds = _seconds;
         playerData = _playerData;
+        warmup = _warmup;
     }
 
     public class PlayerMatchData

@@ -159,7 +159,17 @@ public class GeneralCanvas : MonoBehaviour {
     public Text timerMatch;
     public Text timerWarmup;
     public void UpdateTimer(float i) {
-        timerMatch.text = TimeDiffuse(i)[0].ToString() + " :" + TimeDiffuse(i)[1];
+        Vector2 timer = TimeDiffuse(i);
+        if (timer.x < 0 || timer.y < 0)
+            return;
+
+        string minutes = timer.x.ToString();
+        string seconds = timer.y.ToString();
+        if(timer.y < 10)
+        {
+            seconds = "0" + timer.y.ToString();
+        }
+        timerMatch.text = minutes + " :" + seconds;
     }
     public void UpdateWarmup(float i) {
         timerWarmup.text = TimeDiffuse(i)[0].ToString() + " :" + TimeDiffuse(i)[1];
@@ -168,11 +178,9 @@ public class GeneralCanvas : MonoBehaviour {
         Vector2 times;
         double minutes = 0;
         double seconds = 0;
-        if(i > 60) {
-            minutes = i / 60;
-            seconds = ((minutes - Math.Truncate(minutes)) * 60);
-            minutes = Math.Truncate(minutes);
-        }
+        minutes = i / 60;
+        seconds = ((minutes - Math.Truncate(minutes)) * 60);
+        minutes = Math.Truncate(minutes);
         times = new Vector2((float)minutes, (float)seconds);
         return times;
     }
