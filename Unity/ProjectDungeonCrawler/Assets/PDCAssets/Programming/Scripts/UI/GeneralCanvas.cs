@@ -215,27 +215,39 @@ public class GeneralCanvas : MonoBehaviour {
         foreach (BoardEntryHelper entry in entries) {
             if (entry.playerID == playerID) {
                 entry.Add(kills, deaths);
+                Arrange();
                 return;
             }
-            Arrange();
         }
     }
     public void Arrange() {
         List<BoardEntryHelper> newList = new List<BoardEntryHelper>();
-        int lowest = 0;
-        
-        foreach(BoardEntryHelper entry in entries) {
-            if(entry.kills > 0) {
-                newList.Add(entry);
-            }
-            else {
-                lowest = entry.kills;
-                newList.Insert(0, entry);
-            }
-        }
-        for(int i = 0; i < newList.Count; i++) {
-            newList[i].ReChild(i);       
+        List<BoardEntryHelper> theList = ConvertList<BoardEntryHelper>(entries);
+        for (int i = 0; i < theList.Count; i++) {
+            BoardEntryHelper entry = GetHighestKillCount(theList);
+            entry.ReChild(i);
+            theList.Remove(entry);
         }
     }
+    BoardEntryHelper GetHighestKillCount(List<BoardEntryHelper> list) {
+        int highest = 0;
+        BoardEntryHelper highestBoi = null;
+        foreach(BoardEntryHelper entry in list) {
+            if(entry.kills > highest) {
+                highest = entry.kills;
+                highestBoi = entry;
+            }
+        }
+        return highestBoi;
+    }
     #endregion
+#region
+    public List<T> ConvertList<T>(List<T> convertable) {
+        List<T> ret = new List<T>();
+        foreach (T transgender in convertable)
+            ret.Add(transgender);
+        return ret;
+    }
+#endregion
+
 }
