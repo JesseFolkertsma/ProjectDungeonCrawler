@@ -170,19 +170,23 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         // Effects
 
         WeaponUtility.IHitableHit iHit = WeaponUtility.GetEnemiesInAttack(weapons[equippedWeapon].data, controller.playerCam.transform);
-        CmdWeaponEffects(iHit.rayHit.point, Quaternion.LookRotation(iHit.rayHit.normal));
+        if (iHit.iHit == null)
+            CmdWeaponEffects(iHit.rayHit.point, Quaternion.LookRotation(-iHit.rayHit.normal));
         NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(weapons[equippedWeapon].data.damage, objectName, gameObject.name);
-        if (PlayerManager.PlayerExists(iHit.iHit.objectID))
+        if (iHit.iHit != null)
         {
-            hud.HitMark();
-            string playerID = iHit.iHit.objectID;
-            Debug.Log("I wil damage: " + playerID.ToString());
-            //Damage player
-            CmdDamageClient(playerID, dPck);
-        }
-        else
-        {
-            CmdDamageServer(dPck, iHit.iHit.networkID);
+            if (PlayerManager.PlayerExists(iHit.iHit.objectID))
+            {
+                hud.HitMark();
+                string playerID = iHit.iHit.objectID;
+                Debug.Log("I wil damage: " + playerID.ToString());
+                //Damage player
+                CmdDamageClient(playerID, dPck);
+            }
+            else
+            {
+                CmdDamageServer(dPck, iHit.iHit.networkID);
+            }
         }
     }
 

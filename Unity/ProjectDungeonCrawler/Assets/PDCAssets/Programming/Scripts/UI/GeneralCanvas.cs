@@ -249,7 +249,7 @@ public class GeneralCanvas : MonoBehaviour {
     public void AddScoreBoardStat(string playerID, int kills, int deaths) {
         foreach (BoardEntryHelper entry in entries) {
             if (entry.playerID == playerID) {
-                entry.Update(kills, deaths);
+                entry.UpdateEntry(kills, deaths);
                 Arrange();
                 return;
             }
@@ -268,7 +268,7 @@ public class GeneralCanvas : MonoBehaviour {
     BoardEntryHelper GetHighestKillCount(List<BoardEntryHelper> list) {
         int highest = 0;
         int current = 0;
-        BoardEntryHelper highestBoi = null;
+        BoardEntryHelper highestBoi = list[0];
         foreach(BoardEntryHelper entry in list) {
             int.TryParse(entry.stats[0].text, out current);
             if (current > highest ) {
@@ -280,12 +280,15 @@ public class GeneralCanvas : MonoBehaviour {
     }
     #endregion
     #region Deathscreen 
-    //Variables//
-    public GreyscaleFX[] fxs;
-
-    public void DeathscreenActivate(bool activate) {
-        foreach(GreyscaleFX fx in fxs) {
-            fx.enabled = activate;
+    public void DeathscreenActivate(bool activate)
+    {
+        int intensity = 0;
+        if (activate)
+        {
+            intensity = 1;
+        }
+        foreach(GreyscaleFX fx in FindObjectsOfType<GreyscaleFX>()) {
+            fx.intensity = intensity;
         }
     }
     #endregion
@@ -297,5 +300,4 @@ public class GeneralCanvas : MonoBehaviour {
         return ret;
     }
 #endregion
-
 }

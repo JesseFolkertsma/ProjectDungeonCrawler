@@ -243,6 +243,7 @@ GameObject:
   - component: {fileID: 124112171864783476}
   - component: {fileID: 92667667954400026}
   - component: {fileID: 81333990134087694}
+  - component: {fileID: 114321881120401464}
   m_Layer: 17
   m_Name: PlayerCamera
   m_TagString: Player
@@ -1087,6 +1088,19 @@ MonoBehaviour:
   - {fileID: 81333990134087694}
   - {fileID: 114978034932212936}
   mainCamera: {fileID: 0}
+--- !u!114 &114321881120401464
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1625098297174926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76d05e1de114ffa41908fc4595c527f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  intensity: 0
+  material: {fileID: 2100000, guid: 73ae7e3993f747c42ba57d723b73ce21, type: 2}
 --- !u!114 &114333890048503420
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1283,6 +1297,8 @@ MonoBehaviour:
     canHoldMouseDown: 0
     prefabName: 
   anim: {fileID: 95880328960676020}
+  hitDecal: {fileID: 1770691880575682, guid: 558e815945ea8e744be2187175277f0d, type: 2}
+  weaponEffect: {fileID: 0}
   pc: {fileID: 0}
   gunEnd: {fileID: 4214868994828908}
   muzzleFlash: {fileID: 114533655069739618}

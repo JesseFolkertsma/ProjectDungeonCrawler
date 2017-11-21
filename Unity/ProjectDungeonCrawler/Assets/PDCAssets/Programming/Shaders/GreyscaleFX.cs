@@ -5,7 +5,7 @@ using System.Collections;
 public class GreyscaleFX : MonoBehaviour {
 
     public float intensity;
-    private Material material;
+    public Material material;
 
     // Creates a private material used to the effect
     void Awake() {

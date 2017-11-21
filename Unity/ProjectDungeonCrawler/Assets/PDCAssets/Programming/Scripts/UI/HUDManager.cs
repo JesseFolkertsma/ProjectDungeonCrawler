@@ -94,7 +94,7 @@ public class HUDManager : MonoBehaviour {
     public void AddScoreBoardStat(string playerID, int kills, int deaths) {
         foreach(BoardEntryHelper entry in entries) {
             if(entry.playerID == playerID) {
-                entry.Update(kills, deaths);
+                entry.UpdateEntry(kills, deaths);
                 return;
             }
         }

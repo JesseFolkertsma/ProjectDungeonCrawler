@@ -13,7 +13,7 @@ public class BoardEntryHelper : MonoBehaviour {
         playerID = _playerID;
         name.text = _name;
     }
-    public void Update(int _kills, int _deaths) {
+    public void UpdateEntry(int _kills, int _deaths) {
         stats[0].text = _kills.ToString();
         stats[1].text = _deaths.ToString();
     }

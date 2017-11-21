@@ -24,7 +24,8 @@ public abstract class Weapon : MonoBehaviour
 
     public virtual void WeaponEffects(Vector3 hitpos, Quaternion hitrot)
     {
-        Instantiate(hitDecal, hitpos, hitrot);
+        if(hitDecal != null)
+            Instantiate(hitDecal, hitpos, hitrot);
     }
 
     public bool IsInBaseState()
