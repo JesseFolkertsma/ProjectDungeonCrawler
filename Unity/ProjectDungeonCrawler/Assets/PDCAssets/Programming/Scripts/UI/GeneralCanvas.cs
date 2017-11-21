@@ -19,7 +19,7 @@ public class GeneralCanvas : MonoBehaviour {
         Controls();
     }
     public void MatchDataUpdate(MatchData data) {
-        UpdateTimer(data.seconds);
+        UpdateTimer(data.seconds, data.warmup);
     }
     #endregion
     #region Input
@@ -158,22 +158,25 @@ public class GeneralCanvas : MonoBehaviour {
     //Variables//
     public Text timerMatch;
     public Text timerWarmup;
-    public void UpdateTimer(float i) {
+    public void UpdateTimer(float i, bool warmUp) {
         Vector2 timer = TimeDiffuse(i);
         if (timer.x < 0 || timer.y < 0)
             return;
 
         string minutes = timer.x.ToString();
         string seconds = timer.y.ToString();
-        if(timer.y < 10)
-        {
+        if (timer.y < 10) {
             seconds = "0" + timer.y.ToString();
         }
-        timerMatch.text = minutes + " :" + seconds;
+        if (warmUp) {
+            timerMatch.text = "Warmup time left : " + minutes + " :" + seconds;
+
+        }
+        else {
+            timerMatch.text = minutes + " :" + seconds;
+        }
     }
-    public void UpdateWarmup(float i) {
-        timerWarmup.text = TimeDiffuse(i)[0].ToString() + " :" + TimeDiffuse(i)[1];
-    }
+
     Vector2 TimeDiffuse(float i) {
         Vector2 times;
         double minutes = 0;
