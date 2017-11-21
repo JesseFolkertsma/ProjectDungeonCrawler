@@ -4,43 +4,54 @@ using UnityEngine;
 
 public static class WeaponUtility {
 
-    public static IHitable[] GetEnemiesInAttack(WeaponData weaponData, Transform camera)
+    public class IHitableHit
+    {
+        public IHitable iHit;
+        public RaycastHit rayHit;
+
+        public IHitableHit() { }
+        public IHitableHit(IHitable _ihit, RaycastHit _rayhit)
+        {
+            iHit = _ihit;
+            rayHit = _rayhit;
+        }
+    }
+
+    public static IHitableHit GetEnemiesInAttack(WeaponData weaponData, Transform camera)
     {
         if (weaponData == null)
         {
             Debug.LogError("You little diptard you need to give me some weapondata!");
-            return new IHitable[0];
+            return new IHitableHit();
         }
 
         switch (weaponData.attackType)
         {
             case AttackType.Raycast:
                 return WURaycast(weaponData, camera);
-            case AttackType.Hitbox:
-                return WUBoxCast(weaponData, camera);
+            //case AttackType.Hitbox:
+                // WUBoxCast(weaponData, camera);
         }
-        return new IHitable[0];
+        return new IHitableHit();
     }
 
-    static IHitable[] WUBoxCast(WeaponData wData, Transform cam)
+    static IHitableHit[] WUBoxCast(WeaponData wData, Transform cam)
     {
-        return new IHitable[0];
+        return new IHitableHit[0];
     }
 
-    static IHitable[] WURaycast(WeaponData wData, Transform cam)
+    static IHitableHit WURaycast(WeaponData wData, Transform cam)
     {
         RaycastHit hit;
         if(Physics.Raycast(cam.position, cam.forward, out hit, wData.range, GameManager.instance.hitableLayers))
         {
-            IHitable rayHit = hit.collider.transform.GetComponent<IHitable>();
+            IHitableHit rayHit = new IHitableHit(hit.collider.transform.GetComponent<IHitable>(), hit);
             if (hit.transform.gameObject.GetComponent<IHitable>() != null)
             {
-                IHitable[] rayhits = new IHitable[1];
-                rayhits[0] = rayHit;
-                return rayhits;
+                return rayHit;
             }
         }
-        return new IHitable[0];
+        return new IHitableHit();
     }
 }
 

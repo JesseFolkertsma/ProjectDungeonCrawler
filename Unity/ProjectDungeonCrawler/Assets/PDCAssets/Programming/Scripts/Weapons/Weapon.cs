@@ -6,6 +6,8 @@ public abstract class Weapon : MonoBehaviour
 {
     public WeaponData data;
     public Animator anim;
+    public GameObject hitDecal;
+    public GameObject weaponEffect;
     [HideInInspector] public NWPlayerCombat pc;
 
     public void Setup(NWPlayerCombat _pc)
@@ -19,6 +21,11 @@ public abstract class Weapon : MonoBehaviour
     }
 
     public virtual void PlayVisuals() { }
+
+    public virtual void WeaponEffects(Vector3 hitpos, Quaternion hitrot)
+    {
+        Instantiate(hitDecal, hitpos, hitrot);
+    }
 
     public bool IsInBaseState()
     {
