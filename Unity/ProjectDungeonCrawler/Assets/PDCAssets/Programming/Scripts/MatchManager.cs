@@ -33,9 +33,10 @@ public class MatchManager : NetworkBehaviour {
         match = StartCoroutine(UpdateMatchDataRoutine());
     }
 
-    public void JoinMatch(string playerID)
+    public void JoinMatch(string playerID, string playerName)
     {
         MatchData.PlayerMatchData newPlayer = new MatchData.PlayerMatchData();
+        newPlayer.playerName = playerName;
         newPlayer.playerID = playerID;
         playerData.Add(newPlayer);
     }
@@ -47,7 +48,7 @@ public class MatchManager : NetworkBehaviour {
             if (warmup)
             {
                 warmUpTimeLeft -= updateTime;
-                UpdateMatchData(new MatchData(warmUpTimeLeft, playerData.ToArray(), true));
+                UpdateMatchData(new MatchData(warmUpTimeLeft, playerData.ToArray(), warmup));
                 if (warmUpTimeLeft <= 0)
                 {
                     EndWarmUp();
@@ -56,7 +57,7 @@ public class MatchManager : NetworkBehaviour {
             else
             {
                 matchTimeLeft -= updateTime;
-                UpdateMatchData(new MatchData(matchTimeLeft, playerData.ToArray(), true));
+                UpdateMatchData(new MatchData(matchTimeLeft, playerData.ToArray(), warmup));
             }
             yield return new WaitForSeconds(1 / updateTime);
         }
@@ -94,6 +95,7 @@ public class MatchData
     public class PlayerMatchData
     {
         public string playerID;
+        public string playerName;
         public int kills;
         public int deaths;
     }

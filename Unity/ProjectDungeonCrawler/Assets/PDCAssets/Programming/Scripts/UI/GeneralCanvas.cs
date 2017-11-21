@@ -169,11 +169,11 @@ public class GeneralCanvas : MonoBehaviour {
             seconds = "0" + timer.y.ToString();
         }
         if (warmUp) {
-            timerMatch.text = "Warmup time left : " + minutes + " :" + seconds;
+            timerMatch.text = "Warmup time \n" + minutes + " :" + seconds;
 
         }
         else {
-            timerMatch.text = minutes + " :" + seconds;
+            timerMatch.text = "Time left \n" + minutes + " :" + seconds;
         }
     }
 

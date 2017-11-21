@@ -32,6 +32,7 @@ public class PlayerSetup : NetworkBehaviour {
             mainCamera = Camera.main;
             if (mainCamera != null)
                 mainCamera.gameObject.SetActive(false);
+            CmdJoinMatch(gameObject.name, PlayerInfo.instance.playerName);
         }
 
         combat = GetComponent<NWPlayerCombat>();
@@ -78,5 +79,11 @@ public class PlayerSetup : NetworkBehaviour {
     void SetAsRemotePlayer()
     {
         StaticFunctions.SetLayerRecursively(transform, REMOTE_PLAYER_LAYER);
+    }
+
+    [Command]
+    void CmdJoinMatch(string id, string name)
+    {
+        MatchManager.instance.JoinMatch(id, name);
     }
 }

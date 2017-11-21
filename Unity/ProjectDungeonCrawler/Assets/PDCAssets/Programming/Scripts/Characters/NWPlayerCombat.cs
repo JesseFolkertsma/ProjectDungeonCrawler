@@ -249,14 +249,22 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         Transform newSpawnLocation = NetworkManager.singleton.GetStartPosition();
         transform.position = newSpawnLocation.position;
         transform.rotation = newSpawnLocation.rotation;
-        if(isLocalPlayer)
+        if (isLocalPlayer)
+        {
+            GeneralCanvas.canvas.DeathscreenActivate(false);
             hud.UpdateHealth(100, 100);
+        }
 
         Debug.Log(transform.name + "! I has respawned!");
     }
 
     void Die()
     {
+        if (isLocalPlayer)
+        {
+            GeneralCanvas.canvas.DeathscreenActivate(true);
+        }
+
         isDead = true;
         
         controller.rb.constraints = deadRBC;
