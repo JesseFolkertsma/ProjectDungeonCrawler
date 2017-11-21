@@ -20,6 +20,9 @@ public class GeneralCanvas : MonoBehaviour {
     }
     public void MatchDataUpdate(MatchData data) {
         UpdateTimer(data.seconds, data.warmup);
+        foreach(MatchData.PlayerMatchData pmd in data.playerData) {
+            AddScoreBoardStat(pmd.playerID, pmd.kills, pmd.deaths);
+        }
     }
     #endregion
     #region Input
@@ -176,7 +179,6 @@ public class GeneralCanvas : MonoBehaviour {
             timerMatch.text = "Time left \n" + minutes + " :" + seconds;
         }
     }
-
     Vector2 TimeDiffuse(float i) {
         Vector2 times;
         double minutes = 0;
@@ -275,6 +277,16 @@ public class GeneralCanvas : MonoBehaviour {
             }
         }
         return highestBoi;
+    }
+    #endregion
+    #region Deathscreen 
+    //Variables//
+    public GreyscaleFX[] fxs;
+
+    public void DeathscreenActivate(bool activate) {
+        foreach(GreyscaleFX fx in fxs) {
+            fx.enabled = activate;
+        }
     }
     #endregion
     #region Tools
