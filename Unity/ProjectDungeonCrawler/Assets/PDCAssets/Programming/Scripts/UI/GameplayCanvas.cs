@@ -71,7 +71,7 @@ public class GameplayCanvas : MonoBehaviour {
     public void AddScoreBoardStat(string playerID, int kills, int deaths) {
         foreach (BoardEntryHelper entry in entries) {
             if (entry.playerID == playerID) {
-                entry.Add(kills, deaths);
+                entry.Update(kills, deaths);
                 return;
             }
         }
