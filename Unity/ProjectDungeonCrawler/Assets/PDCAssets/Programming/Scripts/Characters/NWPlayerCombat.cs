@@ -9,7 +9,9 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     //public variables
     [SyncVar] public float testHP = 100;
     public bool isActive = true;
+    public Animator weaponHolderAnim;
     public Transform weaponHolder;
+    public Transform offSetObject;
     public GameObject canvas;
     public int equippedWeapon;
 
@@ -106,6 +108,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             return;
 
         CheckInput();
+        WeaponEffects();
     }
 
     void CheckInput()
@@ -118,6 +121,34 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         else
         {
             mouseDown = false;
+        }
+    }
+
+    void WeaponEffects()
+    {
+        WeaponSway();
+        WeaponAnimation();
+    }
+
+    void WeaponAnimation()
+    {
+        float walkF = controller.acc / controller.acceleration;
+        if (!controller.grounded)
+            walkF = Mathf.Lerp(walkF, 0, Time.deltaTime * 6);
+        weaponHolderAnim.SetFloat("Walk", walkF);
+    }
+
+    void WeaponSway()
+    {
+        if (weaponHolder)
+        {
+            Vector3 sway = new Vector3(-(Mathf.Clamp(Input.GetAxisRaw("Mouse X"), -1, 1) + controller.xInput) / 14, -controller.rb.velocity.y / 20, 0);
+            Vector3 newPos = weapons[equippedWeapon].transform.localPosition + sway;
+            if (newPos.y > .1f)
+                newPos.y = .1f;
+            else if (newPos.y < -.1f)
+                newPos.y = -.1f;
+            offSetObject.localPosition = Vector3.Lerp(offSetObject.localPosition, newPos, Time.deltaTime * 2);
         }
     }
 
@@ -137,25 +168,21 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         if (!isLocalPlayer)
             return;
         // Effects
-        CmdSendFX();
 
-        IHitable[] iHits = WeaponUtility.GetEnemiesInAttack(weapons[equippedWeapon].data, controller.playerCam.transform);
-
-        foreach (IHitable iHit in iHits)
+        WeaponUtility.IHitableHit iHit = WeaponUtility.GetEnemiesInAttack(weapons[equippedWeapon].data, controller.playerCam.transform);
+        CmdWeaponEffects(iHit.rayHit.point, Quaternion.LookRotation(iHit.rayHit.normal));
+        NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(weapons[equippedWeapon].data.damage, objectName, gameObject.name);
+        if (PlayerManager.PlayerExists(iHit.iHit.objectID))
         {
-            NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(weapons[equippedWeapon].data.damage, objectName, gameObject.name);
-            if (PlayerManager.PlayerExists(iHit.objectID))
-            {
-                hud.HitMark();
-                string playerID = iHit.objectID;
-                Debug.Log("I wil damage: " + playerID.ToString());
-                //Damage player
-                CmdDamageClient(playerID, dPck);
-            }
-            else
-            {
-                CmdDamageServer(dPck, iHit.networkID);
-            }
+            hud.HitMark();
+            string playerID = iHit.iHit.objectID;
+            Debug.Log("I wil damage: " + playerID.ToString());
+            //Damage player
+            CmdDamageClient(playerID, dPck);
+        }
+        else
+        {
+            CmdDamageServer(dPck, iHit.iHit.networkID);
         }
     }
 
@@ -241,6 +268,18 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
 
         StartCoroutine(Respawn());
+    }
+
+    [Command]
+    void CmdWeaponEffects(Vector3 hitpos, Quaternion hitrot)
+    {
+        RpcWeaponEffects(hitpos, hitrot);
+    }
+
+    [ClientRpc]
+    void RpcWeaponEffects(Vector3 hitpos, Quaternion hitrot)
+    {
+        weapons[equippedWeapon].WeaponEffects(hitpos, hitrot);
     }
 
     [Command]
