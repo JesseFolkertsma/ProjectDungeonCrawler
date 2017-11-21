@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 
 public class NetworkedUI : NetworkBehaviour {
-#region General
+    #region General
     GeneralCanvas GC {
         get {
             return GeneralCanvas.canvas;

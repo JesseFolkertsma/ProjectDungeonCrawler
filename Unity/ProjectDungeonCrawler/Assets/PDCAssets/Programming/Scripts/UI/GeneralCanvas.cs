@@ -194,6 +194,8 @@ public class GeneralCanvas : MonoBehaviour {
 
     public List<BoardEntryHelper> entries = new List<BoardEntryHelper>();
 
+    bool win;
+
     // Enables ScoreBoard Input
     public void SBControls() {
         if (Input.GetKey(KeyCode.Tab)) {
@@ -205,6 +207,26 @@ public class GeneralCanvas : MonoBehaviour {
 
             }
         }
+        //Testing Controls //
+        if (Input.GetKeyDown(KeyCode.T)) {
+            AddScoreBoardEntry("hary", "misterHary");
+        }
+        if (Input.GetKeyDown(KeyCode.Y)) {
+            AddScoreBoardEntry("hary2", "misterHary2");
+        }
+        if (Input.GetKeyDown(KeyCode.U)) {
+            AddScoreBoardStat("misterHary",1,0);
+        }
+        if (Input.GetKeyDown(KeyCode.I)) {
+            AddScoreBoardStat("misterHary2",1,0);
+        }
+        if (Input.GetKeyDown(KeyCode.P)) {
+            PlayerWin(win);
+            win = !win;
+        }
+    }
+    public void PlayerWin(bool activate) {
+        GetHighestKillCount(entries).Win(activate);
     }
     // Toggles the scoreboard
     public void SBToggle(bool foo) {
@@ -222,13 +244,14 @@ public class GeneralCanvas : MonoBehaviour {
     public void AddScoreBoardStat(string playerID, int kills, int deaths) {
         foreach (BoardEntryHelper entry in entries) {
             if (entry.playerID == playerID) {
-                entry.Add(kills, deaths);
+                entry.Update(kills, deaths);
                 Arrange();
                 return;
             }
         }
     }
     public void Arrange() {
+        print("Arranging");
         List<BoardEntryHelper> newList = new List<BoardEntryHelper>();
         List<BoardEntryHelper> theList = ConvertList<BoardEntryHelper>(entries);
         for (int i = 0; i < theList.Count; i++) {
@@ -239,17 +262,19 @@ public class GeneralCanvas : MonoBehaviour {
     }
     BoardEntryHelper GetHighestKillCount(List<BoardEntryHelper> list) {
         int highest = 0;
+        int current = 0;
         BoardEntryHelper highestBoi = null;
         foreach(BoardEntryHelper entry in list) {
-            if(entry.kills > highest) {
-                highest = entry.kills;
+            int.TryParse(entry.stats[0].text, out current);
+            if (current > highest ) {
+                highest = current;
                 highestBoi = entry;
             }
         }
         return highestBoi;
     }
     #endregion
-#region
+    #region Tools
     public List<T> ConvertList<T>(List<T> convertable) {
         List<T> ret = new List<T>();
         foreach (T transgender in convertable)
