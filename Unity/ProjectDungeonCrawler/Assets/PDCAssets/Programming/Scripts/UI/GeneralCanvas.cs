@@ -19,9 +19,39 @@ public class GeneralCanvas : MonoBehaviour {
         Controls();
     }
     public void MatchDataUpdate(MatchData data) {
+        //Timer Update
         UpdateTimer(data.seconds, data.warmup);
+
+        //Scoreboard Update
+        Debug.Log(data.playerData.Length + "entries: " + entries.Count.ToString());
         foreach(MatchData.PlayerMatchData pmd in data.playerData) {
-            AddScoreBoardStat(pmd.playerID, pmd.kills, pmd.deaths);
+            if(!AddScoreBoardStat(pmd.playerID, pmd.kills, pmd.deaths))
+            {
+                AddScoreBoardEntry(pmd.playerName, pmd.playerID);
+            }
+        }
+        if(entries.Count != data.playerData.Length)
+        {
+            List<BoardEntryHelper> toRemove = new List<BoardEntryHelper>();
+            foreach(BoardEntryHelper beh in entries)
+            {
+                bool found = false;
+                foreach (MatchData.PlayerMatchData pmd in data.playerData)
+                {
+                    if(pmd.playerID == beh.playerID)
+                    {
+                        found = true;
+                    }
+                }
+                if (found)
+                {
+                    toRemove.Add(beh);
+                }
+            }
+            foreach(BoardEntryHelper beh in toRemove)
+            {
+                entries.Remove(beh);
+            }
         }
     }
     #endregion
@@ -246,14 +276,15 @@ public class GeneralCanvas : MonoBehaviour {
         entries.Add(n);
     }
     //Adds kills or deaths to the given player entry
-    public void AddScoreBoardStat(string playerID, int kills, int deaths) {
+    public bool AddScoreBoardStat(string playerID, int kills, int deaths) {
         foreach (BoardEntryHelper entry in entries) {
             if (entry.playerID == playerID) {
                 entry.UpdateEntry(kills, deaths);
                 Arrange();
-                return;
+                return true;
             }
         }
+        return false;
     }
     public void Arrange() {
         print("Arranging");

@@ -90,13 +90,13 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         hud = Instantiate(canvas).GetComponentInChildren<GeneralCanvas>();
         netUI = GetComponent<NetworkedUI>();
         netUI.Init(this);
-        netUI.AddEntry(playerName, gameObject.name);
-        foreach(KeyValuePair<string,NWPlayerCombat> kvp in PlayerManager.PlayerList())
-        {
-            if (kvp.Value.Equals(this)) return;
+        CmdJoinMatch(gameObject.name, PlayerInfo.instance.playerName);
+    }
 
-            GeneralCanvas.canvas.AddScoreBoardEntry(kvp.Value.objectName, kvp.Key);
-        }
+    [Command]
+    void CmdJoinMatch(string id, string name)
+    {
+        MatchManager.instance.JoinMatch(id, name);
     }
 
     private void Update()
@@ -262,6 +262,12 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         Debug.Log(transform.name + "! I has respawned!");
     }
 
+    [ClientRpc]
+    public void RpcDie()
+    {
+        Die();
+    }
+
     void Die()
     {
         if (isLocalPlayer)
@@ -345,16 +351,15 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             Die();
             if (isLocalPlayer)
             {
+                CmdPlayerKilled(dmgPck.hitterID, gameObject.name);
                 netUI.CmdFeedMessage(dmgPck.hitter + " has killed " + objectName + "!");
-                netUI.UpdateEntry(gameObject.name, 0, 1);
-                netUI.UpdateEntry(dmgPck.hitterID, 1, 0);
             }
         }
     }
 
     [Command]
-    void CmdSendPopup(string _message, string senderID, bool _sendToSender)
+    void CmdPlayerKilled(string killerID, string victimID)
     {
-
+        MatchManager.instance.PlayerKilled(killerID, victimID);
     }
 }

@@ -39,6 +39,49 @@ public class MatchManager : NetworkBehaviour {
         newPlayer.playerName = playerName;
         newPlayer.playerID = playerID;
         playerData.Add(newPlayer);
+
+        //GeneralCanvas.canvas.AddScoreBoardEntry(playerName, playerID);
+        Debug.Log("My friendly boi: " + playerName + " with id: " + playerID + " has joined!");
+    }
+
+    public void LeaveMatch(string playerID)
+    {
+        MatchData.PlayerMatchData toRemove = null;
+        foreach(MatchData.PlayerMatchData pmd in playerData)
+        {
+            if(pmd.playerID == playerID)
+            {
+                toRemove = pmd;
+                break;
+            }
+        }
+        if(toRemove != null)
+        {
+            playerData.Remove(toRemove);
+        }
+    }
+
+    public void PlayerKilled(string killerID, string victimID)
+    {
+        bool killerFound = false;
+        bool victimFound = false;
+        foreach (MatchData.PlayerMatchData pmd in playerData)
+        {
+            if (killerFound && victimFound)
+                return;
+            if(pmd.playerID == killerID)
+            {
+                pmd.kills++;
+                killerFound = true;
+                continue;
+            }
+            else if(pmd.playerID == victimID)
+            {
+                pmd.deaths++;
+                victimFound = true;
+                continue;
+            }
+        }
     }
 
     IEnumerator UpdateMatchDataRoutine()
@@ -66,6 +109,14 @@ public class MatchManager : NetworkBehaviour {
     void EndWarmUp()
     {
         warmup = false;
+        foreach (KeyValuePair<string, NWPlayerCombat> kvp in PlayerManager.PlayerList())
+        {
+            kvp.Value.RpcDie();
+        }
+        foreach (MatchData.PlayerMatchData pmd in playerData)
+        {
+            pmd.Reset();
+        }
     }
 
     void UpdateMatchData(MatchData matchData)
@@ -98,5 +149,11 @@ public class MatchData
         public string playerName;
         public int kills;
         public int deaths;
+
+        public void Reset()
+        {
+            kills = 0;
+            deaths = 0;
+        }
     }
 }
