@@ -65,4 +65,15 @@ public class NetworkedUI : NetworkBehaviour {
         GC.MatchDataUpdate(data);
     }
 
+    [ClientRpc]
+    public void RpcEndMatch()
+    {
+        GC.MatchEnd();
+    }
+
+    [ClientRpc]
+    public void RpcResetMatch()
+    {
+        GC.ResetMatch();
+    }
 }

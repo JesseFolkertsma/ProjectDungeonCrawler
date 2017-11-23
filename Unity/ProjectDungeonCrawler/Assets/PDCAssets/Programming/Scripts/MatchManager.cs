@@ -4,33 +4,50 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class MatchManager : NetworkBehaviour {
+    public enum MatchState
+    {
+        WaitForPlayers,
+        Warmup,
+        Playing,
+        MatchEnd,
+    };
 
     public static MatchManager instance;
 
+    public MatchState matchState = MatchState.Warmup;
+
     public int updateTime = 1;
-    public int matchTime = 60;
+    public int playersNeeded = 2;
     public int warmupTime = 60;
-    public bool warmup = true;
+    public int matchTime = 60;
+    public int matchEndTime = 10;
     public List<MatchData.PlayerMatchData> playerData = new List<MatchData.PlayerMatchData>();
 
     int warmUpTimeLeft;
     int matchTimeLeft;
+    int matchEndTimeLeft;
     Coroutine match;
+    NetworkedUI netUI;
 
     private void Start()
     {
-        ResetMatch();
         instance = this;
+        netUI = FindObjectOfType<NetworkedUI>();
+        ResetMatch(false);
     }
 
-    public void ResetMatch()
+    public void ResetMatch(bool killPlayers)
     {
-        warmup = true;
+        matchState = MatchState.WaitForPlayers;
         warmUpTimeLeft = warmupTime;
         matchTimeLeft = matchTime;
+        matchEndTimeLeft = matchEndTime;
         if (match != null)
             StopCoroutine(match);
         match = StartCoroutine(UpdateMatchDataRoutine());
+        if(killPlayers)
+            ResetPlayersAndStats();
+        netUI.RpcResetMatch();
     }
 
     public void JoinMatch(string playerID, string playerName)
@@ -88,27 +105,65 @@ public class MatchManager : NetworkBehaviour {
     {
         while (true)
         {
-            if (warmup)
+            switch (matchState)
             {
-                warmUpTimeLeft -= updateTime;
-                UpdateMatchData(new MatchData(warmUpTimeLeft, playerData.ToArray(), warmup));
-                if (warmUpTimeLeft <= 0)
-                {
-                    EndWarmUp();
-                }
-            }
-            else
-            {
-                matchTimeLeft -= updateTime;
-                UpdateMatchData(new MatchData(matchTimeLeft, playerData.ToArray(), warmup));
+                case MatchState.WaitForPlayers:
+                    int playersInServer = PlayerManager.PlayerList().Count;
+                    Debug.Log(playersInServer);
+                    UpdateMatchData(new MatchData(0, playerData.ToArray(), matchState));
+                    if (playersInServer >= playersNeeded)
+                    {
+                        EnoughPlayers();
+                    }
+                    break;
+                case MatchState.Warmup:
+                    warmUpTimeLeft -= updateTime;
+                    UpdateMatchData(new MatchData(warmUpTimeLeft, playerData.ToArray(), matchState));
+                    if (warmUpTimeLeft <= 0)
+                    {
+                        EndWarmUp();
+                    }
+                    break;
+                case MatchState.Playing:
+                    matchTimeLeft -= updateTime;
+                    UpdateMatchData(new MatchData(matchTimeLeft, playerData.ToArray(), matchState));
+                    if(matchTimeLeft <= 0)
+                    {
+                        MatchEnd();
+                    }
+                    break;
+                case MatchState.MatchEnd:
+                    matchEndTimeLeft -= updateTime;
+                    UpdateMatchData(new MatchData(matchEndTimeLeft, playerData.ToArray(), matchState));
+                    if (matchEndTimeLeft <= 0)
+                    {
+                        ResetMatch(true);
+                    }
+                    break;
             }
             yield return new WaitForSeconds(1 / updateTime);
         }
     }
 
+    void EnoughPlayers()
+    {
+        matchState = MatchState.Warmup;
+    }
+
     void EndWarmUp()
     {
-        warmup = false;
+        matchState = MatchState.Playing;
+        ResetPlayersAndStats();
+    }
+
+    void MatchEnd()
+    {
+        matchState = MatchState.MatchEnd;
+        netUI.RpcEndMatch();
+    }
+
+    public void ResetPlayersAndStats()
+    {
         foreach (KeyValuePair<string, NWPlayerCombat> kvp in PlayerManager.PlayerList())
         {
             kvp.Value.RpcDie();
@@ -121,7 +176,6 @@ public class MatchManager : NetworkBehaviour {
 
     void UpdateMatchData(MatchData matchData)
     {
-        NetworkedUI netUI = FindObjectOfType<NetworkedUI>();
         if (netUI == null) return;
         netUI.RpcUpdateMatch(matchData);
     }
@@ -133,14 +187,14 @@ public class MatchData
 {
     public int seconds;
     public PlayerMatchData[] playerData;
-    public bool warmup;
+    public MatchManager.MatchState matchState;
 
     public MatchData() { }
-    public MatchData(int _seconds, PlayerMatchData[] _playerData, bool _warmup)
+    public MatchData(int _seconds, PlayerMatchData[] _playerData, MatchManager.MatchState _matchState)
     {
         seconds = _seconds;
         playerData = _playerData;
-        warmup = _warmup;
+        matchState = _matchState;
     }
 
     public class PlayerMatchData

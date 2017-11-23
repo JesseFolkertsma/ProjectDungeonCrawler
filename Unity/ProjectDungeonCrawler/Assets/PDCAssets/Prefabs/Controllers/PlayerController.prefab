@@ -290,6 +290,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4699199570273980}
   - component: {fileID: 20879051186849200}
+  - component: {fileID: 114076950015792472}
   m_Layer: 17
   m_Name: WeaponCamera
   m_TagString: Untagged
@@ -1088,6 +1089,19 @@ MonoBehaviour:
   - {fileID: 81333990134087694}
   - {fileID: 114978034932212936}
   mainCamera: {fileID: 0}
+--- !u!114 &114076950015792472
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1731627298280354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76d05e1de114ffa41908fc4595c527f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  intensity: 0
+  material: {fileID: 0}
 --- !u!114 &114321881120401464
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1100,7 +1114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   intensity: 0
-  material: {fileID: 2100000, guid: 73ae7e3993f747c42ba57d723b73ce21, type: 2}
+  material: {fileID: 0}
 --- !u!114 &114333890048503420
 MonoBehaviour:
   m_ObjectHideFlags: 1

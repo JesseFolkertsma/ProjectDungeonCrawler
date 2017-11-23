@@ -20,7 +20,7 @@ public class GeneralCanvas : MonoBehaviour {
     }
     public void MatchDataUpdate(MatchData data) {
         //Timer Update
-        UpdateTimer(data.seconds, data.warmup);
+        UpdateTimer(data.seconds, data.matchState);
 
         //Scoreboard Update
         Debug.Log(data.playerData.Length + "entries: " + entries.Count.ToString());
@@ -191,7 +191,7 @@ public class GeneralCanvas : MonoBehaviour {
     //Variables//
     public Text timerMatch;
     public Text timerWarmup;
-    public void UpdateTimer(float i, bool warmUp) {
+    public void UpdateTimer(float i, MatchManager.MatchState state) {
         Vector2 timer = TimeDiffuse(i);
         if (timer.x < 0 || timer.y < 0)
             return;
@@ -201,12 +201,20 @@ public class GeneralCanvas : MonoBehaviour {
         if (timer.y < 10) {
             seconds = "0" + timer.y.ToString();
         }
-        if (warmUp) {
-            timerMatch.text = "Warmup time \n" + minutes + " :" + seconds;
-
-        }
-        else {
-            timerMatch.text = "Time left \n" + minutes + " :" + seconds;
+        switch (state)
+        {
+            case MatchManager.MatchState.WaitForPlayers:
+                timerMatch.text = "Waiting for other players";
+                break;
+            case MatchManager.MatchState.Warmup:
+                timerMatch.text = "Warmup time \n" + minutes + " :" + seconds;
+                break;
+            case MatchManager.MatchState.Playing:
+                timerMatch.text = "Time left \n" + minutes + " :" + seconds;
+                break;
+            case MatchManager.MatchState.MatchEnd:
+                timerMatch.text = "Restarting match \n" + minutes + " :" + seconds;
+                break;
         }
     }
     Vector2 TimeDiffuse(float i) {
@@ -229,36 +237,58 @@ public class GeneralCanvas : MonoBehaviour {
 
     public List<BoardEntryHelper> entries = new List<BoardEntryHelper>();
 
-    bool win;
+    bool win = false;
+
+    public void MatchEnd()
+    {
+        win = true;
+        SBToggle(true);
+        PlayerWin(true);
+    }
+
+    public void ResetMatch()
+    {
+        win = false;
+    }
 
     // Enables ScoreBoard Input
     public void SBControls() {
-        if (Input.GetKey(KeyCode.Tab)) {
+        if (win)
+        {
             SBToggle(true);
         }
-        else {
-            if (scoreBoard.gameObject.activeInHierarchy != false) {
-                SBToggle(false);
+        else
+        {
+            if (Input.GetKey(KeyCode.Tab))
+            {
+                SBToggle(true);
+            }
+            else
+            {
+                if (scoreBoard.gameObject.activeInHierarchy != false)
+                {
+                    SBToggle(false);
 
+                }
             }
         }
         //Testing Controls //
-        if (Input.GetKeyDown(KeyCode.T)) {
-            AddScoreBoardEntry("hary", "misterHary");
-        }
-        if (Input.GetKeyDown(KeyCode.Y)) {
-            AddScoreBoardEntry("hary2", "misterHary2");
-        }
-        if (Input.GetKeyDown(KeyCode.U)) {
-            AddScoreBoardStat("misterHary",1,0);
-        }
-        if (Input.GetKeyDown(KeyCode.I)) {
-            AddScoreBoardStat("misterHary2",1,0);
-        }
-        if (Input.GetKeyDown(KeyCode.P)) {
-            PlayerWin(win);
-            win = !win;
-        }
+        //if (Input.GetKeyDown(KeyCode.T)) {
+        //    AddScoreBoardEntry("hary", "misterHary");
+        //}
+        //if (Input.GetKeyDown(KeyCode.Y)) {
+        //    AddScoreBoardEntry("hary2", "misterHary2");
+        //}
+        //if (Input.GetKeyDown(KeyCode.U)) {
+        //    AddScoreBoardStat("misterHary",1,0);
+        //}
+        //if (Input.GetKeyDown(KeyCode.I)) {
+        //    AddScoreBoardStat("misterHary2",1,0);
+        //}
+        //if (Input.GetKeyDown(KeyCode.P)) {
+        //    PlayerWin(win);
+        //    win = !win;
+        //}
     }
     public void PlayerWin(bool activate) {
         GetHighestKillCount(entries).Win(activate);
