@@ -11,15 +11,15 @@ public class Gun : Weapon {
 
     public override void Attack()
     {
-        if (!IsInBaseState())
-            return;
+        //if (!IsInBaseState())
+        //    return;
 
         base.Attack();
     }
 
     public void MuzzleFlash()
     {
-        //PlayVisuals();
+        PlayVisuals();
         pc.DoAttackEffect();
     }
 
