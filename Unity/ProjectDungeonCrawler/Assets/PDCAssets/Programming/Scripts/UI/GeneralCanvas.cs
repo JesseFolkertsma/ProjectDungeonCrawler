@@ -17,6 +17,9 @@ public class GeneralCanvas : MonoBehaviour {
     }
     private void Update() {
         Controls();
+        if (Input.GetKey(KeyCode.K)) {
+            SetAmmoCount(true, true, 100, 50);
+        }
     }
     public void MatchDataUpdate(MatchData data) {
         //Timer Update
@@ -52,6 +55,8 @@ public class GeneralCanvas : MonoBehaviour {
             {
                 entries.Remove(beh);
             }
+            //Ammo update
+
         }
     }
     #endregion
@@ -187,6 +192,32 @@ public class GeneralCanvas : MonoBehaviour {
         hp.fillAmount = (currentHP / (maxHP / 100)) / 100;
     }
     #endregion
+    #region Ammo
+    //Variables//
+    public Text ammoCount;
+    public Transform ammoParent;
+    public Animator bulletAnim;
+    public Transform bulletPref;
+
+    public void SetAmmoCount(bool playGone, bool infinite, int max, int current) {
+        ammoCount.text = current + " / " + "∞";
+        if (infinite) {
+           
+        }
+        if (playGone) {
+            Gone();
+        }
+    }
+    public void Reloading(bool active) {
+        bulletAnim.SetBool("Reloading", active);
+    }
+    public void Gone() {
+        Transform newBullet = Instantiate(bulletPref);
+        newBullet.SetParent(ammoParent, false);
+        newBullet.GetComponent<Animator>().SetTrigger("Gone");
+    }
+
+#endregion
     #region Timers
     //Variables//
     public Text timerMatch;
