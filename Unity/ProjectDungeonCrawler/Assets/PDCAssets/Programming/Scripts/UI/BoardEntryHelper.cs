@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class BoardEntryHelper : MonoBehaviour {
     public string playerID;
-    int kills;
-    int deaths;
 
     public Text[] stats;
     public Text name;
@@ -15,15 +13,15 @@ public class BoardEntryHelper : MonoBehaviour {
         playerID = _playerID;
         name.text = _name;
     }
-
-    public void Fill() {
-        stats[0].text = kills.ToString();
-        stats[1].text = deaths.ToString();
-
+    public void UpdateEntry(int _kills, int _deaths) {
+        stats[0].text = _kills.ToString();
+        stats[1].text = _deaths.ToString();
     }
-    public void Add(int _kills, int _deaths) {
-        kills += _kills;
-        deaths += _deaths;
-        Fill();
+    public void ReChild(int i) {
+        transform.SetSiblingIndex(i);
+    }
+
+    public void Win(bool activate) {
+        transform.GetChild(2).GetComponent<Image>().enabled = activate;
     }
 }

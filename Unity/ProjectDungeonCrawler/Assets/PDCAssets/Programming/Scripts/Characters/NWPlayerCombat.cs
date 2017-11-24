@@ -9,7 +9,9 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     //public variables
     [SyncVar] public float testHP = 100;
     public bool isActive = true;
+    public Animator weaponHolderAnim;
     public Transform weaponHolder;
+    public Transform offSetObject;
     public GameObject canvas;
     public int equippedWeapon;
 
@@ -26,7 +28,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     bool mouseDown = false;
     float timer;
     GeneralCanvas hud;
-    NetworkedUI netUI;
+    public NetworkedUI netUI;
 
     NetworkedController controller;
 
@@ -88,6 +90,13 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         hud = Instantiate(canvas).GetComponentInChildren<GeneralCanvas>();
         netUI = GetComponent<NetworkedUI>();
         netUI.Init(this);
+        CmdJoinMatch(gameObject.name, PlayerInfo.instance.playerName);
+    }
+
+    [Command]
+    void CmdJoinMatch(string id, string name)
+    {
+        MatchManager.instance.JoinMatch(id, name);
     }
 
     private void Update()
@@ -99,6 +108,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             return;
 
         CheckInput();
+        WeaponEffects();
     }
 
     void CheckInput()
@@ -111,6 +121,34 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         else
         {
             mouseDown = false;
+        }
+    }
+
+    void WeaponEffects()
+    {
+        WeaponSway();
+        WeaponAnimation();
+    }
+
+    void WeaponAnimation()
+    {
+        float walkF = controller.acc / controller.acceleration;
+        if (!controller.grounded)
+            walkF = Mathf.Lerp(walkF, 0, Time.deltaTime * 6);
+        weaponHolderAnim.SetFloat("Walk", walkF);
+    }
+
+    void WeaponSway()
+    {
+        if (weaponHolder)
+        {
+            Vector3 sway = new Vector3(-(Mathf.Clamp(Input.GetAxisRaw("Mouse X"), -1, 1) + controller.xInput) / 14, -controller.rb.velocity.y / 20, 0);
+            Vector3 newPos = weapons[equippedWeapon].transform.localPosition + sway;
+            if (newPos.y > .1f)
+                newPos.y = .1f;
+            else if (newPos.y < -.1f)
+                newPos.y = -.1f;
+            offSetObject.localPosition = Vector3.Lerp(offSetObject.localPosition, newPos, Time.deltaTime * 2);
         }
     }
 
@@ -130,24 +168,24 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         if (!isLocalPlayer)
             return;
         // Effects
-        CmdSendFX();
 
-        IHitable[] iHits = WeaponUtility.GetEnemiesInAttack(weapons[equippedWeapon].data, controller.playerCam.transform);
-
-        foreach (IHitable iHit in iHits)
+        WeaponUtility.IHitableHit iHit = WeaponUtility.GetEnemiesInAttack(weapons[equippedWeapon].data, controller.playerCam.transform);
+        if (iHit.iHit == null)
+            CmdWeaponEffects(iHit.rayHit.point, Quaternion.LookRotation(-iHit.rayHit.normal));
+        NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(weapons[equippedWeapon].data.damage, objectName, gameObject.name);
+        if (iHit.iHit != null)
         {
-            NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(weapons[equippedWeapon].data.damage, objectName);
-            if (PlayerManager.PlayerExists(iHit.objectID))
+            if (PlayerManager.PlayerExists(iHit.iHit.objectID))
             {
                 hud.HitMark();
-                string playerID = iHit.objectID;
+                string playerID = iHit.iHit.objectID;
                 Debug.Log("I wil damage: " + playerID.ToString());
                 //Damage player
                 CmdDamageClient(playerID, dPck);
             }
             else
             {
-                CmdDamageServer(dPck, iHit.networkID);
+                CmdDamageServer(dPck, iHit.iHit.networkID);
             }
         }
     }
@@ -215,14 +253,28 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         Transform newSpawnLocation = NetworkManager.singleton.GetStartPosition();
         transform.position = newSpawnLocation.position;
         transform.rotation = newSpawnLocation.rotation;
-        if(isLocalPlayer)
+        if (isLocalPlayer)
+        {
+            GeneralCanvas.canvas.DeathscreenActivate(false);
             hud.UpdateHealth(100, 100);
+        }
 
         Debug.Log(transform.name + "! I has respawned!");
     }
 
+    [ClientRpc]
+    public void RpcDie()
+    {
+        Die();
+    }
+
     void Die()
     {
+        if (isLocalPlayer)
+        {
+            GeneralCanvas.canvas.DeathscreenActivate(true);
+        }
+
         isDead = true;
         
         controller.rb.constraints = deadRBC;
@@ -234,6 +286,18 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
 
         StartCoroutine(Respawn());
+    }
+
+    [Command]
+    void CmdWeaponEffects(Vector3 hitpos, Quaternion hitrot)
+    {
+        RpcWeaponEffects(hitpos, hitrot);
+    }
+
+    [ClientRpc]
+    void RpcWeaponEffects(Vector3 hitpos, Quaternion hitrot)
+    {
+        weapons[equippedWeapon].WeaponEffects(hitpos, hitrot);
     }
 
     [Command]
@@ -286,13 +350,16 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             Die();
             if (isLocalPlayer)
+            {
+                CmdPlayerKilled(dmgPck.hitterID, gameObject.name);
                 netUI.CmdFeedMessage(dmgPck.hitter + " has killed " + objectName + "!");
+            }
         }
     }
 
     [Command]
-    void CmdSendPopup(string _message, string senderID, bool _sendToSender)
+    void CmdPlayerKilled(string killerID, string victimID)
     {
-
+        MatchManager.instance.PlayerKilled(killerID, victimID);
     }
 }

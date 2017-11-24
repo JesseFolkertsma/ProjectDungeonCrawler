@@ -8,15 +8,16 @@ public class WeaponData {
     public string description;
     public float damage;
     public float range;
+    public float recoilIntensity;
     public int maxAmmo;
+    public int currentAmmo;
     public float attackRate;
     public AttackType attackType;
     public bool canHoldMouseDown;
-    public string prefabName;
 
     public WeaponData() { }
 
-    public WeaponData(string _name, string _desc, float _dmg, float _range, int _maxAmmo, float _aRate, AttackType _aType, string _prefab, bool _canHoldMouseDown = false)
+    public WeaponData(string _name, string _desc, float _dmg, float _range, int _maxAmmo, float _aRate, AttackType _aType, bool _canHoldMouseDown = false)
     {
         weaponName = _name;
         description = _desc;
@@ -25,7 +26,6 @@ public class WeaponData {
         maxAmmo = _maxAmmo;
         attackRate = _aRate;
         attackType = _aType;
-        prefabName = _prefab;
         canHoldMouseDown = _canHoldMouseDown;
     }
 }

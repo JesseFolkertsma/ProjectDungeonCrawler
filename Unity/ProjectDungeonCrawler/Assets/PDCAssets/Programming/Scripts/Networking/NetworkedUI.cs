@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 
 public class NetworkedUI : NetworkBehaviour {
-#region General
+    #region General
     GeneralCanvas GC {
         get {
             return GeneralCanvas.canvas;
@@ -59,4 +59,21 @@ public class NetworkedUI : NetworkBehaviour {
     }
     #endregion
 
+    [ClientRpc]
+    public void RpcUpdateMatch(MatchData data)
+    {
+        GC.MatchDataUpdate(data);
+    }
+
+    [ClientRpc]
+    public void RpcEndMatch()
+    {
+        GC.MatchEnd();
+    }
+
+    [ClientRpc]
+    public void RpcResetMatch()
+    {
+        GC.ResetMatch();
+    }
 }
