@@ -200,7 +200,7 @@ public class GeneralCanvas : MonoBehaviour {
     public Transform bulletPref;
 
     public void SetAmmoCount(bool playGone, bool infinite, int max, int current) {
-        ammoCount.text = current + " / " + "∞";
+        ammoCount.text = current + " / " + max;
         if (infinite) {
            
         }

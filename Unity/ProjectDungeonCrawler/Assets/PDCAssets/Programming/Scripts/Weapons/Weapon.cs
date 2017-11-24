@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class Weapon : MonoBehaviour
 {
+
     public WeaponData data;
     public Animator anim;
     public GameObject hitDecal;
@@ -15,9 +16,16 @@ public abstract class Weapon : MonoBehaviour
         pc = _pc;
     }
 
-    public virtual void Attack()
+    public virtual bool Attack()
     {
         anim.SetTrigger("Attack");
+        anim.SetBool("Attacking", true);
+        return true;
+    }
+
+    public virtual void AttackButtonUp()
+    {
+        anim.SetBool("Attacking", false);
     }
 
     public virtual void PlayVisuals() { }
