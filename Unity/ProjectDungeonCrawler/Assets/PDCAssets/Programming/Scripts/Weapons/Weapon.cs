@@ -9,18 +9,22 @@ public abstract class Weapon : MonoBehaviour
     public Animator anim;
     public GameObject hitDecal;
     public GameObject weaponEffect;
+    public Transform rightIK;
+    public Transform leftIK;
     [HideInInspector] public NWPlayerCombat pc;
+
+    [HideInInspector]
+    public float timer = 0;
 
     public void Setup(NWPlayerCombat _pc)
     {
         pc = _pc;
     }
 
-    public virtual bool Attack()
+    public virtual void Attack()
     {
         anim.SetTrigger("Attack");
         anim.SetBool("Attacking", true);
-        return true;
     }
 
     public virtual void AttackButtonUp()

@@ -44,6 +44,14 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     RigidbodyConstraints originalRBC;
 
+    Weapon equipped
+    {
+        get
+        {
+            return weapons[equippedWeapon];
+        }
+    }
+
     public NetworkInstanceId networkID
     {
         get
@@ -83,16 +91,17 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         SetDefaults();
         SetEquippedWeapon(0, true);
 
+        foreach (Weapon w in weapons)
+        {
+            w.Setup(this);
+        }
+
         if (!isLocalPlayer)
         {
             return;
         }
 
         //Setup for local player
-        foreach(Weapon w in weapons)
-        {
-            w.Setup(this);
-        }
 
         //Setup name and weapon for all instances of the player
         playerName = PlayerInfo.instance.playerName;
@@ -130,7 +139,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
         else
         {
-            weapons[equippedWeapon].AttackButtonUp();
+            equipped.AttackButtonUp();
             mouseDown = false;
         }
 
@@ -146,7 +155,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             {
                 wepToEquip = 0;
             }
-            EquipWeapon(wepToEquip);
+            CmdEquipWeapon(wepToEquip);
         }
     }
 
@@ -183,14 +192,31 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         if (!isLocalPlayer)
             return;
 
-        if (!weapons[equippedWeapon].data.canHoldMouseDown && mouseDown)
+        if (!equipped.data.canHoldMouseDown && mouseDown)
             return;
 
         if (state != WeaponState.Idle)
             return;
+        
+        if (equipped.data.currentAmmo > 0)
+        {
+            {
+                equipped.timer = Time.time + 1 / equipped.data.attackRate;
+                CmdAttack();
+            }
+        }
+    }
 
-        //if(weapons[equippedWeapon].data.canHoldMouseDown)
-        weapons[equippedWeapon].Attack();
+    [Command]
+    void CmdAttack()
+    {
+        RpcAttack();
+    }
+
+    [ClientRpc]
+    void RpcAttack()
+    {
+        equipped.Attack();
     }
 
     void Reload()
@@ -240,25 +266,38 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         state = WeaponState.Idle;
     }
 
-    void EquipWeapon(int weapon)
+    [Command]
+    void CmdEquipWeapon(int weapon)
+    {
+        RpcEquipWeapon(weapon);
+    }
+
+    [ClientRpc]
+    void RpcEquipWeapon(int weapon)
     {
         weaponHolderAnim.SetTrigger("Equip");
         weapons[equippedWeapon].gameObject.SetActive(false);
         equippedWeapon = weapon;
         weapons[equippedWeapon].gameObject.SetActive(true);
         StartCoroutine(EquipRoutine());
+        controller.rightIKPos = weapons[equippedWeapon].rightIK;
+        controller.leftIKPos = weapons[equippedWeapon].leftIK;
     }
 
     public void DoAttackEffect()
     {
         if (!isLocalPlayer)
+        {
+            equipped.PlayVisuals();
             return;
+        }
         // Effects
 
-        WeaponUtility.IHitableHit iHit = WeaponUtility.GetEnemiesInAttack(weapons[equippedWeapon].data, controller.playerCam.transform);
+        equipped.data.currentAmmo--;
+        WeaponUtility.IHitableHit iHit = WeaponUtility.GetEnemiesInAttack(equipped.data, controller.playerCam.transform);
         if (iHit.iHit == null)
             CmdWeaponEffects(iHit.rayHit.point, Quaternion.LookRotation(-iHit.rayHit.normal));
-        NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(weapons[equippedWeapon].data.damage, objectName, gameObject.name);
+        NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(equipped.data.damage, objectName, gameObject.name);
         if (iHit.iHit != null)
         {
             if (PlayerManager.PlayerExists(iHit.iHit.objectID))
@@ -274,6 +313,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
                 CmdDamageServer(dPck, iHit.iHit.networkID);
             }
         }
+        GeneralCanvas.canvas.SetAmmoCount(true, true, equipped.data.maxAmmo, equipped.data.currentAmmo);
     }
 
     public bool SetEquippedWeapon(int _weaponInt, bool _override)
