@@ -11,6 +11,8 @@ public class NetworkedController : NetworkBehaviour
     public Rigidbody rb;
     [HideInInspector]
     public AudioSource audioS;
+    public Animator anim;
+    public BanditIK ik;
     public Transform camHolder;
     public Camera playerCam;
     public HeadBobVariables headbobVariables;
@@ -27,6 +29,9 @@ public class NetworkedController : NetworkBehaviour
     public float playerLengthCrouched = .5f;
     public float playerFeetThickness = .2f;
     public AudioClip[] footSteps;
+    [HideInInspector]
+    public Transform rightIKPos;
+    public Transform leftIKPos;
 
     //Private variables
     RaycastHit feethit;
@@ -122,22 +127,32 @@ public class NetworkedController : NetworkBehaviour
 
     void Update()
     {
-        if (isEnabled)
+        if (isLocalPlayer)
         {
-            CheckInput();
-            Checks();
-            CameraEffects();
-            GroundAngle();
-            HandleCrouching();
-            Debug.DrawRay(transform.position + transform.up, Forward() * 3);
+            if (isEnabled)
+            {
+                CheckInput();
+                Checks();
+                CameraEffects();
+                GroundAngle();
+                HandleCrouching();
+                Debug.DrawRay(transform.position + transform.up, Forward() * 3);
+            }
+        }
+        else
+        {
+            HandleAnimations();
         }
     }
 
     void FixedUpdate()
     {
-        if (isEnabled)
+        if (isLocalPlayer)
         {
-            Move();
+            if (isEnabled)
+            {
+                Move();
+            }
         }
     }
     
@@ -156,6 +171,28 @@ public class NetworkedController : NetworkBehaviour
         if (camera)
         {
             canLook = value;
+        }
+    }
+
+    public void HandleAnimations()
+    {
+        if(anim != null)
+        {
+            anim.SetFloat("MoveX", xInput);
+            anim.SetFloat("MoveY", yInput);
+            anim.SetBool("IsFalling", !grounded);
+
+            if (rightIKPos != null)
+            {
+                print("setright");
+                ik.SetRightIKPosition(rightIKPos);
+            }
+
+            if (leftIKPos != null)
+            {
+                print("setleft");
+                ik.SetLeftIKPosition(leftIKPos);
+            }
         }
     }
 
