@@ -110,6 +110,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         netUI = GetComponent<NetworkedUI>();
         netUI.Init(this);
         CmdJoinMatch(gameObject.name, PlayerInfo.instance.playerName);
+        CmdEquipWeapon(0);
     }
 
     [Command]
@@ -139,7 +140,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
         else
         {
-            equipped.AttackButtonUp();
+            CmdButtonUp();
             mouseDown = false;
         }
 
@@ -157,6 +158,18 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             }
             CmdEquipWeapon(wepToEquip);
         }
+    }
+
+    [Command]
+    void CmdButtonUp()
+    {
+        RpcButtonUp();
+    }
+
+    [ClientRpc]
+    void RpcButtonUp()
+    {
+        equipped.AttackButtonUp();
     }
 
     void WeaponEffects()
@@ -248,7 +261,8 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     Coroutine equipRoutine;
     IEnumerator EquipRoutine()
     {
-        GeneralCanvas.canvas.Reloading(false);
+        if(isLocalPlayer)
+            GeneralCanvas.canvas.Reloading(false);
         state = WeaponState.Equipping;
         if (reloadRoutine != null)
         {
@@ -262,8 +276,14 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             yield return null;
         }
-        GeneralCanvas.canvas.SetAmmoCount(false, true, weapons[equippedWeapon].data.maxAmmo, weapons[equippedWeapon].data.currentAmmo);
+        if(isLocalPlayer)
+            GeneralCanvas.canvas.SetAmmoCount(false, true, weapons[equippedWeapon].data.maxAmmo, weapons[equippedWeapon].data.currentAmmo);
         state = WeaponState.Idle;
+    }
+    
+    public void EquipWeapon(int weapon)
+    {
+        CmdEquipWeapon(weapon);
     }
 
     [Command]
@@ -296,7 +316,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         equipped.data.currentAmmo--;
         WeaponUtility.IHitableHit iHit = WeaponUtility.GetEnemiesInAttack(equipped.data, controller.playerCam.transform);
         if (iHit.iHit == null)
-            CmdWeaponEffects(iHit.rayHit.point, Quaternion.LookRotation(-iHit.rayHit.normal));
+            CmdWeaponEffects(iHit.rayHit.point + iHit.rayHit.normal * .01f, Quaternion.LookRotation(-iHit.rayHit.normal));
         NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(equipped.data.damage, objectName, gameObject.name);
         if (iHit.iHit != null)
         {
