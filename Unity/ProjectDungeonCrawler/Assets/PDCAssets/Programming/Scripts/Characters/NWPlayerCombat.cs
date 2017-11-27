@@ -6,6 +6,14 @@ using UnityEngine.Networking;
 
 public class NWPlayerCombat : NetworkBehaviour, IHitable
 {
+    public enum WeaponState
+    {
+        Idle,
+        Attacking,
+        Reloading,
+        Equipping,
+    }
+
     //public variables
     [SyncVar] public float testHP = 100;
     public bool isActive = true;
@@ -14,6 +22,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     public Transform offSetObject;
     public GameObject canvas;
     public int equippedWeapon;
+    public WeaponState state = WeaponState.Idle;
 
 
     //private serializable
@@ -24,6 +33,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     [SerializeField] RigidbodyConstraints deadRBC;
     [SerializeField] Weapon[] weapons;
 
+    float shootTimer = 0f;
     bool[] wasEnabled;
     bool mouseDown = false;
     float timer;
@@ -120,7 +130,23 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
         else
         {
+            weapons[equippedWeapon].AttackButtonUp();
             mouseDown = false;
+        }
+
+        if (Input.GetButtonDown("Reload"))
+        {
+            Reload();
+        }
+
+        if (Input.GetButtonDown("Fire2"))
+        {
+            int wepToEquip = equippedWeapon + 1;
+            if(wepToEquip > weapons.Length -1)
+            {
+                wepToEquip = 0;
+            }
+            EquipWeapon(wepToEquip);
         }
     }
 
@@ -160,7 +186,67 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         if (!weapons[equippedWeapon].data.canHoldMouseDown && mouseDown)
             return;
 
+        if (state != WeaponState.Idle)
+            return;
+
+        //if(weapons[equippedWeapon].data.canHoldMouseDown)
         weapons[equippedWeapon].Attack();
+    }
+
+    void Reload()
+    {
+        weaponHolderAnim.SetTrigger("Reload");
+        reloadRoutine = StartCoroutine(ReloadRoutine());
+    }
+
+    Coroutine reloadRoutine;
+    IEnumerator ReloadRoutine()
+    {
+        GeneralCanvas.canvas.Reloading(true);
+        state = WeaponState.Reloading;
+        while (weaponHolderAnim.GetCurrentAnimatorStateInfo(0).IsTag("Idle"))
+        {
+            yield return null;
+        }
+        while (weaponHolderAnim.GetCurrentAnimatorStateInfo(0).IsTag("Reloading"))
+        {
+            yield return null;
+        }
+        weapons[equippedWeapon].data.currentAmmo = weapons[equippedWeapon].data.maxAmmo;
+        GeneralCanvas.canvas.SetAmmoCount(false, true, weapons[equippedWeapon].data.maxAmmo, weapons[equippedWeapon].data.currentAmmo);
+        state = WeaponState.Idle;
+
+        GeneralCanvas.canvas.Reloading(false);
+    }
+
+    Coroutine equipRoutine;
+    IEnumerator EquipRoutine()
+    {
+        GeneralCanvas.canvas.Reloading(false);
+        state = WeaponState.Equipping;
+        if (reloadRoutine != null)
+        {
+            StopCoroutine(reloadRoutine);
+        }
+        while (weaponHolderAnim.GetCurrentAnimatorStateInfo(0).IsTag("Idle"))
+        {
+            yield return null;
+        }
+        while (weaponHolderAnim.GetCurrentAnimatorStateInfo(0).IsTag("Equipping"))
+        {
+            yield return null;
+        }
+        GeneralCanvas.canvas.SetAmmoCount(false, true, weapons[equippedWeapon].data.maxAmmo, weapons[equippedWeapon].data.currentAmmo);
+        state = WeaponState.Idle;
+    }
+
+    void EquipWeapon(int weapon)
+    {
+        weaponHolderAnim.SetTrigger("Equip");
+        weapons[equippedWeapon].gameObject.SetActive(false);
+        equippedWeapon = weapon;
+        weapons[equippedWeapon].gameObject.SetActive(true);
+        StartCoroutine(EquipRoutine());
     }
 
     public void DoAttackEffect()

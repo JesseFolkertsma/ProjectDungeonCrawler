@@ -43,13 +43,10 @@ public static class WeaponUtility {
     static IHitableHit WURaycast(WeaponData wData, Transform cam)
     {
         RaycastHit hit;
-        if(Physics.Raycast(cam.position, cam.forward, out hit, wData.range, GameManager.instance.hitableLayers))
+        if(Physics.Raycast(cam.position, cam.forward, out hit, wData.range))
         {
             IHitableHit rayHit = new IHitableHit(hit.collider.transform.GetComponent<IHitable>(), hit);
-            if (hit.transform.gameObject.GetComponent<IHitable>() != null)
-            {
-                return rayHit;
-            }
+            return rayHit;
         }
         return new IHitableHit();
     }
