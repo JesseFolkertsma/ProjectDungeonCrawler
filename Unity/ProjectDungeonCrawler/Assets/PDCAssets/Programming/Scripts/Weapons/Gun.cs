@@ -6,8 +6,7 @@ using UnityEngine.Networking;
 
 public class Gun : Weapon {
     public Transform gunEnd;
-
-    public MuzzleFlash muzzleFlash;
+    public GameObject muzzleFlash;
 
     public override void Attack()
     {
@@ -22,6 +21,7 @@ public class Gun : Weapon {
     public override void PlayVisuals()
     {
         base.PlayVisuals();
-        muzzleFlash.Play();
+        //muzzleFlash.Play();
+        Instantiate(muzzleFlash, gunEnd.position, gunEnd.rotation);
     }
 }

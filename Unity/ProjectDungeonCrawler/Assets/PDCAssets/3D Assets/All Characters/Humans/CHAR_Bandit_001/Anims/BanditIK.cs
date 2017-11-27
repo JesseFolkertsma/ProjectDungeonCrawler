@@ -32,7 +32,7 @@ public class BanditIK : MonoBehaviour {
             {
                 Vector3 lookat = cam.position + cam.forward * 20;
                 anim.SetLookAtPosition(lookat);
-                anim.SetLookAtWeight(1f, .5f, 1f, 1f, 0f);
+                anim.SetLookAtWeight(1f, .25f, 1f, 1f, 0f);
             }
 
             if (rightIKPos != null)
@@ -40,6 +40,7 @@ public class BanditIK : MonoBehaviour {
                 anim.SetIKPosition(AvatarIKGoal.RightHand, rightIKPos.position);
                 anim.SetIKRotation(AvatarIKGoal.RightHand, rightIKPos.rotation);
                 anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1f);
+                anim.SetIKRotationWeight(AvatarIKGoal.RightHand, 1f);
             }
 
             if (leftIKPos != null)
@@ -47,6 +48,7 @@ public class BanditIK : MonoBehaviour {
                 anim.SetIKPosition(AvatarIKGoal.LeftHand, leftIKPos.position);
                 anim.SetIKRotation(AvatarIKGoal.LeftHand, leftIKPos.rotation);
                 anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, 1f);
+                anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, 1f);
             }
         }
     }

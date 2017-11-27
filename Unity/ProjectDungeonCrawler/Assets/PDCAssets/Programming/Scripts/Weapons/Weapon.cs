@@ -9,6 +9,7 @@ public abstract class Weapon : MonoBehaviour
     public Animator anim;
     public GameObject hitDecal;
     public GameObject weaponEffect;
+    public Vector3 clientOffset;
     public Transform rightIK;
     public Transform leftIK;
     [HideInInspector] public NWPlayerCombat pc;
@@ -16,9 +17,13 @@ public abstract class Weapon : MonoBehaviour
     [HideInInspector]
     public float timer = 0;
 
-    public void Setup(NWPlayerCombat _pc)
+    public void Setup(NWPlayerCombat _pc, bool isLocal)
     {
         pc = _pc;
+        if (!isLocal)
+        {
+            transform.localPosition = clientOffset;
+        }
     }
 
     public virtual void Attack()
