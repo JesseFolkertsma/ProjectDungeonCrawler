@@ -441,6 +441,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             GeneralCanvas.canvas.DeathscreenActivate(false);
             hud.UpdateHealth(100, 100);
+            CmdEquipWeapon(0, 0);
         }
 
         Debug.Log(transform.name + "! I has respawned!");
