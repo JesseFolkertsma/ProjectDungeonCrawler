@@ -45,6 +45,7 @@ public class NetworkedController : NetworkBehaviour
     bool obstacle;
     bool onSurface;
     bool crouching;
+    bool onLadder;
 
     //Hidden public variables
     [HideInInspector]
@@ -265,10 +266,19 @@ public class NetworkedController : NetworkBehaviour
         {
             if (Physics.SphereCast(camHolder.position, collisionVariables.blockRayThickness, direction, out collisionVariables.colHitInfo, collisionVariables.blockRayLenght, blockPath) || Physics.SphereCast(camHolder.position - (Vector3.up * (pLength / 1.5f)), collisionVariables.blockRayThickness, direction, out collisionVariables.colHitInfo, collisionVariables.blockRayLenght, blockPath)) 
             {
-                obstacle = true;
+                if(collisionVariables.colHitInfo.transform.tag == "Ladder")
+                {
+                    onLadder = true;
+                }
+                else
+                {
+                    obstacle = true;
+                    onLadder = false;
+                }
             }
             else
             {
+                onLadder = false;
                 obstacle = false;
             }
         }
@@ -386,8 +396,20 @@ public class NetworkedController : NetworkBehaviour
     {
         if (direction != Vector3.zero && !obstacle && IsInAngle)
         {
+            Vector3 newDir = new Vector3();
+            if (onLadder)
+            {
+                rb.useGravity = false;
+                rb.isKinematic = true;
+                newDir = Vector3.up;
+            }
+            else
+            {
+                rb.useGravity = true;
+                rb.isKinematic = false;
+                newDir = new Vector3(direction.x, Forward().y, direction.z);
+            }
             acc = Mathf.Lerp(acc, movementModifier, Time.fixedDeltaTime * acceleration);
-            Vector3 newDir = new Vector3(direction.x, Forward().y, direction.z);
             rb.MovePosition(rb.position + (newDir * Time.fixedDeltaTime * movementSpeed * acc));
         }
         else

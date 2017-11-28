@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4957219598396088}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Gun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35,7 +35,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4790278800381828}
   - component: {fileID: 137949587119129426}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: WEP_MINICatling_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50,7 +50,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4179042521278548}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Crank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68,7 +68,7 @@ GameObject:
   - component: {fileID: 54990977427090406}
   - component: {fileID: 135235630155112102}
   - component: {fileID: 114284216812855498}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Minigun Pickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -83,7 +83,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4318590365229160}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: WEP_MiniCatling
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,7 +99,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4858735155816308}
   - component: {fileID: 95361331287492718}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: WEP_MiniGun_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,7 +114,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4718051094947940}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Barrel_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -129,7 +129,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4299376303089314}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Crank_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144,7 +144,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4049745477029764}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -186,7 +186,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1245218529901612}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -47.516838, y: 6.881, z: 10.913635}
+  m_LocalPosition: {x: -15.217172, y: 5.9, z: -1.31}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4858735155816308}
@@ -319,13 +319,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25ba571f5b4e6db42a4c8aac214e843e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 1
   enabled: 1
   item: {fileID: 4858735155816308}
-  itemID: 0
+  itemID: 1
   amplitude: 0.002
   speed: 2.5
   rotateSpeed: 0.5
-  respawnTime: 2
+  respawnTime: 60
 --- !u!135 &135235630155112102
 SphereCollider:
   m_ObjectHideFlags: 1
