@@ -251,6 +251,8 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     void Reload()
     {
+        if (!equipped.canReload) return;
+
         weaponHolderAnim.SetTrigger("Reload");
         reloadRoutine = StartCoroutine(ReloadRoutine());
     }

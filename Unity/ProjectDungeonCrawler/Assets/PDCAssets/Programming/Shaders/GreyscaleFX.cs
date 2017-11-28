@@ -9,7 +9,7 @@ public class GreyscaleFX : MonoBehaviour {
 
     // Creates a private material used to the effect
     void Awake() {
-        material = new Material(Shader.Find("Custom/Greyscale"));
+        //material = new Material(Shader.Find("Custom/Greyscale"));
     }
 
     // Postprocess the image
