@@ -22,7 +22,7 @@ public static class WeaponUtility {
         if (weaponData == null)
         {
             Debug.LogError("You little diptard you need to give me some weapondata!");
-            return new IHitableHit();
+            return null;
         }
 
         switch (weaponData.attackType)
@@ -32,7 +32,7 @@ public static class WeaponUtility {
             //case AttackType.Hitbox:
                 // WUBoxCast(weaponData, camera);
         }
-        return new IHitableHit();
+        return null;
     }
 
     static IHitableHit[] WUBoxCast(WeaponData wData, Transform cam)
@@ -43,12 +43,12 @@ public static class WeaponUtility {
     static IHitableHit WURaycast(WeaponData wData, Transform cam)
     {
         RaycastHit hit;
-        if(Physics.Raycast(cam.position, cam.forward, out hit, wData.range))
+        if(Physics.Raycast(cam.position, cam.forward, out hit, wData.range, GameManager.instance.hitableLayers))
         {
             IHitableHit rayHit = new IHitableHit(hit.collider.transform.GetComponent<IHitable>(), hit);
             return rayHit;
         }
-        return new IHitableHit();
+        return null;
     }
 }
 

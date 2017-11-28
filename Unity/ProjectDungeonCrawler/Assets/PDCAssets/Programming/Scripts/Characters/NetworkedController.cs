@@ -55,6 +55,12 @@ public class NetworkedController : NetworkBehaviour
     public float xInput;
     [HideInInspector]
     public float yInput;
+    [HideInInspector, SyncVar]
+    public bool sGrounded;
+    [HideInInspector, SyncVar]
+    public float sxInput;
+    [HideInInspector, SyncVar]
+    public float syInput;
 
     [Serializable]
     public struct HeadBobVariables
@@ -178,19 +184,17 @@ public class NetworkedController : NetworkBehaviour
     {
         if(anim != null)
         {
-            anim.SetFloat("MoveX", xInput);
-            anim.SetFloat("MoveY", yInput);
-            anim.SetBool("IsFalling", !grounded);
+            anim.SetFloat("MoveX", sxInput);
+            anim.SetFloat("MoveY", syInput);
+            anim.SetBool("IsFalling", !sGrounded);
 
             if (rightIKPos != null)
             {
-                print("setright");
                 ik.SetRightIKPosition(rightIKPos);
             }
 
             if (leftIKPos != null)
             {
-                print("setleft");
                 ik.SetLeftIKPosition(leftIKPos);
             }
         }
@@ -211,7 +215,9 @@ public class NetworkedController : NetworkBehaviour
     void CheckInput()
     {
         #region MovementInput
+        CmdSetX(Input.GetAxisRaw("Horizontal"));
         xInput = Input.GetAxisRaw("Horizontal");
+        CmdSetY(Input.GetAxisRaw("Vertical"));
         yInput = Input.GetAxisRaw("Vertical");
         Vector3 xVector = transform.right * xInput;
         Vector3 yVector = transform.forward * yInput;
@@ -239,10 +245,12 @@ public class NetworkedController : NetworkBehaviour
         if (Physics.SphereCast(transform.position + Vector3.up, playerFeetThickness, Vector3.down, out ground, pLength + 0.1f, playerLayer) && IsInAngle)
         {
             grounded = true;
+            CmdSetGrounded(true);
         }
         else
         {
             grounded = false;
+            CmdSetGrounded(false);
         }
         if (Physics.SphereCast(transform.position + Vector3.up, playerFeetThickness, Vector3.down, out feethit, pLength + 0.2f, playerLayer))
         {
@@ -386,5 +394,41 @@ public class NetworkedController : NetworkBehaviour
         {
             acc = Mathf.Lerp(acc, 0f, Time.fixedDeltaTime * acceleration * 2);
         }
+    }
+
+    [Command]
+    void CmdSetGrounded(bool set)
+    {
+        RpcSetGrounded(set);
+    }
+
+    [ClientRpc]
+    void RpcSetGrounded(bool set)
+    {
+        sGrounded = set;
+    }
+
+    [Command]
+    void CmdSetX(float x)
+    {
+        RpcSetX(x);
+    }
+
+    [ClientRpc]
+    void RpcSetX(float x)
+    {
+        sxInput = x;
+    }
+
+    [Command]
+    void CmdSetY(float y)
+    {
+        RpcSetY(y);
+    }
+
+    [ClientRpc]
+    void RpcSetY(float y)
+    {
+        syInput = y;
     }
 }

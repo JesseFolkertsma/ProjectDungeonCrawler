@@ -13699,6 +13699,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 114598919027241488, guid: 51ce1bb850b55c344a711e7928f21e60,
+        type: 2}
+      propertyPath: hitableLayers.m_Bits
+      value: 4294296575
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 51ce1bb850b55c344a711e7928f21e60, type: 2}
   m_IsPrefabParent: 0
@@ -14130,7 +14135,7 @@ GameObject:
   - component: {fileID: 2127670234}
   - component: {fileID: 2127670233}
   - component: {fileID: 2127670232}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: SkyboxCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
