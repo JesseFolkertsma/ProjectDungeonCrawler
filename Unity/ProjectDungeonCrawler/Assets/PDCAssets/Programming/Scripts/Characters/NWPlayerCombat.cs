@@ -32,6 +32,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     [SerializeField] bool isDead;
     [SerializeField] RigidbodyConstraints deadRBC;
     [SerializeField] Weapon[] weapons;
+    [SerializeField] GameObject blood;
 
     float shootTimer = 0f;
     bool[] wasEnabled;
@@ -110,7 +111,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         netUI = GetComponent<NetworkedUI>();
         netUI.Init(this);
         CmdJoinMatch(gameObject.name, PlayerInfo.instance.playerName);
-        CmdEquipWeapon(0);
+        CmdEquipWeapon(0, 0);
 
         foreach(NWPlayerCombat pc in FindObjectsOfType<NWPlayerCombat>())
         {
@@ -155,15 +156,15 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             Reload();
         }
 
-        if (Input.GetButtonDown("Fire2"))
-        {
-            int wepToEquip = equippedWeapon + 1;
-            if(wepToEquip > weapons.Length -1)
-            {
-                wepToEquip = 0;
-            }
-            CmdEquipWeapon(wepToEquip);
-        }
+        //if (Input.GetButtonDown("Fire2"))
+        //{
+        //    int wepToEquip = equippedWeapon + 1;
+        //    if(wepToEquip > weapons.Length -1)
+        //    {
+        //        wepToEquip = 0;
+        //    }
+        //    CmdEquipWeapon(wepToEquip, 0);
+        //}
     }
 
     [Command]
@@ -218,12 +219,20 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
         if (state != WeaponState.Idle)
             return;
-        
+
         if (equipped.data.currentAmmo > 0)
         {
             {
                 //wepTimer = Time.time + 1 / equipped.data.attackRate;
                 CmdAttack();
+            }
+        }
+        else
+        {
+            CmdButtonUp();
+            if (!equipped.canReload)
+            {
+                CmdEquipWeapon(0, 0);
             }
         }
     }
@@ -288,6 +297,11 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             GeneralCanvas.canvas.SetAmmoCount(false, true, weapons[equippedWeapon].data.maxAmmo, weapons[equippedWeapon].data.currentAmmo);
         state = WeaponState.Idle;
     }
+
+    public void EquipFromPickup(int weapID, int pickupID)
+    {
+        CmdEquipWeapon(weapID, pickupID);
+    }
     
     public void EquipWeapon(int weapon)
     {
@@ -298,18 +312,29 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         StartCoroutine(EquipRoutine());
         controller.rightIKPos = weapons[equippedWeapon].rightIK;
         controller.leftIKPos = weapons[equippedWeapon].leftIK;
+        equipped.data.currentAmmo = equipped.data.maxAmmo;
     }
 
     [Command]
-    void CmdEquipWeapon(int weapon)
+    void CmdEquipWeapon(int weapon, int pickupID)
     {
-        RpcEquipWeapon(weapon);
+        RpcEquipWeapon(weapon, pickupID);
     }
 
     [ClientRpc]
-    void RpcEquipWeapon(int weapon)
+    void RpcEquipWeapon(int weapon, int pickupID)
     {
         EquipWeapon(weapon);
+        if(pickupID != 0)
+        {
+            foreach(PickUp pu in FindObjectsOfType<PickUp>())
+            {
+                if(pu.id == pickupID)
+                {
+                    pu.Respawn();
+                }
+            }
+        }
     }
 
     public void DoAttackEffect()
@@ -328,7 +353,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
         if (iHit.iHit == null)
             CmdWeaponEffects(iHit.rayHit.point + iHit.rayHit.normal * .01f, Quaternion.LookRotation(-iHit.rayHit.normal));
-        NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(equipped.data.damage, objectName, gameObject.name);
+        NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(equipped.data.damage, objectName, gameObject.name, iHit.rayHit.point);
         if (iHit.iHit != null)
         {
             if (PlayerManager.PlayerExists(iHit.iHit.objectID))
@@ -500,6 +525,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             return;
 
         testHP -= dmgPck.damage;
+        Instantiate(blood, dmgPck.hitPosition, Quaternion.identity);
         print("Is me " + playerName + "! And i hit hit with " + dmgPck.damage.ToString() + " damage by " + dmgPck.hitter + "! I now have " + testHP.ToString() + " health.");
         if (isLocalPlayer)
             hud.UpdateHealth(testHP, 100);

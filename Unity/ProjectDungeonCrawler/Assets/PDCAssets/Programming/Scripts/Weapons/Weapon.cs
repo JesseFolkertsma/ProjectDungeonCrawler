@@ -12,6 +12,7 @@ public abstract class Weapon : MonoBehaviour
     public Vector3 clientOffset;
     public Transform rightIK;
     public Transform leftIK;
+    public bool canReload = true;
     [HideInInspector] public NWPlayerCombat pc;
 
     [HideInInspector]

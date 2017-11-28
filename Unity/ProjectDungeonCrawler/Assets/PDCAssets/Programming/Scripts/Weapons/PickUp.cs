@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PickUp : MonoBehaviour {
+    public int id;
     public bool enabled;
     public Transform item;
     public int itemID;
@@ -19,14 +20,11 @@ public class PickUp : MonoBehaviour {
     private void OnTriggerEnter(Collider other) {
         //Give weapon to player
         if (enabled) {
-            enabled = false;
             PickUpActivate(other);
-            item.gameObject.SetActive(enabled);
-            StartCoroutine(Respawn());
         }
     }
     public void PickUpActivate(Collider player) {
-        player.GetComponent<NWPlayerCombat>().EquipWeapon(itemID);
+        player.transform.root.GetComponent<NWPlayerCombat>().EquipFromPickup(itemID, id);
     }
     public void Update() {
         if (enabled) {
@@ -40,7 +38,17 @@ public class PickUp : MonoBehaviour {
         item.position = new Vector3(item.position.x,item.position.y + amplitude * Mathf.Sin(speed * Time.time),item.position.z);
         item.Rotate(new Vector3(0, rotateSpeed, 0));
     }
-    IEnumerator Respawn() {
+
+    public void Respawn()
+    {
+        StartCoroutine(RespawnRoutine());
+    }
+
+
+    IEnumerator RespawnRoutine()
+    {
+        enabled = false;
+        item.gameObject.SetActive(enabled);
         yield return new WaitForSeconds(respawnTime);
         enabled = true;
         item.gameObject.SetActive(enabled);

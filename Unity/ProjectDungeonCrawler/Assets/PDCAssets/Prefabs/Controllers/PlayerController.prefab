@@ -3774,6 +3774,7 @@ MonoBehaviour:
   clientOffset: {x: 0, y: 0.34, z: 0.044}
   rightIK: {fileID: 4990273868645440}
   leftIK: {fileID: 4586875077535412}
+  canReload: 1
   pc: {fileID: 0}
   timer: 0
   gunEnd: {fileID: 4717398526094418}
@@ -3865,6 +3866,7 @@ MonoBehaviour:
   weapons:
   - {fileID: 114384386343048550}
   - {fileID: 114589465245014518}
+  blood: {fileID: 1698809174783574, guid: 632c5ab481a3e794fb6a01ec4b2ff997, type: 2}
   netUI: {fileID: 0}
 --- !u!114 &114533655069739618
 MonoBehaviour:
@@ -3921,11 +3923,11 @@ MonoBehaviour:
   data:
     weaponName: Minigun
     description: pew
-    damage: 5
+    damage: 10
     range: 1000
     recoilIntensity: 0
-    maxAmmo: 300
-    currentAmmo: 300
+    maxAmmo: 150
+    currentAmmo: 150
     attackRate: 4
     attackType: 0
     canHoldMouseDown: 1
@@ -3935,6 +3937,7 @@ MonoBehaviour:
   clientOffset: {x: -0.128, y: 0.006, z: 0.45}
   rightIK: {fileID: 4402694353255072}
   leftIK: {fileID: 4377275123210776}
+  canReload: 0
   pc: {fileID: 0}
   timer: 0
   gunEnd: {fileID: 4214868994828908}
