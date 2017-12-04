@@ -31,9 +31,11 @@ public class MatchManager : NetworkBehaviour {
 
     private void Start()
     {
-        MyNetworkManager.singleton.connectionConfig.MaxCombinedReliableMessageCount = 30;
-        MyNetworkManager.singleton.connectionConfig.MaxCombinedReliableMessageSize = 300;
-        MyNetworkManager.singleton.connectionConfig.MaxSentMessageQueueSize = 500;
+        MyNetworkManager.mySingleton.connectionConfig.NetworkDropThreshold = 45;
+        MyNetworkManager.mySingleton.connectionConfig.OverflowDropThreshold = 45;
+        MyNetworkManager.mySingleton.connectionConfig.AckDelay = 200;
+        MyNetworkManager.mySingleton.connectionConfig.AcksType = ConnectionAcksType.Acks128;
+        MyNetworkManager.mySingleton.connectionConfig.MaxSentMessageQueueSize = 300;
         instance = this;
         netUI = FindObjectOfType<NetworkedUI>();
         ResetMatch(false);
