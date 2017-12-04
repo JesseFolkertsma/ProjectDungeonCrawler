@@ -4,6 +4,17 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class MyNetworkManager : NetworkManager {
+
+    public static MyNetworkManager mySingleton;
+
+    private void Awake()
+    {
+        if (mySingleton == null)
+            mySingleton = this;
+        else
+            Destroy(gameObject);
+    }
+
     public override void OnServerDisconnect(NetworkConnection conn)
     {
         //PlayerManager.RemovePlayer(conn.playerControllers[0].gameObject.name);

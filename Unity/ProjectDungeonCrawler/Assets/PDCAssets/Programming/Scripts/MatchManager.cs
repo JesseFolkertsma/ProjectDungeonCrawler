@@ -31,9 +31,9 @@ public class MatchManager : NetworkBehaviour {
 
     private void Start()
     {
-        NetworkManager.singleton.connectionConfig.MaxCombinedReliableMessageCount = 20;
-        NetworkManager.singleton.connectionConfig.MaxCombinedReliableMessageSize = 200;
-        NetworkManager.singleton.connectionConfig.MaxSentMessageQueueSize = 256;
+        MyNetworkManager.singleton.connectionConfig.MaxCombinedReliableMessageCount = 30;
+        MyNetworkManager.singleton.connectionConfig.MaxCombinedReliableMessageSize = 300;
+        MyNetworkManager.singleton.connectionConfig.MaxSentMessageQueueSize = 500;
         instance = this;
         netUI = FindObjectOfType<NetworkedUI>();
         ResetMatch(false);

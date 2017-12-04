@@ -14,10 +14,10 @@ public class Joining : MonoBehaviour {
 
     public GameObject lobbyPref;
 
-    private NetworkManager networkManager;
+    private MyNetworkManager networkManager;
 
     public void Start() {
-        networkManager = NetworkManager.singleton;
+        networkManager = MyNetworkManager.mySingleton;
         if (networkManager.matchMaker == null) {
             MatchMakerOn();
         }

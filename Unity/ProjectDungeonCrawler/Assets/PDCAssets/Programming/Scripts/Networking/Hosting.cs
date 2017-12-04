@@ -10,10 +10,10 @@ public class Hosting : MonoBehaviour {
 
     public Transform LobbyMenu;
 
-    private NetworkManager networkManager;
+    private MyNetworkManager networkManager;
 
     public void Start() {
-        networkManager = NetworkManager.singleton;
+        networkManager = MyNetworkManager.mySingleton;
         if (networkManager.matchMaker == null) {
             MatchMakerOn();
         }
