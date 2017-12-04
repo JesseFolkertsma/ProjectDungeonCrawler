@@ -61,7 +61,7 @@ public class MatchManager : NetworkBehaviour {
         playerData.Add(newPlayer);
 
         //GeneralCanvas.canvas.AddScoreBoardEntry(playerName, playerID);
-        Debug.Log("My friendly boi: " + playerName + " with id: " + playerID + " has joined!");
+        Debug.Log("New Player: " + playerName + " with id: " + playerID + " has joined!");
     }
 
     public void LeaveMatch(string playerID)

@@ -21,7 +21,7 @@ public static class WeaponUtility {
     {
         if (weaponData == null)
         {
-            Debug.LogError("You little diptard you need to give me some weapondata!");
+            Debug.LogError("You need to give me weapondata!");
             return null;
         }
 

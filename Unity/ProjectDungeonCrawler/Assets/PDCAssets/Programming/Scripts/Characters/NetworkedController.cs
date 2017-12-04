@@ -418,6 +418,8 @@ public class NetworkedController : NetworkBehaviour
         }
     }
 
+    //UNet Functions
+    #region UNet
     [Command]
     void CmdSetGrounded(bool set)
     {
@@ -453,4 +455,5 @@ public class NetworkedController : NetworkBehaviour
     {
         syInput = y;
     }
+    #endregion
 }

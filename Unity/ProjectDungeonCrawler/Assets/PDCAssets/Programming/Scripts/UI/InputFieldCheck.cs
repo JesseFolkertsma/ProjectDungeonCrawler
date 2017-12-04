@@ -16,7 +16,6 @@ public class InputFieldCheck : MonoBehaviour {
             targetButton.onClick.Invoke();
         }
         else {
-            print("hARRY");
         }
     }
     public void FieldEndEdit() {
