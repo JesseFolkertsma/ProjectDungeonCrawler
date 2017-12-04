@@ -28,22 +28,22 @@ public class NetworkedUI : NetworkBehaviour {
     }
 #endregion
     #region Feed/Notifications
-    [Command]
+    [Command(channel = 1)]
     public void CmdFeedMessage(string message) {
         RpcFeedMessage(message);
     }
-    [ClientRpc]
+    [ClientRpc(channel = 1)]
     public void RpcFeedMessage(string message) {
         GC.FeedMessage(message);
     }
     #endregion
     #region Chat
     //Variables//
-    [Command]
+    [Command(channel = 1)]
     public void CmdChatMessage(string message) {
         RpcChatMessage(message);
     }
-    [ClientRpc]
+    [ClientRpc(channel = 1)]
     public void RpcChatMessage(string message) {
         GC.SendMessage(message);
     }
@@ -59,7 +59,7 @@ public class NetworkedUI : NetworkBehaviour {
     }
     #endregion
 
-    [ClientRpc]
+    [ClientRpc(channel = 2)]
     public void RpcUpdateMatch(MatchData data)
     {
         GC.MatchDataUpdate(data);
