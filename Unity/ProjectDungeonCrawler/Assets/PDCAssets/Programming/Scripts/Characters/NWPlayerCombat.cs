@@ -14,35 +14,36 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         Equipping,
     }
 
-    //public variables
     [SyncVar] public float testHP = 100;
+
+    //public variables
     public bool isActive = true;
+    public int equippedWeapon;
     public Animator weaponHolderAnim;
     public Transform weaponHolder;
     public Transform offSetObject;
     public GameObject canvas;
-    public int equippedWeapon;
+    public NetworkedUI netUI;
     public WeaponState state = WeaponState.Idle;
 
 
     //private serializable
     [SerializeField] string playerName;
+    [SerializeField] bool isDead;
     [SerializeField] Behaviour[] disableOnDeath;
     [SerializeField] Collider[] playercolliders;
-    [SerializeField] bool isDead;
-    [SerializeField] RigidbodyConstraints deadRBC;
     [SerializeField] Weapon[] weapons;
     [SerializeField] GameObject blood;
+    [SerializeField] RigidbodyConstraints deadRBC;
 
+    //Private Variables
     float shootTimer = 0f;
-    bool[] wasEnabled;
-    bool mouseDown = false;
+    float wepTimer = 0f;
     float timer;
+    bool mouseDown = false;
+    bool[] wasEnabled;
     GeneralCanvas hud;
-    public NetworkedUI netUI;
-
     NetworkedController controller;
-
     RigidbodyConstraints originalRBC;
 
     Weapon equipped
@@ -120,12 +121,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
     }
 
-    [Command]
-    void CmdJoinMatch(string id, string name)
-    {
-        MatchManager.instance.JoinMatch(id, name);
-    }
-
     private void Update()
     {
         if (!isLocalPlayer)
@@ -167,18 +162,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         //}
     }
 
-    [Command]
-    void CmdButtonUp()
-    {
-        RpcButtonUp();
-    }
-
-    [ClientRpc]
-    void RpcButtonUp()
-    {
-        equipped.AttackButtonUp();
-    }
-
     void WeaponEffects()
     {
         WeaponSway();
@@ -206,9 +189,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             offSetObject.localPosition = Vector3.Lerp(offSetObject.localPosition, newPos, Time.deltaTime * 2);
         }
     }
-
-
-    float wepTimer = 0f;
+    
     void Attack()
     {
         if (!isLocalPlayer)
@@ -235,18 +216,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
                 CmdEquipWeapon(0, 0);
             }
         }
-    }
-
-    [Command]
-    void CmdAttack()
-    {
-        RpcAttack();
-    }
-
-    [ClientRpc]
-    void RpcAttack()
-    {
-        equipped.Attack();
     }
 
     void Reload()
@@ -315,28 +284,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         controller.rightIKPos = weapons[equippedWeapon].rightIK;
         controller.leftIKPos = weapons[equippedWeapon].leftIK;
         equipped.data.currentAmmo = equipped.data.maxAmmo;
-    }
-
-    [Command]
-    void CmdEquipWeapon(int weapon, int pickupID)
-    {
-        RpcEquipWeapon(weapon, pickupID);
-    }
-
-    [ClientRpc]
-    void RpcEquipWeapon(int weapon, int pickupID)
-    {
-        EquipWeapon(weapon);
-        if(pickupID != 0)
-        {
-            foreach(PickUp pu in FindObjectsOfType<PickUp>())
-            {
-                if(pu.id == pickupID)
-                {
-                    pu.Respawn();
-                }
-            }
-        }
     }
 
     public void DoAttackEffect()
@@ -444,14 +391,9 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             CmdEquipWeapon(0, 0);
         }
 
-        Debug.Log(transform.name + "! I has respawned!");
+        Debug.Log(transform.name + " has respawned!");
     }
 
-    [ClientRpc]
-    public void RpcDie()
-    {
-        Die();
-    }
 
     void Die()
     {
@@ -473,40 +415,24 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         StartCoroutine(Respawn());
     }
 
+    //UNet Commands
+    #region Commands
+    [Command]
+    void CmdJoinMatch(string id, string name)
+    {
+        MatchManager.instance.JoinMatch(id, name);
+    }
+
     [Command]
     void CmdWeaponEffects(Vector3 hitpos, Quaternion hitrot)
     {
         RpcWeaponEffects(hitpos, hitrot);
     }
 
-    [ClientRpc]
-    void RpcWeaponEffects(Vector3 hitpos, Quaternion hitrot)
-    {
-        weapons[equippedWeapon].WeaponEffects(hitpos, hitrot);
-    }
-
     [Command]
     void CmdSetName(string name)
     {
         RpcSetName(name);
-    }
-
-    [ClientRpc]
-    void RpcSetName(string name)
-    {
-        playerName = name;
-    }
-
-    [ClientRpc]
-    void RpcGetFX()
-    {
-        weapons[equippedWeapon].PlayVisuals();
-    }
-
-    [Command]
-    void CmdSendFX()
-    {
-        RpcGetFX();
     }
 
     [Command]
@@ -519,6 +445,46 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     void CmdDamageClient(string playerID, NetworkPackages.DamagePackage dmgPck)
     {
         PlayerManager.GetPlayer(playerID).RpcGetHit(dmgPck);
+    }
+
+    [Command]
+    void CmdPlayerKilled(string killerID, string victimID)
+    {
+        MatchManager.instance.PlayerKilled(killerID, victimID);
+    }
+
+    [Command]
+    void CmdEquipWeapon(int weapon, int pickupID)
+    {
+        RpcEquipWeapon(weapon, pickupID);
+    }
+
+    [Command]
+    void CmdAttack()
+    {
+        RpcAttack();
+    }
+
+    [Command]
+    void CmdButtonUp()
+    {
+        RpcButtonUp();
+    }
+    #endregion
+
+    //UNet RPC's
+    #region RPC
+
+    [ClientRpc]
+    void RpcSetName(string name)
+    {
+        playerName = name;
+    }
+
+    [ClientRpc]
+    void RpcWeaponEffects(Vector3 hitpos, Quaternion hitrot)
+    {
+        weapons[equippedWeapon].WeaponEffects(hitpos, hitrot);
     }
 
     [ClientRpc]
@@ -543,9 +509,38 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
     }
 
-    [Command]
-    void CmdPlayerKilled(string killerID, string victimID)
+    [ClientRpc]
+    public void RpcDie()
     {
-        MatchManager.instance.PlayerKilled(killerID, victimID);
+        Die();
     }
+    
+    [ClientRpc]
+    void RpcEquipWeapon(int weapon, int pickupID)
+    {
+        EquipWeapon(weapon);
+        if (pickupID != 0)
+        {
+            foreach (PickUp pu in FindObjectsOfType<PickUp>())
+            {
+                if (pu.id == pickupID)
+                {
+                    pu.Respawn();
+                }
+            }
+        }
+    }
+
+    [ClientRpc]
+    void RpcAttack()
+    {
+        equipped.Attack();
+    }
+
+    [ClientRpc]
+    void RpcButtonUp()
+    {
+        equipped.AttackButtonUp();
+    }
+    #endregion
 }

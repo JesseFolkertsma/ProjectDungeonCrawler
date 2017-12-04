@@ -8,7 +8,7 @@ public class MyNetworkManager : NetworkManager {
     {
         //PlayerManager.RemovePlayer(conn.playerControllers[0].gameObject.name);
         //MatchManager.instance.LeaveMatch(conn.playerControllers[0].gameObject.name);
-        print("A player pressed alt + f4 my dude!");
+        print("A player pressed alt + f4!");
         NetworkServer.Destroy(conn.playerControllers[0].gameObject);
         //base.OnServerDisconnect(conn);
     }
