@@ -423,7 +423,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         MatchManager.instance.JoinMatch(id, name);
     }
 
-    [Command]
+    [Command(channel = 1)]
     void CmdWeaponEffects(Vector3 hitpos, Quaternion hitrot)
     {
         RpcWeaponEffects(hitpos, hitrot);
@@ -447,13 +447,13 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         PlayerManager.GetPlayer(playerID).RpcGetHit(dmgPck);
     }
 
-    [Command]
+    [Command(channel = 2)]
     void CmdPlayerKilled(string killerID, string victimID)
     {
         MatchManager.instance.PlayerKilled(killerID, victimID);
     }
 
-    [Command]
+    [Command(channel = 1)]
     void CmdEquipWeapon(int weapon, int pickupID)
     {
         RpcEquipWeapon(weapon, pickupID);
@@ -481,7 +481,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         playerName = name;
     }
 
-    [ClientRpc]
+    [ClientRpc(channel = 1)]
     void RpcWeaponEffects(Vector3 hitpos, Quaternion hitrot)
     {
         weapons[equippedWeapon].WeaponEffects(hitpos, hitrot);
@@ -515,7 +515,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         Die();
     }
     
-    [ClientRpc]
+    [ClientRpc(channel = 1)]
     void RpcEquipWeapon(int weapon, int pickupID)
     {
         EquipWeapon(weapon);

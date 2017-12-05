@@ -8,7 +8,7 @@ using UnityEngine.Networking.Match;
 public class MatchMaking : MonoBehaviour {
 
 
-    private NetworkManager networkManager;
+    private MyNetworkManager networkManager;
 
     public string[] errorMessages;
 
@@ -19,7 +19,7 @@ public class MatchMaking : MonoBehaviour {
     public string nickName;
 
     public void Start() {
-        networkManager = NetworkManager.singleton;
+        networkManager = MyNetworkManager.mySingleton;
         if (networkManager.matchMaker == null) {
             networkManager.StartMatchMaker();
         }

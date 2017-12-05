@@ -420,37 +420,37 @@ public class NetworkedController : NetworkBehaviour
 
     //UNet Functions
     #region UNet
-    [Command]
+    [Command(channel = 2)]
     void CmdSetGrounded(bool set)
     {
         RpcSetGrounded(set);
     }
 
-    [ClientRpc]
+    [ClientRpc(channel = 2)]
     void RpcSetGrounded(bool set)
     {
         sGrounded = set;
     }
 
-    [Command]
+    [Command(channel = 2)]
     void CmdSetX(float x)
     {
         RpcSetX(x);
     }
 
-    [ClientRpc]
+    [ClientRpc(channel = 2)]
     void RpcSetX(float x)
     {
         sxInput = x;
     }
 
-    [Command]
+    [Command(channel = 2)]
     void CmdSetY(float y)
     {
         RpcSetY(y);
     }
 
-    [ClientRpc]
+    [ClientRpc(channel = 2)]
     void RpcSetY(float y)
     {
         syInput = y;
