@@ -131,6 +131,7 @@ public class NetworkedController : NetworkBehaviour
             headbobVariables.maxCameraPan = 60;
             headbobVariables.fovBonus = 50;
         }
+        StartCoroutine(UpdateAnimatorClients());
     }
 
     void Update()
