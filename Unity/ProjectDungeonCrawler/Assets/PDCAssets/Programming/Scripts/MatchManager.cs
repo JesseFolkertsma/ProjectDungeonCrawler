@@ -202,6 +202,7 @@ public class MatchData
         matchState = _matchState;
     }
 
+    [System.Serializable]
     public class PlayerMatchData
     {
         public string playerID;
