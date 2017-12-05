@@ -1,10 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class DestroyableObject : MonoBehaviour {
+public class DestroyableObject : NetworkBehaviour, IHitable {
     public GameObject replacePref;
     public bool hary;
+
+    public string objectID {
+        get {
+            return gameObject.name;
+        }
+    }
+
+    public string objectName {
+        get {
+            return gameObject.name;
+        }
+    }
+
+    public NetworkInstanceId networkID {
+        get {
+            return netId;
+        }
+    }
+
     public void Update() {
         if (hary) {
             Replace();
@@ -12,8 +32,13 @@ public class DestroyableObject : MonoBehaviour {
         }
     }
     public void Replace() {
-        GameObject newObject = Instantiate(replacePref,transform.position, transform.rotation);
-        newObject.transform.position = transform.TransformPoint(transform.position);
+        GameObject newObject = Instantiate(replacePref, transform);
+        newObject.transform.SetParent(null, true);
+        //newObject.transform.position = transform.TransformPoint(transform.position);
         Destroy(gameObject);
+    }
+
+    public void RpcGetHit(NetworkPackages.DamagePackage dmgPck) {
+        throw new System.NotImplementedException();
     }
 }

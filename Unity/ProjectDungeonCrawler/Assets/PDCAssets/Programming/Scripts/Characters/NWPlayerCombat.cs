@@ -302,6 +302,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
         if (iHit.iHit == null)
             CmdWeaponEffects(iHit.rayHit.point + iHit.rayHit.normal * .01f, Quaternion.LookRotation(-iHit.rayHit.normal));
+
         NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage((byte)equipped.data.damage, objectName, gameObject.name, iHit.rayHit.point);
         if (iHit.iHit != null)
         {
@@ -315,7 +316,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             }
             else
             {
-                CmdDamageServer(dPck, iHit.iHit.networkID);
+                iHit.rayHit.transform.GetComponent<DestroyableObject>().Replace();
             }
         }
         GeneralCanvas.canvas.SetAmmoCount(true, true, equipped.data.maxAmmo, equipped.data.currentAmmo);
@@ -436,12 +437,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     }
 
     [Command]
-    void CmdDamageServer(NetworkPackages.DamagePackage dmgPck, NetworkInstanceId objectID)
-    {
-        NetworkServer.FindLocalObject(objectID).GetComponent<IHitable>().RpcGetHit(dmgPck);
-    }
-
-    [Command]
     void CmdDamageClient(string playerID, NetworkPackages.DamagePackage dmgPck)
     {
         PlayerManager.GetPlayer(playerID).RpcGetHit(dmgPck);
@@ -480,6 +475,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     {
         playerName = name;
     }
+
 
     [ClientRpc(channel = 1)]
     void RpcWeaponEffects(Vector3 hitpos, Quaternion hitrot)
