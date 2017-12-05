@@ -12,7 +12,7 @@ public class NetworkPackages {
         public string hitterID;
         public Vector3 hitPosition;
 
-        public DamagePackage(float _damage, string _hitter, string _hitterID, Vector3 _hitPos)
+        public DamagePackage(byte _damage, string _hitter, string _hitterID, Vector3 _hitPos)
         {
             damage = _damage;
             hitter = _hitter;

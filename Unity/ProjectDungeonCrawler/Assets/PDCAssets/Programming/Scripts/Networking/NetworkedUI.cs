@@ -60,9 +60,9 @@ public class NetworkedUI : NetworkBehaviour {
     #endregion
 
     [ClientRpc(channel = 2)]
-    public void RpcUpdateMatch(MatchData data)
+    public void RpcUpdateMatch(byte[] data)
     {
-        GC.MatchDataUpdate(data);
+        GC.MatchDataUpdate((MatchData)StaticFunctions.ByteArrayToObject(data));
     }
 
     [ClientRpc]

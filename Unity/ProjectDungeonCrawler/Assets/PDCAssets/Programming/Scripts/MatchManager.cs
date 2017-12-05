@@ -182,7 +182,7 @@ public class MatchManager : NetworkBehaviour {
     void UpdateMatchData(MatchData matchData)
     {
         if (netUI == null) return;
-        netUI.RpcUpdateMatch(matchData);
+        netUI.RpcUpdateMatch(StaticFunctions.ObjectToByteArray(matchData));
     }
 
 }

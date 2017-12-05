@@ -271,7 +271,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     public void EquipFromPickup(int weapID, int pickupID)
     {
-        CmdEquipWeapon(weapID, pickupID);
+        CmdEquipWeapon((byte)weapID, (byte)pickupID);
     }
     
     public void EquipWeapon(int weapon)
@@ -302,7 +302,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
         if (iHit.iHit == null)
             CmdWeaponEffects(iHit.rayHit.point + iHit.rayHit.normal * .01f, Quaternion.LookRotation(-iHit.rayHit.normal));
-        NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(equipped.data.damage, objectName, gameObject.name, iHit.rayHit.point);
+        NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage((byte)equipped.data.damage, objectName, gameObject.name, iHit.rayHit.point);
         if (iHit.iHit != null)
         {
             if (PlayerManager.PlayerExists(iHit.iHit.objectID))
@@ -454,7 +454,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     }
 
     [Command(channel = 1)]
-    void CmdEquipWeapon(int weapon, int pickupID)
+    void CmdEquipWeapon(byte weapon, byte pickupID)
     {
         RpcEquipWeapon(weapon, pickupID);
     }
@@ -516,7 +516,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     }
     
     [ClientRpc(channel = 1)]
-    void RpcEquipWeapon(int weapon, int pickupID)
+    void RpcEquipWeapon(byte weapon, byte pickupID)
     {
         EquipWeapon(weapon);
         if (pickupID != 0)

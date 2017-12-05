@@ -28,6 +28,7 @@ public class NetworkedController : NetworkBehaviour
     public float playerLength = 1f;
     public float playerLengthCrouched = .5f;
     public float playerFeetThickness = .2f;
+    public float clientAnimatorUpdateRate = 4f;
     public AudioClip[] footSteps;
     [HideInInspector]
     public Transform rightIKPos;
@@ -162,6 +163,17 @@ public class NetworkedController : NetworkBehaviour
             }
         }
     }
+
+    IEnumerator UpdateAnimatorClients()
+    {
+        while (true)
+        {
+            CmdSetX((sbyte)(xInput * 100));
+            CmdSetY((sbyte)(yInput * 100));
+            CmdSetGrounded(grounded);
+            yield return new WaitForSeconds(1 / clientAnimatorUpdateRate);
+        }
+    }
     
     /// <summary>
     /// Enable or disable controls
@@ -216,9 +228,7 @@ public class NetworkedController : NetworkBehaviour
     void CheckInput()
     {
         #region MovementInput
-        CmdSetX(Input.GetAxisRaw("Horizontal"));
         xInput = Input.GetAxisRaw("Horizontal");
-        CmdSetY(Input.GetAxisRaw("Vertical"));
         yInput = Input.GetAxisRaw("Vertical");
         Vector3 xVector = transform.right * xInput;
         Vector3 yVector = transform.forward * yInput;
@@ -246,12 +256,10 @@ public class NetworkedController : NetworkBehaviour
         if (Physics.SphereCast(transform.position + Vector3.up, playerFeetThickness, Vector3.down, out ground, pLength + 0.1f, playerLayer) && IsInAngle)
         {
             grounded = true;
-            CmdSetGrounded(true);
         }
         else
         {
             grounded = false;
-            CmdSetGrounded(false);
         }
         if (Physics.SphereCast(transform.position + Vector3.up, playerFeetThickness, Vector3.down, out feethit, pLength + 0.2f, playerLayer))
         {
@@ -433,27 +441,27 @@ public class NetworkedController : NetworkBehaviour
     }
 
     [Command(channel = 2)]
-    void CmdSetX(float x)
+    void CmdSetX(sbyte x)
     {
         RpcSetX(x);
     }
 
     [ClientRpc(channel = 2)]
-    void RpcSetX(float x)
+    void RpcSetX(sbyte x)
     {
-        sxInput = x;
+        sxInput = x/100;
     }
 
     [Command(channel = 2)]
-    void CmdSetY(float y)
+    void CmdSetY(sbyte y)
     {
         RpcSetY(y);
     }
 
     [ClientRpc(channel = 2)]
-    void RpcSetY(float y)
+    void RpcSetY(sbyte y)
     {
-        syInput = y;
+        syInput = y/100;
     }
     #endregion
 }
