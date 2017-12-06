@@ -25,6 +25,10 @@ public class DestroyableObject : NetworkBehaviour, IHitable {
         }
     }
 
+    public override bool InvokeRPC(int cmdHash, NetworkReader reader) {
+        return base.InvokeRPC(cmdHash, reader);
+    }
+
     public void Update() {
         if (hary) {
             Replace();
