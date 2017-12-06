@@ -182,7 +182,7 @@ public class MatchManager : NetworkBehaviour {
     void UpdateMatchData(MatchData matchData)
     {
         if (netUI == null) return;
-        netUI.RpcUpdateMatch(matchData);
+        netUI.RpcUpdateMatch(StaticFunctions.ObjectToByteArray(matchData));
     }
 
 }
@@ -202,6 +202,7 @@ public class MatchData
         matchState = _matchState;
     }
 
+    [System.Serializable]
     public class PlayerMatchData
     {
         public string playerID;

@@ -271,7 +271,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     public void EquipFromPickup(int weapID, int pickupID)
     {
-        CmdEquipWeapon(weapID, pickupID);
+        CmdEquipWeapon((byte)weapID, (byte)pickupID);
     }
     
     public void EquipWeapon(int weapon)
@@ -302,7 +302,8 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
         if (iHit.iHit == null)
             CmdWeaponEffects(iHit.rayHit.point + iHit.rayHit.normal * .01f, Quaternion.LookRotation(-iHit.rayHit.normal));
-        NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage(equipped.data.damage, objectName, gameObject.name, iHit.rayHit.point);
+
+        NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage((byte)equipped.data.damage, objectName, gameObject.name, iHit.rayHit.point);
         if (iHit.iHit != null)
         {
             if (PlayerManager.PlayerExists(iHit.iHit.objectID))
@@ -315,7 +316,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             }
             else
             {
-                CmdDamageServer(dPck, iHit.iHit.networkID);
+                iHit.rayHit.transform.GetComponent<DestroyableObject>().Replace();
             }
         }
         GeneralCanvas.canvas.SetAmmoCount(true, true, equipped.data.maxAmmo, equipped.data.currentAmmo);
@@ -436,12 +437,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     }
 
     [Command]
-    void CmdDamageServer(NetworkPackages.DamagePackage dmgPck, NetworkInstanceId objectID)
-    {
-        NetworkServer.FindLocalObject(objectID).GetComponent<IHitable>().RpcGetHit(dmgPck);
-    }
-
-    [Command]
     void CmdDamageClient(string playerID, NetworkPackages.DamagePackage dmgPck)
     {
         PlayerManager.GetPlayer(playerID).RpcGetHit(dmgPck);
@@ -454,7 +449,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     }
 
     [Command(channel = 1)]
-    void CmdEquipWeapon(int weapon, int pickupID)
+    void CmdEquipWeapon(byte weapon, byte pickupID)
     {
         RpcEquipWeapon(weapon, pickupID);
     }
@@ -480,6 +475,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     {
         playerName = name;
     }
+
 
     [ClientRpc(channel = 1)]
     void RpcWeaponEffects(Vector3 hitpos, Quaternion hitrot)
@@ -516,7 +512,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     }
     
     [ClientRpc(channel = 1)]
-    void RpcEquipWeapon(int weapon, int pickupID)
+    void RpcEquipWeapon(byte weapon, byte pickupID)
     {
         EquipWeapon(weapon);
         if (pickupID != 0)

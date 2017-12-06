@@ -6,7 +6,7 @@ using UnityEngine;
 public class WeaponData {
     public string weaponName;
     public string description;
-    public float damage;
+    public int damage;
     public float range;
     public float recoilIntensity;
     public int maxAmmo;
@@ -17,7 +17,7 @@ public class WeaponData {
 
     public WeaponData() { }
 
-    public WeaponData(string _name, string _desc, float _dmg, float _range, int _maxAmmo, float _aRate, AttackType _aType, bool _canHoldMouseDown = false)
+    public WeaponData(string _name, string _desc, int _dmg, float _range, int _maxAmmo, float _aRate, AttackType _aType, bool _canHoldMouseDown = false)
     {
         weaponName = _name;
         description = _desc;

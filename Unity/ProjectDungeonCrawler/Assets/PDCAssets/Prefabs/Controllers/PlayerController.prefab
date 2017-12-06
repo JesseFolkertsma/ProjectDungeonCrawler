@@ -3826,6 +3826,7 @@ MonoBehaviour:
   playerLength: 1
   playerLengthCrouched: 0.5
   playerFeetThickness: 0.2
+  clientAnimatorUpdateRate: 4
   footSteps:
   - {fileID: 8300000, guid: 8d4406feafb5bd94799534918c81e575, type: 3}
   rightIKPos: {fileID: 0}
@@ -3850,24 +3851,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   testHP: 100
   isActive: 1
+  equippedWeapon: 0
   weaponHolderAnim: {fileID: 95210221700041736}
   weaponHolder: {fileID: 4750375687892324}
   offSetObject: {fileID: 4744753356104310}
   canvas: {fileID: 1878224029624964, guid: d48bb95b21becec4cb5d62936c6e06de, type: 2}
-  equippedWeapon: 0
+  netUI: {fileID: 0}
   state: 0
   playerName: 
+  isDead: 0
   disableOnDeath:
   - {fileID: 114454382125572154}
   - {fileID: 114978034932212936}
   playercolliders: []
-  isDead: 0
-  deadRBC: 0
   weapons:
   - {fileID: 114384386343048550}
   - {fileID: 114589465245014518}
   blood: {fileID: 1698809174783574, guid: 632c5ab481a3e794fb6a01ec4b2ff997, type: 2}
-  netUI: {fileID: 0}
+  deadRBC: 0
 --- !u!114 &114533655069739618
 MonoBehaviour:
   m_ObjectHideFlags: 1
