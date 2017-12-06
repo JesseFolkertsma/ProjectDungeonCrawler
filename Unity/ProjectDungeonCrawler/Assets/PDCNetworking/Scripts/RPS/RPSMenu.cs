@@ -8,16 +8,16 @@ using UnityEngine.Networking;
 public class RPSMenu : NetworkBehaviour {
     public int choice;
     public int currentMatchID;
-    [ClientRpc]
+    [ClientRpc(channel = 3)]
     public void RpcRequest(int matchID) {
         currentMatchID = matchID;
         //Activate popup for rps request
     }
-    [ClientRpc]
+    [ClientRpc(channel = 3)]
     public void RpcToggle(int i) {
         //Can Toggle the UI off and On
     }
-    [Command]
+    [Command(channel = 3)]
     public void CmdRequestAnswer(int i) {
         if(i == 0) {
             // Call RPSMatch in RPSManager and tell it that you accepted
@@ -37,7 +37,7 @@ public class RPSMenu : NetworkBehaviour {
     public void Select(int i) {
         choice = i;
     }
-    [Command]
+    [Command(channel = 3)]
     public void CmdLockIn() {
         // Call RPSMatch Answer(choice, transform.name);
     }

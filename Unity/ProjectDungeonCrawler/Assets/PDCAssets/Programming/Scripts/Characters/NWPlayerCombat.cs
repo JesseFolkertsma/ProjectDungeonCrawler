@@ -418,7 +418,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     //UNet Commands
     #region Commands
-    [Command]
+    [Command(channel =3)]
     void CmdJoinMatch(string id, string name)
     {
         MatchManager.instance.JoinMatch(id, name);
@@ -430,13 +430,13 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         RpcWeaponEffects(hitpos, hitrot);
     }
 
-    [Command]
+    [Command(channel = 3)]
     void CmdSetName(string name)
     {
         RpcSetName(name);
     }
 
-    [Command]
+    [Command(channel = 3)]
     void CmdDamageClient(string playerID, NetworkPackages.DamagePackage dmgPck)
     {
         PlayerManager.GetPlayer(playerID).RpcGetHit(dmgPck);
@@ -454,13 +454,13 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         RpcEquipWeapon(weapon, pickupID);
     }
 
-    [Command]
+    [Command(channel = 3)]
     void CmdAttack()
     {
         RpcAttack();
     }
 
-    [Command]
+    [Command(channel = 3)]
     void CmdButtonUp()
     {
         RpcButtonUp();
@@ -470,7 +470,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     //UNet RPC's
     #region RPC
 
-    [ClientRpc]
+    [ClientRpc(channel = 3)]
     void RpcSetName(string name)
     {
         playerName = name;
@@ -483,7 +483,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         weapons[equippedWeapon].WeaponEffects(hitpos, hitrot);
     }
 
-    [ClientRpc]
+    [ClientRpc(channel = 3)]
     public void RpcGetHit(NetworkPackages.DamagePackage dmgPck)
     {
         if (isDead)
@@ -505,7 +505,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
     }
 
-    [ClientRpc]
+    [ClientRpc(channel = 3)]
     public void RpcDie()
     {
         Die();
@@ -527,13 +527,13 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
     }
 
-    [ClientRpc]
+    [ClientRpc(channel = 3)]
     void RpcAttack()
     {
         equipped.Attack();
     }
 
-    [ClientRpc]
+    [ClientRpc(channel = 3)]
     void RpcButtonUp()
     {
         equipped.AttackButtonUp();

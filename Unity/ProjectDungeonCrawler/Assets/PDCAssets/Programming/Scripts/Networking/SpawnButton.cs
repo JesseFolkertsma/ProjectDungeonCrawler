@@ -7,7 +7,7 @@ public class SpawnButton : NetworkBehaviour {
     public GameObject objectToSpawn;
     public Transform spawnPosition;
     
-    [Command]
+    [Command(channel = 3)]
     public void CmdSpawn()
     {
         GameObject go = (GameObject)Instantiate(objectToSpawn, spawnPosition.position, spawnPosition.rotation);
