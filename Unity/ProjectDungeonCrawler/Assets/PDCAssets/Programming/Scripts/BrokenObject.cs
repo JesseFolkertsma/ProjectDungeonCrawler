@@ -8,7 +8,8 @@ public class BrokenObject : MonoBehaviour {
     public int explosionRadius;
     public void Start() {
         foreach (Rigidbody child in transform.GetComponentsInChildren<Rigidbody>()) {
-            child.AddExplosionForce(explosionForce, exploc, explosionRadius);
+            child.AddExplosionForce(explosionForce, transform.position, explosionRadius);
         }
     }
 }
+ 
