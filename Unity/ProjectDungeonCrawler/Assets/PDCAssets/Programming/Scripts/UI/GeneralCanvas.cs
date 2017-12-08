@@ -186,7 +186,7 @@ public class GeneralCanvas : MonoBehaviour {
         foreach(Image CH in crosshairs) {
             CH.enabled = false;
         }
-        crosshairs[0].enabled = true;
+        //crosshairs[0].enabled = true;
     }
 
     public void EnableCrosshair(int id) {
