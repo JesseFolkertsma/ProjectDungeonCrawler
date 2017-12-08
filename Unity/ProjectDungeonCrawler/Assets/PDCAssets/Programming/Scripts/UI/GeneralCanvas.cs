@@ -14,11 +14,12 @@ public class GeneralCanvas : MonoBehaviour {
     private void Awake () {
         chatAnim = chatContent.parent.GetComponent<Animator>();
         canvas = this;
+        CHStart();
     }
     private void Update() {
         Controls();
         if (Input.GetKey(KeyCode.K)) {
-            SetAmmoCount(true, true, 100, 50);
+
         }
     }
     public void MatchDataUpdate(MatchData data) {
@@ -174,13 +175,49 @@ public class GeneralCanvas : MonoBehaviour {
     }
 
     #endregion
-    #region Hitmarker
+    #region Crosshairs
     //Variables//
-    public Transform hm;
+    public Transform hitMark;
+    public Image[] crosshairs;
+    public Vector2[] specsCH;
+    public int currentCH;
 
+    public void CHStart() {
+        foreach(Image CH in crosshairs) {
+            CH.enabled = false;
+        }
+        crosshairs[0].enabled = true;
+    }
+
+    public void EnableCrosshair(int id) {
+        crosshairs[id].enabled = false;
+        currentCH = id;
+        crosshairs[currentCH].enabled = true;
+    }
+    /*
+    public float LerpSpread(float value, float targetValue, int percentage) {
+        print("Target value : " + targetValue + " Current value : " + value);
+        float newValue = value;
+        float lerpJump = (targetValue - value)/100 * percentage;
+        newValue = Mathf.Lerp(newValue, targetValue, lerpJump);
+        print("New value = " + newValue);
+        return newValue;
+    }
+    public void IncreaseSpread(int percentage) {
+        Vector3 scaleCH = crosshairs[currentCH].rectTransform.localScale;
+        Vector3 newScale = new Vector3(LerpSpread(scaleCH.x,specsCH[currentCH].y, percentage), LerpSpread(scaleCH.y, specsCH[currentCH].y, percentage), 1);
+        print(newScale + "" + scaleCH);
+        crosshairs[currentCH].rectTransform.localScale = newScale;
+    }*/
     //Enables hitmark animations//
     public void HitMark() {
-        hm.GetChild(0).GetComponent<Animator>().SetTrigger("Hit");
+        hitMark.GetChild(0).GetComponent<Animator>().SetTrigger("Hit");
+    }
+    //Will reset the size of the crosshair to minimal size over time
+    public IEnumerator CHreset() {
+        while (crosshairs[currentCH].rectTransform.localScale.y != specsCH[currentCH].y) {
+            yield return new WaitForSeconds(0.5f);
+        }
     }
 
     #endregion
