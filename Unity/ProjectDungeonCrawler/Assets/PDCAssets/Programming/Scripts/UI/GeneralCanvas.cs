@@ -14,7 +14,6 @@ public class GeneralCanvas : MonoBehaviour {
     private void Awake () {
         chatAnim = chatContent.parent.GetComponent<Animator>();
         canvas = this;
-        CHStart();
     }
     private void Update() {
         Controls();
@@ -177,7 +176,11 @@ public class GeneralCanvas : MonoBehaviour {
     #endregion
     #region Crosshairs
     //Variables//
+
+ 
     public Transform hitMark;
+
+    /*
     public Image[] crosshairs;
     public Vector2[] specsCH;
     public int currentCH;
@@ -186,7 +189,7 @@ public class GeneralCanvas : MonoBehaviour {
         foreach(Image CH in crosshairs) {
             CH.enabled = false;
         }
-        crosshairs[0].enabled = true;
+        //crosshairs[0].enabled = true;
     }
 
     public void EnableCrosshair(int id) {
@@ -194,7 +197,6 @@ public class GeneralCanvas : MonoBehaviour {
         currentCH = id;
         crosshairs[currentCH].enabled = true;
     }
-    /*
     public float LerpSpread(float value, float targetValue, int percentage) {
         print("Target value : " + targetValue + " Current value : " + value);
         float newValue = value;
@@ -208,10 +210,6 @@ public class GeneralCanvas : MonoBehaviour {
         Vector3 newScale = new Vector3(LerpSpread(scaleCH.x,specsCH[currentCH].y, percentage), LerpSpread(scaleCH.y, specsCH[currentCH].y, percentage), 1);
         print(newScale + "" + scaleCH);
         crosshairs[currentCH].rectTransform.localScale = newScale;
-    }*/
-    //Enables hitmark animations//
-    public void HitMark() {
-        hitMark.GetChild(0).GetComponent<Animator>().SetTrigger("Hit");
     }
     //Will reset the size of the crosshair to minimal size over time
     public IEnumerator CHreset() {
@@ -219,6 +217,12 @@ public class GeneralCanvas : MonoBehaviour {
             yield return new WaitForSeconds(0.5f);
         }
     }
+         */
+    //Enables hitmark animations//
+    public void HitMark() {
+        hitMark.GetChild(0).GetComponent<Animator>().SetTrigger("Hit");
+    }
+
 
     #endregion
     #region Health
