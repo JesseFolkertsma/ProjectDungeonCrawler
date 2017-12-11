@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -108,6 +108,22 @@ NavMeshSettings:
     tileSize: 256
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &172785387 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1243296276744722, guid: d48bb95b21becec4cb5d62936c6e06de,
+    type: 2}
+  m_PrefabInternal: {fileID: 1675368948}
+--- !u!225 &172785391
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 172785387}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!224 &300709640 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224830760470881562, guid: d48bb95b21becec4cb5d62936c6e06de,
@@ -455,6 +471,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1189711460}
   - component: {fileID: 1189711461}
+  - component: {fileID: 1189711462}
   m_Layer: 5
   m_Name: Crosshair02
   m_TagString: Untagged
@@ -501,6 +518,17 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!225 &1189711462
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1189711459}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1261725039
 GameObject:
   m_ObjectHideFlags: 0
@@ -731,7 +759,7 @@ Prefab:
     - target: {fileID: 224498832181630128, guid: d48bb95b21becec4cb5d62936c6e06de,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -225
       objectReference: {fileID: 0}
     - target: {fileID: 224498832181630128, guid: d48bb95b21becec4cb5d62936c6e06de,
         type: 2}
@@ -741,7 +769,7 @@ Prefab:
     - target: {fileID: 224498832181630128, guid: d48bb95b21becec4cb5d62936c6e06de,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 224199090186639926, guid: d48bb95b21becec4cb5d62936c6e06de,
         type: 2}
@@ -761,7 +789,7 @@ Prefab:
     - target: {fileID: 224199090186639926, guid: d48bb95b21becec4cb5d62936c6e06de,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -375
       objectReference: {fileID: 0}
     - target: {fileID: 224199090186639926, guid: d48bb95b21becec4cb5d62936c6e06de,
         type: 2}
@@ -771,7 +799,7 @@ Prefab:
     - target: {fileID: 224199090186639926, guid: d48bb95b21becec4cb5d62936c6e06de,
         type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 224179246454195510, guid: d48bb95b21becec4cb5d62936c6e06de,
         type: 2}
@@ -783,6 +811,11 @@ Prefab:
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114189711647141958, guid: d48bb95b21becec4cb5d62936c6e06de,
+        type: 2}
+      propertyPath: crosshairObject
+      value: 
+      objectReference: {fileID: 300709640}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d48bb95b21becec4cb5d62936c6e06de, type: 2}
   m_IsPrefabParent: 0

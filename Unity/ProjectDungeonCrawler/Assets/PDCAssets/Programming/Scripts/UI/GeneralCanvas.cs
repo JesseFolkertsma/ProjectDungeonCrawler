@@ -14,11 +14,15 @@ public class GeneralCanvas : MonoBehaviour {
     private void Awake () {
         chatAnim = chatContent.parent.GetComponent<Animator>();
         canvas = this;
+        crosshairStart();
     }
     private void Update() {
         Controls();
         if (Input.GetKey(KeyCode.K)) {
-
+            CHChange(1);
+        }
+        if (Input.GetKey(KeyCode.J)) {
+            CHSpread();
         }
     }
     public void MatchDataUpdate(MatchData data) {
@@ -177,47 +181,44 @@ public class GeneralCanvas : MonoBehaviour {
     #region Crosshairs
     //Variables//
 
- 
+    Transform currentCH;
+    Animator currentCHAnim;
+    public Transform crosshairObject;
     public Transform hitMark;
 
-    /*
-    public Image[] crosshairs;
-    public Vector2[] specsCH;
-    public int currentCH;
+    Coroutine spread;
 
-    public void CHStart() {
-        foreach(Image CH in crosshairs) {
-            CH.enabled = false;
-        }
-        //crosshairs[0].enabled = true;
-    }
-
-    public void EnableCrosshair(int id) {
-        crosshairs[id].enabled = false;
-        currentCH = id;
-        crosshairs[currentCH].enabled = true;
-    }
-    public float LerpSpread(float value, float targetValue, int percentage) {
-        print("Target value : " + targetValue + " Current value : " + value);
-        float newValue = value;
-        float lerpJump = (targetValue - value)/100 * percentage;
-        newValue = Mathf.Lerp(newValue, targetValue, lerpJump);
-        print("New value = " + newValue);
-        return newValue;
-    }
-    public void IncreaseSpread(int percentage) {
-        Vector3 scaleCH = crosshairs[currentCH].rectTransform.localScale;
-        Vector3 newScale = new Vector3(LerpSpread(scaleCH.x,specsCH[currentCH].y, percentage), LerpSpread(scaleCH.y, specsCH[currentCH].y, percentage), 1);
-        print(newScale + "" + scaleCH);
-        crosshairs[currentCH].rectTransform.localScale = newScale;
-    }
-    //Will reset the size of the crosshair to minimal size over time
-    public IEnumerator CHreset() {
-        while (crosshairs[currentCH].rectTransform.localScale.y != specsCH[currentCH].y) {
-            yield return new WaitForSeconds(0.5f);
+    public void crosshairStart() {
+        foreach(Transform child in crosshairObject) {
+            child.GetComponent<CanvasGroup>().alpha = 0;
         }
     }
-         */
+
+    public void CHChange(int index) {
+        if (currentCH != null) {
+            currentCH.GetComponent<CanvasGroup>().alpha = 0;
+        }
+        currentCH = crosshairObject.GetChild(index);
+        currentCHAnim = currentCH.GetComponent<Animator>();
+        currentCH.GetComponent<CanvasGroup>().alpha = 1;
+    }
+    public void CHSpread() {
+        if (currentCHAnim != null) {
+            if (spread != null) {
+                StopCoroutine(spread);
+            }
+            currentCHAnim.SetFloat("Blend", 1);
+            spread = StartCoroutine(SpreadReset());
+        }
+    }
+    IEnumerator SpreadReset() {
+        while (currentCHAnim.GetFloat("Blend") >= 0) {
+            float n = currentCHAnim.GetFloat("Blend");
+            currentCHAnim.SetFloat("Blend", Mathf.Lerp(n, 0, 0.1f));
+            yield return new WaitForSeconds(0.01f);
+        }
+        currentCHAnim.SetFloat("Blend", 0);
+    }
     //Enables hitmark animations//
     public void HitMark() {
         hitMark.GetChild(0).GetComponent<Animator>().SetTrigger("Hit");
