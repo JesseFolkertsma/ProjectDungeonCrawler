@@ -19,7 +19,7 @@ public class GeneralCanvas : MonoBehaviour {
     private void Update() {
         Controls();
         if (Input.GetKey(KeyCode.K)) {
-            CHChange(1);
+            CHChange(2);
         }
         if (Input.GetKey(KeyCode.J)) {
             CHSpread();
