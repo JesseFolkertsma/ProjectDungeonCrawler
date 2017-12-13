@@ -87,7 +87,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         wasEnabled = new bool[disableOnDeath.Length];
         for (int i = 0; i < disableOnDeath.Length; i++)
         {
-            wasEnabled[i] = disableOnDeath[i].enabled; 
+            wasEnabled[i] = disableOnDeath[i].enabled;
         }
         originalRBC = controller.rb.constraints;
         SetDefaults();
@@ -114,7 +114,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         CmdJoinMatch(gameObject.name, PlayerInfo.instance.playerName);
         CmdEquipWeapon(0, 0);
 
-        foreach(NWPlayerCombat pc in FindObjectsOfType<NWPlayerCombat>())
+        foreach (NWPlayerCombat pc in FindObjectsOfType<NWPlayerCombat>())
         {
             if (pc != this)
                 pc.EquipWeapon(pc.equippedWeapon);
@@ -150,16 +150,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             Reload();
         }
-
-        //if (Input.GetButtonDown("Fire2"))
-        //{
-        //    int wepToEquip = equippedWeapon + 1;
-        //    if(wepToEquip > weapons.Length -1)
-        //    {
-        //        wepToEquip = 0;
-        //    }
-        //    CmdEquipWeapon(wepToEquip, 0);
-        //}
     }
 
     void WeaponEffects()
@@ -189,12 +179,9 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             offSetObject.localPosition = Vector3.Lerp(offSetObject.localPosition, newPos, Time.deltaTime * 2);
         }
     }
-    
+
     void Attack()
     {
-        if (!isLocalPlayer)
-            return;
-
         if (!equipped.data.canHoldMouseDown && mouseDown)
             return;
 
@@ -203,27 +190,79 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
         if (equipped.data.currentAmmo > 0)
         {
+            if (equipped.timer < Time.time)
             {
-                //wepTimer = Time.time + 1 / equipped.data.attackRate;
-                CmdAttack();
+                equipped.timer = Time.time + 1 / equipped.data.attackRate;
+                AttackEffect();
+                equipped.Attack();
             }
         }
         else
         {
-            CmdButtonUp();
             if (!equipped.canReload)
             {
+                CmdButtonUp();
                 CmdEquipWeapon(0, 0);
             }
+            else
+            {
+                Reload();
+            }
+        }
+    }
+
+    public void AttackEffect()
+    {
+        equipped.data.currentAmmo--;
+        GeneralCanvas.canvas.CHSpread(equipped.data.recoilIntensity);
+        GeneralCanvas.canvas.SetAmmoCount(true, true, equipped.data.maxAmmo, equipped.data.currentAmmo);
+        float rngHeight = UnityEngine.Random.Range(-.02f, .02f);
+        float rngWidth = UnityEngine.Random.Range(-.02f, .02f);
+        Transform cam = controller.playerCam.transform;
+        Vector3 rngDir = cam.forward + cam.up * rngHeight + cam.right * rngWidth;
+        Ray newRay = new Ray(cam.position, rngDir);
+          
+        WeaponUtility.IHitableHit iHit = WeaponUtility.GetEnemiesInAttack(equipped.data, newRay);
+        if (iHit == null)
+        {
+            //Hit Nothing
+            CmdMuzzleFlash();
+            return;
+        }
+
+        if (iHit.iHit == null)
+        {
+            //Hit EnviromentObject
+            CmdEnviromentHit(iHit.rayHit.point + iHit.rayHit.normal * .01f, Quaternion.LookRotation(-iHit.rayHit.normal));
+            return;
+        }
+
+        NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage((byte)equipped.data.damage, objectName, gameObject.name, iHit.rayHit.point);
+        if (PlayerManager.PlayerExists(iHit.iHit.objectID))
+        {
+            hud.HitMark();
+            string playerID = iHit.iHit.objectID;
+            Debug.Log("I wil damage: " + playerID.ToString());
+            //Damage player
+            CmdPlayerHit(playerID, dPck);
+        }
+        else
+        {
+            CmdMuzzleFlash();
+            iHit.rayHit.transform.GetComponent<DestroyableObject>().Replace();
         }
     }
 
     void Reload()
     {
-        if (!equipped.canReload) return;
+        if (!equipped.canReload || state == WeaponState.Reloading || equipped.data.currentAmmo == equipped.data.maxAmmo) return;
 
-        weaponHolderAnim.SetTrigger("Reload");
-        reloadRoutine = StartCoroutine(ReloadRoutine());
+        if (reloadRoutine == null)
+        {
+            state = WeaponState.Reloading;
+            weaponHolderAnim.SetTrigger("Reload");
+            reloadRoutine = StartCoroutine(ReloadRoutine());
+        }
     }
 
     Coroutine reloadRoutine;
@@ -244,10 +283,11 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         state = WeaponState.Idle;
 
         GeneralCanvas.canvas.Reloading(false);
+        reloadRoutine = null;
     }
 
     Coroutine equipRoutine;
-    IEnumerator EquipRoutine()
+    IEnumerator EquipRoutine(int wepID)
     {
         if(isLocalPlayer)
             GeneralCanvas.canvas.Reloading(false);
@@ -264,8 +304,11 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             yield return null;
         }
-        if(isLocalPlayer)
+        if (isLocalPlayer)
+        {
             GeneralCanvas.canvas.SetAmmoCount(false, true, weapons[equippedWeapon].data.maxAmmo, weapons[equippedWeapon].data.currentAmmo);
+            GeneralCanvas.canvas.CHChange(wepID);
+        }
         state = WeaponState.Idle;
     }
 
@@ -280,46 +323,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         weapons[equippedWeapon].gameObject.SetActive(false);
         equippedWeapon = weapon;
         weapons[equippedWeapon].gameObject.SetActive(true);
-        StartCoroutine(EquipRoutine());
+        StartCoroutine(EquipRoutine(weapon));
         controller.rightIKPos = weapons[equippedWeapon].rightIK;
         controller.leftIKPos = weapons[equippedWeapon].leftIK;
         equipped.data.currentAmmo = equipped.data.maxAmmo;
-    }
-
-    public void DoAttackEffect()
-    {
-        equipped.PlayVisuals();
-        if (!isLocalPlayer)
-        {
-            return;
-        }
-        // Effects
-
-        equipped.data.currentAmmo--;
-        WeaponUtility.IHitableHit iHit = WeaponUtility.GetEnemiesInAttack(equipped.data, controller.playerCam.transform);
-        if (iHit == null)
-            return;
-
-        if (iHit.iHit == null)
-            CmdWeaponEffects(iHit.rayHit.point + iHit.rayHit.normal * .01f, Quaternion.LookRotation(-iHit.rayHit.normal));
-
-        NetworkPackages.DamagePackage dPck = new NetworkPackages.DamagePackage((byte)equipped.data.damage, objectName, gameObject.name, iHit.rayHit.point);
-        if (iHit.iHit != null)
-        {
-            if (PlayerManager.PlayerExists(iHit.iHit.objectID))
-            {
-                hud.HitMark();
-                string playerID = iHit.iHit.objectID;
-                Debug.Log("I wil damage: " + playerID.ToString());
-                //Damage player
-                CmdDamageClient(playerID, dPck);
-            }
-            else
-            {
-                iHit.rayHit.transform.GetComponent<DestroyableObject>().Replace();
-            }
-        }
-        GeneralCanvas.canvas.SetAmmoCount(true, true, equipped.data.maxAmmo, equipped.data.currentAmmo);
     }
 
     public bool SetEquippedWeapon(int _weaponInt, bool _override)
@@ -416,7 +423,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         StartCoroutine(Respawn());
     }
 
-    //UNet Commands
+    //Server Commands
     #region Commands
     [Command(channel =3)]
     void CmdJoinMatch(string id, string name)
@@ -424,11 +431,15 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         MatchManager.instance.JoinMatch(id, name);
     }
 
-    [Command(channel = 1)]
-    void CmdWeaponEffects(Vector3 hitpos, Quaternion hitrot)
+    [Command(channel = 2)]
+    void CmdPlayerKilled(string killerID, string victimID)
     {
-        RpcWeaponEffects(hitpos, hitrot);
+        MatchManager.instance.PlayerKilled(killerID, victimID);
     }
+    #endregion
+
+    //Gameplay Unet functions
+    #region Unet
 
     [Command(channel = 3)]
     void CmdSetName(string name)
@@ -436,51 +447,42 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         RpcSetName(name);
     }
 
-    [Command(channel = 3)]
-    void CmdDamageClient(string playerID, NetworkPackages.DamagePackage dmgPck)
-    {
-        PlayerManager.GetPlayer(playerID).RpcGetHit(dmgPck);
-    }
-
-    [Command(channel = 2)]
-    void CmdPlayerKilled(string killerID, string victimID)
-    {
-        MatchManager.instance.PlayerKilled(killerID, victimID);
-    }
-
-    [Command(channel = 1)]
-    void CmdEquipWeapon(byte weapon, byte pickupID)
-    {
-        RpcEquipWeapon(weapon, pickupID);
-    }
-
-    [Command(channel = 3)]
-    void CmdAttack()
-    {
-        RpcAttack();
-    }
-
-    [Command(channel = 3)]
-    void CmdButtonUp()
-    {
-        RpcButtonUp();
-    }
-    #endregion
-
-    //UNet RPC's
-    #region RPC
-
     [ClientRpc(channel = 3)]
     void RpcSetName(string name)
     {
         playerName = name;
     }
 
+    [Command(channel = 1)]
+    void CmdMuzzleFlash()
+    {
+        RpcMuzzleFlash();
+    }
 
     [ClientRpc(channel = 1)]
-    void RpcWeaponEffects(Vector3 hitpos, Quaternion hitrot)
+    void RpcMuzzleFlash()
     {
+        equipped.PlayVisuals();
+    }
+
+    [Command(channel = 1)]
+    void CmdEnviromentHit(Vector3 hitpos, Quaternion hitrot)
+    {
+        RpcEnviromentHit(hitpos, hitrot);
+    }
+
+    [ClientRpc(channel = 1)]
+    void RpcEnviromentHit(Vector3 hitpos, Quaternion hitrot)
+    {
+        equipped.PlayVisuals();
         weapons[equippedWeapon].WeaponEffects(hitpos, hitrot);
+    }
+
+    [Command(channel = 3)]
+    void CmdPlayerHit(string playerID, NetworkPackages.DamagePackage dmgPck)
+    {
+        equipped.PlayVisuals();
+        PlayerManager.GetPlayer(playerID).RpcGetHit(dmgPck);
     }
 
     [ClientRpc(channel = 3)]
@@ -510,7 +512,13 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     {
         Die();
     }
-    
+
+    [Command(channel = 1)]
+    void CmdEquipWeapon(byte weapon, byte pickupID)
+    {
+        RpcEquipWeapon(weapon, pickupID);
+    }
+
     [ClientRpc(channel = 1)]
     void RpcEquipWeapon(byte weapon, byte pickupID)
     {
@@ -527,13 +535,25 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
     }
 
+    [Command(channel = 4)]
+    void CmdAttack()
+    {
+        RpcAttack();
+    }
+
     [ClientRpc(channel = 3)]
     void RpcAttack()
     {
         equipped.Attack();
     }
 
-    [ClientRpc(channel = 3)]
+    [Command(channel = 4)]
+    void CmdButtonUp()
+    {
+        RpcButtonUp();
+    }
+
+    [ClientRpc(channel = 4)]
     void RpcButtonUp()
     {
         equipped.AttackButtonUp();

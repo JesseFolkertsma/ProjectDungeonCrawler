@@ -15,7 +15,7 @@ public class Gun : Weapon {
 
     public void MuzzleFlash()
     {
-        pc.DoAttackEffect();
+        //pc.AttackEffect();
     }
 
     public override void PlayVisuals()

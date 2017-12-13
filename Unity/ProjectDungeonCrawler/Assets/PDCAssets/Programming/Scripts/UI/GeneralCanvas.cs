@@ -19,10 +19,11 @@ public class GeneralCanvas : MonoBehaviour {
     private void Update() {
         Controls();
         if (Input.GetKey(KeyCode.K)) {
-            CHChange(2);
+            CHChange(1);
         }
         if (Input.GetKey(KeyCode.J)) {
-            CHSpread();
+
+            CHSpread(.1f);
         }
     }
     public void MatchDataUpdate(MatchData data) {
@@ -202,12 +203,17 @@ public class GeneralCanvas : MonoBehaviour {
         currentCHAnim = currentCH.GetComponent<Animator>();
         currentCH.GetComponent<CanvasGroup>().alpha = 1;
     }
-    public void CHSpread() {
+    public void CHSpread(float amount) {
         if (currentCHAnim != null) {
+            float newAmount = currentCHAnim.GetFloat("Blend") + amount;
+            if(newAmount > 1)
+            {
+                newAmount = 1;
+            }
             if (spread != null) {
                 StopCoroutine(spread);
             }
-            currentCHAnim.SetFloat("Blend", 1);
+            currentCHAnim.SetFloat("Blend", newAmount);
             spread = StartCoroutine(SpreadReset());
         }
     }

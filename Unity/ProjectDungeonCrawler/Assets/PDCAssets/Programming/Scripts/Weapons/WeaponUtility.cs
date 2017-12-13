@@ -17,7 +17,7 @@ public static class WeaponUtility {
         }
     }
 
-    public static IHitableHit GetEnemiesInAttack(WeaponData weaponData, Transform camera)
+    public static IHitableHit GetEnemiesInAttack(WeaponData weaponData, Ray ray)
     {
         if (weaponData == null)
         {
@@ -28,7 +28,7 @@ public static class WeaponUtility {
         switch (weaponData.attackType)
         {
             case AttackType.Raycast:
-                return WURaycast(weaponData, camera);
+                return WURaycast(weaponData, ray);
             //case AttackType.Hitbox:
                 // WUBoxCast(weaponData, camera);
         }
@@ -40,10 +40,10 @@ public static class WeaponUtility {
         return new IHitableHit[0];
     }
 
-    static IHitableHit WURaycast(WeaponData wData, Transform cam)
+    static IHitableHit WURaycast(WeaponData wData, Ray ray)
     {
         RaycastHit hit;
-        if(Physics.Raycast(cam.position, cam.forward, out hit, wData.range, GameManager.instance.hitableLayers))
+        if(Physics.Raycast(ray, out hit, wData.range, GameManager.instance.hitableLayers))
         {
             IHitableHit rayHit = new IHitableHit(hit.collider.transform.GetComponent<IHitable>(), hit);
             return rayHit;
