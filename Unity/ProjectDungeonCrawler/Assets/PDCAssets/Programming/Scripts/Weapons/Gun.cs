@@ -21,6 +21,7 @@ public class Gun : Weapon {
     public override void PlayVisuals()
     {
         base.PlayVisuals();
+        Attack();
         //muzzleFlash.Play();
         Instantiate(muzzleFlash, gunEnd.position, gunEnd.rotation);
     }

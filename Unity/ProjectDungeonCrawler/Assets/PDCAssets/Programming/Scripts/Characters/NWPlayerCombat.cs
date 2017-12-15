@@ -193,7 +193,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             {
                 equipped.timer = Time.time + 1 / equipped.data.attackRate;
                 AttackEffect();
-                equipped.Attack();
             }
         }
         else
