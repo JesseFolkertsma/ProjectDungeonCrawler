@@ -28,13 +28,14 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
 
     //private serializable
+    [SerializeField] GameObject ragdoll;
+    [SerializeField] SkinnedMeshRenderer[] visuals;
     [SerializeField] string playerName;
     [SerializeField] bool isDead;
     [SerializeField] Behaviour[] disableOnDeath;
     [SerializeField] Collider[] playercolliders;
     [SerializeField] Weapon[] weapons;
     [SerializeField] GameObject blood;
-    [SerializeField] RigidbodyConstraints deadRBC;
 
     //Private Variables
     float shootTimer = 0f;
@@ -44,7 +45,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     bool[] wasEnabled;
     GeneralCanvas hud;
     NetworkedController controller;
-    RigidbodyConstraints originalRBC;
 
     Weapon equipped
     {
@@ -89,7 +89,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             wasEnabled[i] = disableOnDeath[i].enabled;
         }
-        originalRBC = controller.rb.constraints;
         SetDefaults();
         SetEquippedWeapon(0, true);
 
@@ -380,8 +379,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             col.enabled = true;
         }
-
-        controller.rb.constraints = originalRBC;
     }
 
     IEnumerator Respawn()
@@ -398,6 +395,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             hud.UpdateHealth(100, 100);
             CmdEquipWeapon(0, 0);
         }
+        foreach (SkinnedMeshRenderer render in visuals)
+        {
+            render.enabled = true;
+        }
 
         Debug.Log(transform.name + " has respawned!");
     }
@@ -411,9 +412,11 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
 
         isDead = true;
-        
-        controller.rb.constraints = deadRBC;
-        controller.rb.AddExplosionForce(10000, transform.position - transform.up + new Vector3(UnityEngine.Random.Range(-1, 1), 0, UnityEngine.Random.Range(-1, 1)), 10);
+        foreach(SkinnedMeshRenderer render in visuals)
+        {
+            render.enabled = false;
+        }
+        Instantiate(ragdoll, transform.position, transform.rotation);
 
         for (int i = 0; i < disableOnDeath.Length; i++)
         {
