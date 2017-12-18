@@ -19,12 +19,10 @@ public class GeneralCanvas : MonoBehaviour {
     private void Update() {
         Controls();
         if (Input.GetKey(KeyCode.K)) {
-            CHChange(2);
+            NewUsable(0);
         }
         if (Input.GetKey(KeyCode.J)) {
-
-            CHSpread(.1f);
-            HitMark();
+            NewUsable(1);
         }
     }
     public void MatchDataUpdate(MatchData data) {
@@ -433,6 +431,25 @@ public class GeneralCanvas : MonoBehaviour {
         }
     }
     #endregion
+    #region Usable Slot
+    public Transform slot;
+    int currentUsable;
+
+    public void StartUsables() {
+        foreach(Transform child in slot) {
+            child.GetComponent<CanvasGroup>().alpha = 0;
+        }
+    }
+
+    public void NewUsable(int id) {
+        slot.GetChild(currentUsable).GetComponent<CanvasGroup>().alpha = 0;
+        currentUsable = id;
+        slot.GetChild(currentUsable).GetComponent<CanvasGroup>().alpha = 1;
+    }
+    public void UseUsable() {
+        slot.GetChild(currentUsable).GetComponent<CanvasGroup>().alpha = 0;
+    }
+#endregion
     #region Tools
     public List<T> ConvertList<T>(List<T> convertable) {
         List<T> ret = new List<T>();
