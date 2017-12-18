@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour {
         }
         else
         {
-            if(pObject.objectsInScene.Count >= 50)
+            if(pObject.objectsInScene.Count >= pObject.maxObjects)
             {
                 GameObject newObject = pObject.objectsInScene.Peek();
                 pObject.objectsInScene.Enqueue(pObject.objectsInScene.Dequeue());
