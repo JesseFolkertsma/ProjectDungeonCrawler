@@ -117,6 +117,19 @@ public class NetworkedController : NetworkBehaviour
         }
     }
 
+    bool Grounded
+    {
+        get
+        {
+            return grounded;
+        }
+        set
+        {
+            grounded = value;
+            CmdSetGrounded(value);
+        }
+    }
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -171,7 +184,7 @@ public class NetworkedController : NetworkBehaviour
         {
             CmdSetX((sbyte)(xInput * 100));
             CmdSetY((sbyte)(yInput * 100));
-            CmdSetGrounded(grounded);
+            //CmdSetGrounded(grounded);
             yield return new WaitForSeconds(1 / clientAnimatorUpdateRate);
         }
     }
@@ -256,11 +269,11 @@ public class NetworkedController : NetworkBehaviour
         RaycastHit ground;
         if (Physics.SphereCast(transform.position + Vector3.up, playerFeetThickness, Vector3.down, out ground, pLength + 0.1f, playerLayer) && IsInAngle)
         {
-            grounded = true;
+            Grounded = true;
         }
         else
         {
-            grounded = false;
+            Grounded = false;
         }
         if (Physics.SphereCast(transform.position + Vector3.up, playerFeetThickness, Vector3.down, out feethit, pLength + 0.2f, playerLayer))
         {
@@ -429,37 +442,40 @@ public class NetworkedController : NetworkBehaviour
 
     //UNet Functions
     #region UNet
-    [Command(channel = 2)]
+    [Command(channel = 3)]
     void CmdSetGrounded(bool set)
     {
-        RpcSetGrounded(set);
+        //RpcSetGrounded(set);
+        sGrounded = set;
     }
 
-    [ClientRpc(channel = 2)]
+    [ClientRpc(channel = 3)]
     void RpcSetGrounded(bool set)
     {
         sGrounded = set;
     }
 
-    [Command(channel = 2)]
+    [Command(channel = 3)]
     void CmdSetX(sbyte x)
     {
-        RpcSetX(x);
+        //RpcSetX(x);
+        sxInput = x / 100;
     }
 
-    [ClientRpc(channel = 2)]
+    [ClientRpc(channel = 3)]
     void RpcSetX(sbyte x)
     {
         sxInput = x/100;
     }
 
-    [Command(channel = 2)]
+    [Command(channel = 3)]
     void CmdSetY(sbyte y)
     {
-        RpcSetY(y);
+        //RpcSetY(y);
+        syInput = y / 100;
     }
 
-    [ClientRpc(channel = 2)]
+    [ClientRpc(channel = 3)]
     void RpcSetY(sbyte y)
     {
         syInput = y/100;
