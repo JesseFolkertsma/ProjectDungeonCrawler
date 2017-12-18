@@ -46,7 +46,11 @@ public class GameManager : MonoBehaviour {
         {
             if(pObject.objectsInScene.Count >= 50)
             {
-                return pObject.objectsInScene.Dequeue();
+                GameObject newObject = pObject.objectsInScene.Peek();
+                pObject.objectsInScene.Enqueue(pObject.objectsInScene.Dequeue());
+                newObject.transform.position = position;
+                newObject.transform.rotation = rotation;
+                return newObject;
             }
             else
             {
@@ -65,5 +69,5 @@ public class PoolableObject
     public GameObject poolObject;
     public int maxObjects;
     [HideInInspector]
-    public Queue<GameObject> objectsInScene;
+    public Queue<GameObject> objectsInScene = new Queue<GameObject>();
 }
