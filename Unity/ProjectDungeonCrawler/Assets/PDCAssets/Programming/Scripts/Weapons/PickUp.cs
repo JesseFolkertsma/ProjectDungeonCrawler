@@ -5,6 +5,8 @@ using UnityEngine;
 public class PickUp : MonoBehaviour {
     public int id;
     public bool enabled;
+    public enum Category {Weapon, Usable}
+    public Category category;
     public Transform item;
     public int itemID;
 
@@ -24,11 +26,11 @@ public class PickUp : MonoBehaviour {
         }
     }
     public void PickUpActivate(Collider player) {
-        player.transform.root.GetComponent<NWPlayerCombat>().EquipFromPickup(itemID, id);
+        player.transform.root.GetComponent<NWPlayerCombat>().EquipFromPickup(itemID, (int)category, id);
     }
     public void Update() {
         if (enabled) {
-            Hover();
+            Hover();    
         }
     }
     public void Toggle(bool enable) {
