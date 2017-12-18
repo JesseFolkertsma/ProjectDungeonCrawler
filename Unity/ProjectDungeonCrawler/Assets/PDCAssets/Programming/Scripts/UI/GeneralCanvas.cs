@@ -24,6 +24,7 @@ public class GeneralCanvas : MonoBehaviour {
         if (Input.GetKey(KeyCode.J)) {
 
             CHSpread(.1f);
+            HitMark();
         }
     }
     public void MatchDataUpdate(MatchData data) {
@@ -185,7 +186,7 @@ public class GeneralCanvas : MonoBehaviour {
     Transform currentCH;
     Animator currentCHAnim;
     public Transform crosshairObject;
-    public Transform hitMark;
+    public Animator hitMark;
 
     Coroutine spread;
 
@@ -227,7 +228,7 @@ public class GeneralCanvas : MonoBehaviour {
     }
     //Enables hitmark animations//
     public void HitMark() {
-        hitMark.GetChild(0).GetComponent<Animator>().SetTrigger("Hit");
+        hitMark.SetTrigger("Hit");
     }
 
 
