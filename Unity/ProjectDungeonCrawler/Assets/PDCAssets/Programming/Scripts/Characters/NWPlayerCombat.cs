@@ -212,6 +212,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     public void AttackEffect()
     {
         equipped.data.currentAmmo--;
+        equipped.PlayVisuals();
         GeneralCanvas.canvas.CHSpread(equipped.data.recoilIntensity);
         GeneralCanvas.canvas.SetAmmoCount(true, true, equipped.data.maxAmmo, equipped.data.currentAmmo);
         float rngHeight = UnityEngine.Random.Range(-.02f, .02f);
@@ -231,7 +232,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         if (iHit.iHit == null)
         {
             //Hit EnviromentObject
-            CmdEnviromentHit(iHit.rayHit.point + iHit.rayHit.normal * .01f, Quaternion.LookRotation(-iHit.rayHit.normal));
+            Vector3 hitpos = iHit.rayHit.point + iHit.rayHit.normal * .01f;
+            Quaternion hitrot = Quaternion.LookRotation(-iHit.rayHit.normal);
+            equipped.WeaponEffects(hitpos, hitrot);
+            CmdEnviromentHit(hitpos, hitrot);
             return;
         }
 
@@ -464,7 +468,8 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     [ClientRpc(channel = 1)]
     void RpcMuzzleFlash()
     {
-        equipped.PlayVisuals();
+        if(!isLocalPlayer)
+            equipped.PlayVisuals();
     }
 
     [Command(channel = 1)]
@@ -476,14 +481,17 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     [ClientRpc(channel = 1)]
     void RpcEnviromentHit(Vector3 hitpos, Quaternion hitrot)
     {
-        equipped.PlayVisuals();
-        weapons[equippedWeapon].WeaponEffects(hitpos, hitrot);
+        if (!isLocalPlayer)
+        {
+            equipped.PlayVisuals();
+            weapons[equippedWeapon].WeaponEffects(hitpos, hitrot);
+        }
     }
 
     [Command(channel = 3)]
     void CmdPlayerHit(string playerID, NetworkPackages.DamagePackage dmgPck)
     {
-        equipped.PlayVisuals();
+        RpcMuzzleFlash();
         PlayerManager.GetPlayer(playerID).RpcGetHit(dmgPck);
     }
 
