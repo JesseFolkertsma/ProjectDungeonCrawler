@@ -314,7 +314,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         state = WeaponState.Idle;
     }
 
-    public void EquipFromPickup(int weapID, int pickupID)
+    public void EquipFromPickup(int weapID, int category,int pickupID)
     {
         CmdEquipWeapon((byte)weapID, (byte)pickupID);
     }
