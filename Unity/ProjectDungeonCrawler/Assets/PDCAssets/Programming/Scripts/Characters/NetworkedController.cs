@@ -144,7 +144,7 @@ public class NetworkedController : NetworkBehaviour
             headbobVariables.maxCameraPan = 60;
             headbobVariables.fovBonus = 50;
         }
-        StartCoroutine(UpdateAnimatorClients());
+        //StartCoroutine(UpdateAnimatorClients());
     }
 
     void Update()
@@ -182,8 +182,6 @@ public class NetworkedController : NetworkBehaviour
     {
         while (true)
         {
-            CmdSetX((sbyte)(xInput * 100));
-            CmdSetY((sbyte)(yInput * 100));
             //CmdSetGrounded(grounded);
             yield return new WaitForSeconds(1 / clientAnimatorUpdateRate);
         }
@@ -207,6 +205,7 @@ public class NetworkedController : NetworkBehaviour
         }
     }
 
+    float animTimer = 0;
     public void HandleAnimations()
     {
         if(anim != null)
@@ -223,6 +222,13 @@ public class NetworkedController : NetworkBehaviour
             if (leftIKPos != null)
             {
                 ik.SetLeftIKPosition(leftIKPos);
+            }
+
+            if(animTimer < Time.time)
+            {
+                animTimer = Time.time + 1 / clientAnimatorUpdateRate;
+                CmdSetX((sbyte)(xInput * 100));
+                CmdSetY((sbyte)(yInput * 100));
             }
         }
     }
