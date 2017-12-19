@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    public GameObject SpawnObject(string objectName, Vector3 position, Quaternion rotation)
+    public GameObject SpawnObject(string objectName, Vector3 position, Quaternion rotation, bool isParticle)
     {
         PoolableObject pObject = null;
         foreach(PoolableObject po in poolableObjects)
@@ -50,6 +50,10 @@ public class GameManager : MonoBehaviour {
                 pObject.objectsInScene.Enqueue(pObject.objectsInScene.Dequeue());
                 newObject.transform.position = position;
                 newObject.transform.rotation = rotation;
+                if (isParticle)
+                {
+                    newObject.GetComponent<PoolableParticle>().Activate();
+                }
                 return newObject;
             }
             else

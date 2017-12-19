@@ -36,6 +36,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     [SerializeField] Collider[] playercolliders;
     [SerializeField] Weapon[] weapons;
     [SerializeField] GameObject blood;
+    [SerializeField] GameObject dynamite;
 
     //Private Variables
     float shootTimer = 0f;
@@ -148,6 +149,11 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         if (Input.GetButtonDown("Reload"))
         {
             Reload();
+        }
+        if (Input.GetButtonDown("Throw"))
+        {
+            CmdThrowDynamite();
+            print("a");
         }
     }
 
@@ -431,6 +437,13 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     //Server Commands
     #region Commands
+    [Command(channel = 4)]
+    void CmdThrowDynamite()
+    {
+        GameObject newDynamite = Instantiate(dynamite, controller.playerCam.transform.position, controller.playerCam.transform.rotation);
+        NetworkServer.Spawn(newDynamite);
+    }
+
     [Command(channel =3)]
     void CmdJoinMatch(string id, string name)
     {
