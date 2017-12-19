@@ -44,7 +44,7 @@ public abstract class Weapon : MonoBehaviour
     {
         if (hitDecal != null)
         {
-            GameManager.instance.SpawnObject("Decal", hitpos, hitrot);
+            GameManager.instance.SpawnObject("Decal", hitpos, hitrot, false);
         }
     }
 
