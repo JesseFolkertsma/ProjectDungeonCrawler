@@ -152,7 +152,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
         if (Input.GetButtonDown("Throw"))
         {
-            CmdThrowDynamite();
+            CmdThrowDynamite(objectName, gameObject.name);
             print("a");
         }
     }
@@ -412,6 +412,26 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         Debug.Log(transform.name + " has respawned!");
     }
 
+    public void GetHit(NetworkPackages.DamagePackage dmgPck)
+    {
+        if (isDead)
+            return;
+
+        testHP -= dmgPck.damage;
+        Instantiate(blood, dmgPck.hitPosition, Quaternion.identity);
+        print("Is me " + playerName + "! And i hit hit with " + dmgPck.damage.ToString() + " damage by " + dmgPck.hitter + "! I now have " + testHP.ToString() + " health.");
+        if (isLocalPlayer)
+            hud.UpdateHealth(testHP, 100);
+        if (testHP <= 0)
+        {
+            Die();
+            if (isLocalPlayer)
+            {
+                CmdPlayerKilled(dmgPck.hitterID, gameObject.name);
+                netUI.CmdFeedMessage(dmgPck.hitter + " has killed " + objectName + "!");
+            }
+        }
+    }
 
     void Die()
     {
@@ -437,12 +457,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     //Server Commands
     #region Commands
-    [Command(channel = 4)]
-    void CmdThrowDynamite()
-    {
-        GameObject newDynamite = Instantiate(dynamite, controller.playerCam.transform.position, controller.playerCam.transform.rotation);
-        NetworkServer.Spawn(newDynamite);
-    }
 
     [Command(channel =3)]
     void CmdJoinMatch(string id, string name)
@@ -459,6 +473,21 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     //Gameplay Unet functions
     #region Unet
+    [Command(channel = 4)]
+    void CmdThrowDynamite(string _owner, string _ownerID)
+    {
+        GameObject newDynamite = Instantiate(dynamite, controller.playerCam.transform.position, controller.playerCam.transform.rotation);
+        DynamiteObject dynamiteObject = newDynamite.GetComponent<DynamiteObject>();
+        dynamiteObject.SetOwner(_owner, _ownerID);
+        NetworkServer.Spawn(newDynamite);
+        RpcThrowDynamite(newDynamite);
+    }
+
+    [ClientRpc(channel = 4)]
+    void RpcThrowDynamite(GameObject go)
+    {
+        go.GetComponent<DynamiteObject>().LightFuse();
+    }
 
     [Command(channel = 3)]
     void CmdSetName(string name)
@@ -508,26 +537,16 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         PlayerManager.GetPlayer(playerID).RpcGetHit(dmgPck);
     }
 
+    [Command(channel = 3)]
+    public void CmdGetHit(NetworkPackages.DamagePackage dmgPck)
+    {
+        RpcGetHit(dmgPck);
+    }
+
     [ClientRpc(channel = 3)]
     public void RpcGetHit(NetworkPackages.DamagePackage dmgPck)
     {
-        if (isDead)
-            return;
-
-        testHP -= dmgPck.damage;
-        Instantiate(blood, dmgPck.hitPosition, Quaternion.identity);
-        print("Is me " + playerName + "! And i hit hit with " + dmgPck.damage.ToString() + " damage by " + dmgPck.hitter + "! I now have " + testHP.ToString() + " health.");
-        if (isLocalPlayer)
-            hud.UpdateHealth(testHP, 100);
-        if (testHP <= 0)
-        {
-            Die();
-            if (isLocalPlayer)
-            {
-                CmdPlayerKilled(dmgPck.hitterID, gameObject.name);
-                netUI.CmdFeedMessage(dmgPck.hitter + " has killed " + objectName + "!");
-            }
-        }
+        GetHit(dmgPck);
     }
 
     [ClientRpc(channel = 3)]
