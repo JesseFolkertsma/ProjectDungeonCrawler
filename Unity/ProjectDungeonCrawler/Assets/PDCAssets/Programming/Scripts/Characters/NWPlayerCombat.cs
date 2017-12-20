@@ -260,7 +260,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             switch (iHit.iHit.objectID)
             {
                 case "Dynamite":
-                    CmdDestroyDynamite(iHit.rayHit.transform.gameObject);
+                    //CmdDestroyDynamite(iHit.rayHit.transform.gameObject);
                     break;
                 case "Breakable":
                     iHit.rayHit.transform.GetComponent<DestroyableObject>().Replace();
