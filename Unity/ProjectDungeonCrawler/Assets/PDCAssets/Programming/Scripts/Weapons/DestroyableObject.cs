@@ -9,7 +9,7 @@ public class DestroyableObject : NetworkBehaviour, IHitable {
 
     public string objectID {
         get {
-            return gameObject.name;
+            return "Breakable";
         }
     }
 

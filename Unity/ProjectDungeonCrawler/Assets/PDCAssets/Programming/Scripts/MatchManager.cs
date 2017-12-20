@@ -85,6 +85,19 @@ public class MatchManager : NetworkBehaviour {
 
     public void PlayerKilled(string killerID, string victimID)
     {
+        //Check for suicide
+        if(killerID == victimID)
+        {
+            foreach (MatchData.PlayerMatchData pmd in playerData)
+            {
+                if (pmd.playerID == killerID)
+                {
+                    pmd.deaths++;
+                    return;
+                }
+            }
+        }
+
         bool killerFound = false;
         bool victimFound = false;
         foreach (MatchData.PlayerMatchData pmd in playerData)

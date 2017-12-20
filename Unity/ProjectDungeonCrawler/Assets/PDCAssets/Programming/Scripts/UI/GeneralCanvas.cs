@@ -442,6 +442,7 @@ public class GeneralCanvas : MonoBehaviour {
     }
 
     public void NewUsable(int id) {
+        id -= 1;
         slot.GetChild(currentUsable).GetComponent<CanvasGroup>().alpha = 0;
         currentUsable = id;
         slot.GetChild(currentUsable).GetComponent<CanvasGroup>().alpha = 1;

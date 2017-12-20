@@ -205,7 +205,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1111043792120664}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 131.16829, y: 12.007129, z: 164.00656}
   m_LocalScale: {x: 0.044251714, y: 0.044251703, z: 0.044251703}
   m_Children:
   - {fileID: 4180724557569150}
@@ -263,7 +263,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 798851a4a3d9a7347bd7d41d0d963e65, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.25
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -395,6 +395,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particles: []
+  aSource: {fileID: 0}
 --- !u!198 &198275058629646774
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -454,7 +455,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1905810603
+  randomSeed: -1344758797
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -3649,7 +3650,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -2091003790
+  randomSeed: 1359226839
   InitialModule:
     serializedVersion: 3
     enabled: 1
