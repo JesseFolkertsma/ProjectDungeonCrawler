@@ -26,7 +26,7 @@ public class PickUp : MonoBehaviour {
         }
     }
     public void PickUpActivate(Collider player) {
-        player.transform.root.GetComponent<NWPlayerCombat>().EquipFromPickup(itemID, (int)category, id);
+        player.transform.root.GetComponent<NWPlayerCombat>().EquipFromPickup(itemID, category, id);
     }
     public void Update() {
         if (enabled) {

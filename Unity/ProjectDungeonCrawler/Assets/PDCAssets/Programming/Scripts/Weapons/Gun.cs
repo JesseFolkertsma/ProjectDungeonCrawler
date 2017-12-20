@@ -23,6 +23,6 @@ public class Gun : Weapon {
         base.PlayVisuals();
         Attack();
         //muzzleFlash.Play();
-        GameManager.instance.SpawnObject("MuzzleFlash", gunEnd.position, gunEnd.rotation, true);
+        GameManager.instance.SpawnObject("MuzzleFlash", gunEnd.position, gunEnd.rotation);
     }
 }
