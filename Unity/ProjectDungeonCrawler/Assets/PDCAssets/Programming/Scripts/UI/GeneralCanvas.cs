@@ -18,8 +18,8 @@ public class GeneralCanvas : MonoBehaviour {
     }
     private void Update() {
         Controls();
-        if (Input.GetKey(KeyCode.K)) {
-            NewUsable(0);
+        if (Input.GetKeyDown(KeyCode.K)) {
+            UpdateHealth(50, 100);
         }
         if (Input.GetKey(KeyCode.J)) {
             NewUsable(1);
@@ -234,9 +234,19 @@ public class GeneralCanvas : MonoBehaviour {
     #region Health
     //Variables/
     public Image hp;
+    public float toBeRecovered;
     //Updates the health bar with the given data//
     public void UpdateHealth(float currentHP, float maxHP) {
-        hp.fillAmount = (currentHP / (maxHP / 100)) / 100;
+        toBeRecovered = (currentHP / (maxHP / 100)) / 100;
+        print(toBeRecovered);
+        print(currentHP / 100);
+        StartCoroutine(healthFill(currentHP / 100));
+    }
+    IEnumerator healthFill(float currentHP) {
+        while(toBeRecovered != 0) {
+            hp.fillAmount = Mathf.MoveTowards(hp.fillAmount, currentHP, 0.005f);
+            yield return null;
+        }
     }
     #endregion
     #region Ammo
@@ -442,6 +452,7 @@ public class GeneralCanvas : MonoBehaviour {
     }
 
     public void NewUsable(int id) {
+        id -= 1;
         slot.GetChild(currentUsable).GetComponent<CanvasGroup>().alpha = 0;
         currentUsable = id;
         slot.GetChild(currentUsable).GetComponent<CanvasGroup>().alpha = 1;
