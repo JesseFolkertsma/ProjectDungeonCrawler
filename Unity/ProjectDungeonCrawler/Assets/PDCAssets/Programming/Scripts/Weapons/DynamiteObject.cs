@@ -68,6 +68,7 @@ public class DynamiteObject : NetworkBehaviour, IHitable
         if (!exploded)
         {
             exploded = true;
+            Instantiate(explosionParticle, transform.position, Quaternion.identity);
             if (isServer)
             {
                 Collider[] hits = Physics.OverlapSphere(transform.position, explosionRadius, layermask);
@@ -83,7 +84,6 @@ public class DynamiteObject : NetworkBehaviour, IHitable
                 }
                 NetworkServer.Destroy(this.gameObject);
             }
-            Instantiate(explosionParticle, transform.position, Quaternion.identity);
         }
     }
 
