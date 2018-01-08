@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 114127580565754866}
   - component: {fileID: 114103799535472024}
   - component: {fileID: 54043832301972546}
+  - component: {fileID: 114372469710767232}
   m_Layer: 21
   m_Name: DynamiteObject
   m_TagString: Untagged
@@ -182,6 +183,27 @@ MonoBehaviour:
     m_Bits: 393216
   explosionParticle: {fileID: 1664679584324712, guid: d8dab380827326944a8e1b4484240b81,
     type: 2}
+--- !u!114 &114372469710767232
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1329780706554392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 3
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_VelocityThreshold: 0.0001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!136 &136325261892546660
 CapsuleCollider:
   m_ObjectHideFlags: 1
