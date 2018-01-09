@@ -248,12 +248,15 @@ public class GeneralCanvas : MonoBehaviour {
     //Variables/
     public Image hp;
     public float toBeRecovered;
+
+    Coroutine regen;
     //Updates the health bar with the given data//
     public void UpdateHealth(float currentHP, float maxHP) {
+        StopCoroutine(regen);
         toBeRecovered = (currentHP / (maxHP / 100)) / 100;
         print(toBeRecovered);
         print(currentHP / 100);
-        StartCoroutine(healthFill(currentHP / 100));
+        regen = StartCoroutine(healthFill(currentHP / 100));
     }
     IEnumerator healthFill(float currentHP) {
         while(toBeRecovered != 0) {
