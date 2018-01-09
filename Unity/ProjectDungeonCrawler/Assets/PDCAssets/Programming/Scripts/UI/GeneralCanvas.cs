@@ -22,7 +22,7 @@ public class GeneralCanvas : MonoBehaviour {
             UpdateHealth(50, 100);
         }
         if (Input.GetKey(KeyCode.J)) {
-            NewUsable(1);
+            UpdateHealth(20, 100);
         }
     }
     public void MatchDataUpdate(MatchData data) {
@@ -239,6 +239,7 @@ public class GeneralCanvas : MonoBehaviour {
     Coroutine regen;
     //Updates the health bar with the given data//
     public void UpdateHealth(float currentHP, float maxHP) {
+        if(regen != null)
         StopCoroutine(regen);
         toBeRecovered = (currentHP / (maxHP / 100)) / 100;
         print(toBeRecovered);
