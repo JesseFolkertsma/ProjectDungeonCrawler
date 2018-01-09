@@ -188,6 +188,8 @@ public class GeneralCanvas : MonoBehaviour {
 
     Coroutine spread;
 
+    public GameObject zoomPanel;
+
     public void crosshairStart() {
         foreach(Transform child in crosshairObject) {
             child.GetComponent<CanvasGroup>().alpha = 0;
@@ -229,6 +231,17 @@ public class GeneralCanvas : MonoBehaviour {
         hitMark.SetTrigger("Hit");
     }
 
+    public bool Zoom
+    {
+        set
+        {
+            zoomPanel.SetActive(value);
+        }
+        get
+        {
+            return zoomPanel.activeSelf;
+        }
+    }
 
     #endregion
     #region Health
