@@ -45,8 +45,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     float timer;
     bool mouseDown = false;
     bool[] wasEnabled;
+    bool isZoomed = false;
     GeneralCanvas hud;
     NetworkedController controller;
+    ClampedCamera camClass;
 
     Weapon equipped
     {
@@ -84,6 +86,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     {
         //Setup for every instance of the player on all clients
         controller = GetComponent<NetworkedController>();
+        camClass = GetComponentInChildren<ClampedCamera>();
 
         //ComponentSetup
         wasEnabled = new bool[disableOnDeath.Length];
@@ -146,6 +149,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             CmdButtonUp();
             mouseDown = false;
         }
+        if (Input.GetButtonDown("Fire2"))
+        {
+            Zoom(!isZoomed);
+        }
 
         if (Input.GetButtonDown("Reload"))
         {
@@ -185,6 +192,28 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
     }
 
+    void Zoom(bool state)
+    {
+        if (!equipped.IsInBaseState())
+        {
+            state = false;
+        }
+        isZoomed = state;
+        GeneralCanvas.canvas.Zoom = state;
+        if(state == true)
+        {
+            controller.playerCam.fov = 5;
+            camClass.sensitivity.x = .2f;
+            camClass.sensitivity.y = .2f;
+        }
+        else
+        {
+            controller.playerCam.fov = 70;
+            camClass.sensitivity.x = 2;
+            camClass.sensitivity.y = 2;
+        }
+    }
+
     void Attack()
     {
         if (!equipped.data.canHoldMouseDown && mouseDown)
@@ -198,7 +227,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             if (equipped.timer < Time.time)
             {
                 equipped.timer = Time.time + 1 / equipped.data.attackRate;
-                AttackEffect();
+                AttackEffect(1 , equipped.data.spread);
             }
         }
         else
@@ -215,14 +244,15 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
     }
 
-    public void AttackEffect()
+    public void AttackEffect(int rays, float spread)
     {
         equipped.data.currentAmmo--;
         equipped.PlayVisuals();
-        GeneralCanvas.canvas.CHSpread(equipped.data.recoilIntensity);
+        Zoom(false);
+        GeneralCanvas.canvas.CHSpread(equipped.data.spread);
         GeneralCanvas.canvas.SetAmmoCount(true, true, equipped.data.maxAmmo, equipped.data.currentAmmo);
-        float rngHeight = UnityEngine.Random.Range(-.02f, .02f);
-        float rngWidth = UnityEngine.Random.Range(-.02f, .02f);
+        float rngHeight = UnityEngine.Random.Range(-spread, spread);
+        float rngWidth = UnityEngine.Random.Range(-spread, spread);
         Transform cam = controller.playerCam.transform;
         Vector3 rngDir = cam.forward + cam.up * rngHeight + cam.right * rngWidth;
         Ray newRay = new Ray(cam.position, rngDir);
@@ -275,6 +305,8 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
         if (reloadRoutine == null)
         {
+
+            Zoom(false);
             state = WeaponState.Reloading;
             weaponHolderAnim.SetTrigger("Reload");
             reloadRoutine = StartCoroutine(ReloadRoutine());
