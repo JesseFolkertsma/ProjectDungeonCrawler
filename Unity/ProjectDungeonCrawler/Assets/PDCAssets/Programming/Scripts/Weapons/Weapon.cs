@@ -7,6 +7,7 @@ public abstract class Weapon : MonoBehaviour
 
     public WeaponData data;
     public Animator anim;
+    public Animator overallAnim;
     public GameObject hitDecal;
     public GameObject weaponEffect;
     public Vector3 clientOffset;
@@ -25,6 +26,7 @@ public abstract class Weapon : MonoBehaviour
         {
             transform.localPosition = clientOffset;
         }
+        overallAnim = transform.parent.parent.GetComponent<Animator>();
     }
 
     public virtual void Attack()
@@ -55,6 +57,6 @@ public abstract class Weapon : MonoBehaviour
 
     public bool IsInBaseState()
     {
-        return (anim.GetCurrentAnimatorStateInfo(0).IsTag("Base"));
+        return (anim.GetCurrentAnimatorStateInfo(0).IsTag("Base") && overallAnim.GetCurrentAnimatorStateInfo(0).IsTag("Idle"));
     }
 }

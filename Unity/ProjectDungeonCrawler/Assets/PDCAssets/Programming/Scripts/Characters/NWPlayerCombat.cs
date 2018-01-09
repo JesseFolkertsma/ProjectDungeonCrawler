@@ -194,6 +194,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     void Zoom(bool state)
     {
+        if (!equipped.IsInBaseState())
+        {
+            state = false;
+        }
         isZoomed = state;
         GeneralCanvas.canvas.Zoom = state;
         if(state == true)
