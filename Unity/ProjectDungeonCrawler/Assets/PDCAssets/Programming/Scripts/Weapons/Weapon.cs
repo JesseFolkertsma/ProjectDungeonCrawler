@@ -38,6 +38,11 @@ public abstract class Weapon : MonoBehaviour
         anim.SetBool("Attacking", false);
     }
 
+    public virtual void RightClick(bool down)
+    {
+
+    }
+
     public virtual void PlayVisuals() { }
 
     public virtual void WeaponEffects(Vector3 hitpos, Quaternion hitrot)
