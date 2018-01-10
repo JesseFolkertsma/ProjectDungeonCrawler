@@ -2,14 +2,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GeneralCanvas : MonoBehaviour {
-
+    GameObject networkManager;
 
     #region General
     //Variables//
+
     public static GeneralCanvas canvas;
     private void Awake () {
         chatAnim = chatContent.parent.GetComponent<Animator>();
@@ -87,9 +89,11 @@ public class GeneralCanvas : MonoBehaviour {
     public void IGMOptions(int i) {
         switch (i) {
             case 0:
+                NetworkManager.singleton.StopClient();
                 SceneManager.LoadScene(0);
                 break;
             case 1:
+                NetworkManager.singleton.StopClient();
                 Application.Quit();
                 break;
         }
