@@ -205,15 +205,14 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             controller.playerCam.fov = 15;
             camClass.sensitivity.x = .2f;
             camClass.sensitivity.y = .2f;
-            equipped.mesh.gameObject.SetActive(false);
         }
         else
         {
             controller.playerCam.fov = 70;
             camClass.sensitivity.x = 2;
             camClass.sensitivity.y = 2;
-            equipped.mesh.gameObject.SetActive(true);
         }
+        equipped.mesh.gameObject.SetActive(!state);
     }
 
     void Attack()
@@ -250,6 +249,8 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     {
         equipped.data.currentAmmo--;
         equipped.PlayVisuals();
+        if (equipped.data.canZoom && !isZoomed)
+            spread = .5f;
         Zoom(false);
         GeneralCanvas.canvas.CHSpread(equipped.data.spread * 50);
         GeneralCanvas.canvas.SetAmmoCount(true, true, equipped.data.maxAmmo, equipped.data.currentAmmo);
