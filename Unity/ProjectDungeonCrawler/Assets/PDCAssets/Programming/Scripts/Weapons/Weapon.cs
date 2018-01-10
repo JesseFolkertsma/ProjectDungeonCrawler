@@ -10,6 +10,7 @@ public abstract class Weapon : MonoBehaviour
     public Animator overallAnim;
     public GameObject hitDecal;
     public GameObject weaponEffect;
+    public GameObject mesh;
     public Vector3 clientOffset;
     public Transform rightIK;
     public Transform leftIK;

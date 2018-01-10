@@ -144,7 +144,7 @@ public class NetworkedController : NetworkBehaviour
             headbobVariables.fovBonus = 50;
         }
 
-        if (isLocalPlayer)
+        if (!isLocalPlayer)
         {
             StartCoroutine(UpdateAnimatorClients());
         }
@@ -185,6 +185,7 @@ public class NetworkedController : NetworkBehaviour
     {
         while (true)
         {
+            Debug.Log("plskillme");
             CmdSetGrounded(grounded);
             CmdSetX((sbyte)(xInput * 100));
             CmdSetY((sbyte)(yInput * 100));
@@ -215,9 +216,9 @@ public class NetworkedController : NetworkBehaviour
     {
         if(anim != null)
         {
-            anim.SetFloat("MoveX", sxInput);
-            anim.SetFloat("MoveY", syInput);
-            anim.SetBool("IsFalling", !sGrounded);
+            anim.SetFloat("MoveX", xInput);
+            anim.SetFloat("MoveY", yInput);
+            anim.SetBool("IsFalling", !Grounded);
 
             if (rightIKPos != null)
             {
@@ -449,40 +450,37 @@ public class NetworkedController : NetworkBehaviour
     [Command(channel = 3)]
     void CmdSetGrounded(bool set)
     {
-        //RpcSetGrounded(set);
-        sGrounded = set;
+        RpcSetGrounded(set);
     }
 
     [ClientRpc(channel = 3)]
     void RpcSetGrounded(bool set)
     {
-        sGrounded = set;
+        grounded = set;
     }
 
     [Command(channel = 3)]
     void CmdSetX(sbyte x)
     {
-        //RpcSetX(x);
-        sxInput = x / 100;
+        RpcSetX(x);
     }
 
     [ClientRpc(channel = 3)]
     void RpcSetX(sbyte x)
     {
-        sxInput = x/100;
+        xInput = x/100;
     }
 
     [Command(channel = 3)]
     void CmdSetY(sbyte y)
     {
-        //RpcSetY(y);
-        syInput = y / 100;
+        RpcSetY(y);
     }
 
     [ClientRpc(channel = 3)]
     void RpcSetY(sbyte y)
     {
-        syInput = y/100;
+        yInput = y/100;
     }
     #endregion
 }
