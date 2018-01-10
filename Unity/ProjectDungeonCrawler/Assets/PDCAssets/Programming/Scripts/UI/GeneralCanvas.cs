@@ -22,7 +22,7 @@ public class GeneralCanvas : MonoBehaviour {
             UpdateHealth(50, 100);
         }
         if (Input.GetKey(KeyCode.J)) {
-            NewUsable(1);
+            UpdateHealth(20, 100);
         }
     }
     public void MatchDataUpdate(MatchData data) {
@@ -188,6 +188,8 @@ public class GeneralCanvas : MonoBehaviour {
 
     Coroutine spread;
 
+    public GameObject zoomPanel;
+
     public void crosshairStart() {
         foreach(Transform child in crosshairObject) {
             child.GetComponent<CanvasGroup>().alpha = 0;
@@ -229,18 +231,33 @@ public class GeneralCanvas : MonoBehaviour {
         hitMark.SetTrigger("Hit");
     }
 
+    public bool Zoom
+    {
+        set
+        {
+            zoomPanel.SetActive(value);
+        }
+        get
+        {
+            return zoomPanel.activeSelf;
+        }
+    }
 
     #endregion
     #region Health
     //Variables/
     public Image hp;
     public float toBeRecovered;
+
+    Coroutine regen;
     //Updates the health bar with the given data//
     public void UpdateHealth(float currentHP, float maxHP) {
+        if(regen != null)
+        StopCoroutine(regen);
         toBeRecovered = (currentHP / (maxHP / 100)) / 100;
         print(toBeRecovered);
         print(currentHP / 100);
-        StartCoroutine(healthFill(currentHP / 100));
+        regen = StartCoroutine(healthFill(currentHP / 100));
     }
     IEnumerator healthFill(float currentHP) {
         while(toBeRecovered != 0) {
