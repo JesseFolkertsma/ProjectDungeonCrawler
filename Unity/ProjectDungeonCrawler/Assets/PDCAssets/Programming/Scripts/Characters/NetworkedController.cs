@@ -126,7 +126,6 @@ public class NetworkedController : NetworkBehaviour
         set
         {
             grounded = value;
-            CmdSetGrounded(value);
         }
     }
 
@@ -144,7 +143,11 @@ public class NetworkedController : NetworkBehaviour
             headbobVariables.maxCameraPan = 60;
             headbobVariables.fovBonus = 50;
         }
-        //StartCoroutine(UpdateAnimatorClients());
+
+        if (isLocalPlayer)
+        {
+            StartCoroutine(UpdateAnimatorClients());
+        }
     }
 
     void Update()
@@ -182,7 +185,9 @@ public class NetworkedController : NetworkBehaviour
     {
         while (true)
         {
-            //CmdSetGrounded(grounded);
+            CmdSetGrounded(grounded);
+            CmdSetX((sbyte)(xInput * 100));
+            CmdSetY((sbyte)(yInput * 100));
             yield return new WaitForSeconds(1 / clientAnimatorUpdateRate);
         }
     }
@@ -222,13 +227,6 @@ public class NetworkedController : NetworkBehaviour
             if (leftIKPos != null)
             {
                 ik.SetLeftIKPosition(leftIKPos);
-            }
-
-            if(animTimer < Time.time)
-            {
-                animTimer = Time.time + 1 / clientAnimatorUpdateRate;
-                CmdSetX((sbyte)(xInput * 100));
-                CmdSetY((sbyte)(yInput * 100));
             }
         }
     }
@@ -337,12 +335,12 @@ public class NetworkedController : NetworkBehaviour
             if (yInput > 0.1)
             {
                 //FOV effect
-                playerCam.fieldOfView = Mathf.Lerp(playerCam.fieldOfView, headbobVariables.baseFOV + headbobVariables.fovBonus / movementModifier * acc, headbobVariables.changeFOVSpeed * Time.deltaTime);
+                //playerCam.fieldOfView = Mathf.Lerp(playerCam.fieldOfView, headbobVariables.baseFOV + headbobVariables.fovBonus / movementModifier * acc, headbobVariables.changeFOVSpeed * Time.deltaTime);
             }
             else
             {
                 if (playerCam.fieldOfView != headbobVariables.baseFOV)
-                    playerCam.fieldOfView = Mathf.Lerp(playerCam.fieldOfView, headbobVariables.baseFOV, headbobVariables.changeFOVSpeed * 3 * Time.deltaTime);
+                    //playerCam.fieldOfView = Mathf.Lerp(playerCam.fieldOfView, headbobVariables.baseFOV, headbobVariables.changeFOVSpeed * 3 * Time.deltaTime);
 
                 if (playerCam.transform.localPosition != Vector3.zero)
                     playerCam.transform.localPosition = Vector3.Lerp(playerCam.transform.localPosition, Vector3.zero, headbobVariables.maxBobSpeed * Time.deltaTime);

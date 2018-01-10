@@ -7,6 +7,7 @@ public abstract class Weapon : MonoBehaviour
 
     public WeaponData data;
     public Animator anim;
+    public Animator overallAnim;
     public GameObject hitDecal;
     public GameObject weaponEffect;
     public Vector3 clientOffset;
@@ -25,6 +26,7 @@ public abstract class Weapon : MonoBehaviour
         {
             transform.localPosition = clientOffset;
         }
+        overallAnim = transform.parent.parent.GetComponent<Animator>();
     }
 
     public virtual void Attack()
@@ -38,18 +40,23 @@ public abstract class Weapon : MonoBehaviour
         anim.SetBool("Attacking", false);
     }
 
+    public virtual void RightClick(bool down)
+    {
+
+    }
+
     public virtual void PlayVisuals() { }
 
     public virtual void WeaponEffects(Vector3 hitpos, Quaternion hitrot)
     {
         if (hitDecal != null)
         {
-            GameManager.instance.SpawnObject("Decal", hitpos, hitrot, false);
+            GameManager.instance.SpawnObject("Decal", hitpos, hitrot);
         }
     }
 
     public bool IsInBaseState()
     {
-        return (anim.GetCurrentAnimatorStateInfo(0).IsTag("Base"));
+        return (anim.GetCurrentAnimatorStateInfo(0).IsTag("Base") && overallAnim.GetCurrentAnimatorStateInfo(0).IsTag("Idle"));
     }
 }

@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    public GameObject SpawnObject(string objectName, Vector3 position, Quaternion rotation, bool isParticle)
+    public GameObject SpawnObject(string objectName, Vector3 position, Quaternion rotation)
     {
         PoolableObject pObject = null;
         foreach(PoolableObject po in poolableObjects)
@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour {
                 pObject.objectsInScene.Enqueue(pObject.objectsInScene.Dequeue());
                 newObject.transform.position = position;
                 newObject.transform.rotation = rotation;
-                if (isParticle)
+                if (pObject.isParticle)
                 {
                     newObject.GetComponent<PoolableParticle>().Activate();
                 }
@@ -72,6 +72,7 @@ public class PoolableObject
     public string objectName;
     public GameObject poolObject;
     public int maxObjects;
+    public bool isParticle;
     [HideInInspector]
     public Queue<GameObject> objectsInScene = new Queue<GameObject>();
 }

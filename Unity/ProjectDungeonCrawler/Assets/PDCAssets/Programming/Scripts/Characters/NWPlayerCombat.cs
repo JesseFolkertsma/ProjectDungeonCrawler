@@ -19,6 +19,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     //public variables
     public bool isActive = true;
     public int equippedWeapon;
+    public int usable;
     public Animator weaponHolderAnim;
     public Transform weaponHolder;
     public Transform offSetObject;
@@ -44,8 +45,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     float timer;
     bool mouseDown = false;
     bool[] wasEnabled;
+    bool isZoomed = false;
     GeneralCanvas hud;
     NetworkedController controller;
+    ClampedCamera camClass;
 
     Weapon equipped
     {
@@ -83,6 +86,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     {
         //Setup for every instance of the player on all clients
         controller = GetComponent<NetworkedController>();
+        camClass = GetComponentInChildren<ClampedCamera>();
 
         //ComponentSetup
         wasEnabled = new bool[disableOnDeath.Length];
@@ -112,7 +116,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         netUI = GetComponent<NetworkedUI>();
         netUI.Init(this);
         CmdJoinMatch(gameObject.name, PlayerInfo.instance.playerName);
-        CmdEquipWeapon(0, 0);
+        CmdEquipWeapon(0);
 
         foreach (NWPlayerCombat pc in FindObjectsOfType<NWPlayerCombat>())
         {
@@ -145,6 +149,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             CmdButtonUp();
             mouseDown = false;
         }
+        if (Input.GetButtonDown("Fire2"))
+        {
+            Zoom(!isZoomed);
+        }
 
         if (Input.GetButtonDown("Reload"))
         {
@@ -152,8 +160,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
         if (Input.GetButtonDown("Throw"))
         {
-            CmdThrowDynamite(objectName, gameObject.name);
-            print("a");
+            UseUsable();
         }
     }
 
@@ -185,6 +192,28 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
     }
 
+    void Zoom(bool state)
+    {
+        if (!equipped.IsInBaseState())
+        {
+            state = false;
+        }
+        isZoomed = state;
+        GeneralCanvas.canvas.Zoom = state;
+        if(state == true)
+        {
+            controller.playerCam.fov = 5;
+            camClass.sensitivity.x = .2f;
+            camClass.sensitivity.y = .2f;
+        }
+        else
+        {
+            controller.playerCam.fov = 70;
+            camClass.sensitivity.x = 2;
+            camClass.sensitivity.y = 2;
+        }
+    }
+
     void Attack()
     {
         if (!equipped.data.canHoldMouseDown && mouseDown)
@@ -198,7 +227,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             if (equipped.timer < Time.time)
             {
                 equipped.timer = Time.time + 1 / equipped.data.attackRate;
-                AttackEffect();
+                AttackEffect(1 , equipped.data.spread);
             }
         }
         else
@@ -206,7 +235,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             if (!equipped.canReload)
             {
                 CmdButtonUp();
-                CmdEquipWeapon(0, 0);
+                CmdEquipWeapon(0);
             }
             else
             {
@@ -215,14 +244,15 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
     }
 
-    public void AttackEffect()
+    public void AttackEffect(int rays, float spread)
     {
         equipped.data.currentAmmo--;
         equipped.PlayVisuals();
-        GeneralCanvas.canvas.CHSpread(equipped.data.recoilIntensity);
+        Zoom(false);
+        GeneralCanvas.canvas.CHSpread(equipped.data.spread);
         GeneralCanvas.canvas.SetAmmoCount(true, true, equipped.data.maxAmmo, equipped.data.currentAmmo);
-        float rngHeight = UnityEngine.Random.Range(-.02f, .02f);
-        float rngWidth = UnityEngine.Random.Range(-.02f, .02f);
+        float rngHeight = UnityEngine.Random.Range(-spread, spread);
+        float rngWidth = UnityEngine.Random.Range(-spread, spread);
         Transform cam = controller.playerCam.transform;
         Vector3 rngDir = cam.forward + cam.up * rngHeight + cam.right * rngWidth;
         Ray newRay = new Ray(cam.position, rngDir);
@@ -257,7 +287,15 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         else
         {
             CmdMuzzleFlash();
-            iHit.rayHit.transform.GetComponent<DestroyableObject>().Replace();
+            switch (iHit.iHit.objectID)
+            {
+                case "Dynamite":
+                    //CmdDestroyDynamite(iHit.rayHit.transform.gameObject);
+                    break;
+                case "Breakable":
+                    iHit.rayHit.transform.GetComponent<DestroyableObject>().Replace();
+                    break;
+            }
         }
     }
 
@@ -267,6 +305,8 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
         if (reloadRoutine == null)
         {
+
+            Zoom(false);
             state = WeaponState.Reloading;
             weaponHolderAnim.SetTrigger("Reload");
             reloadRoutine = StartCoroutine(ReloadRoutine());
@@ -294,10 +334,37 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         reloadRoutine = null;
     }
 
+    public void EquipFromPickup(int weapID, PickUp.Category catagory, int pickupID)
+    {
+        switch (catagory)
+        {
+            case PickUp.Category.Weapon:
+                CmdEquipWeapon((byte)weapID);
+                break;
+            case PickUp.Category.Usable:
+                usable = weapID;
+                GeneralCanvas.canvas.NewUsable(usable);
+                break;
+        }
+        CmdDisablePickup((byte)pickupID);
+    }
+    
+    public void EquipWeapon(int weapon)
+    {
+        weaponHolderAnim.SetTrigger("Equip");
+        weapons[equippedWeapon].gameObject.SetActive(false);
+        equippedWeapon = weapon;
+        weapons[equippedWeapon].gameObject.SetActive(true);
+        StartCoroutine(EquipRoutine(weapon));
+        controller.rightIKPos = weapons[equippedWeapon].rightIK;
+        controller.leftIKPos = weapons[equippedWeapon].leftIK;
+        equipped.data.currentAmmo = equipped.data.maxAmmo;
+    }
+
     Coroutine equipRoutine;
     IEnumerator EquipRoutine(int wepID)
     {
-        if(isLocalPlayer)
+        if (isLocalPlayer)
             GeneralCanvas.canvas.Reloading(false);
         state = WeaponState.Equipping;
         if (reloadRoutine != null)
@@ -318,23 +385,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             GeneralCanvas.canvas.CHChange(wepID);
         }
         state = WeaponState.Idle;
-    }
-
-    public void EquipFromPickup(int weapID, int category,int pickupID)
-    {
-        CmdEquipWeapon((byte)weapID, (byte)pickupID);
-    }
-    
-    public void EquipWeapon(int weapon)
-    {
-        weaponHolderAnim.SetTrigger("Equip");
-        weapons[equippedWeapon].gameObject.SetActive(false);
-        equippedWeapon = weapon;
-        weapons[equippedWeapon].gameObject.SetActive(true);
-        StartCoroutine(EquipRoutine(weapon));
-        controller.rightIKPos = weapons[equippedWeapon].rightIK;
-        controller.leftIKPos = weapons[equippedWeapon].leftIK;
-        equipped.data.currentAmmo = equipped.data.maxAmmo;
     }
 
     public bool SetEquippedWeapon(int _weaponInt, bool _override)
@@ -374,6 +424,24 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         return false;
     }
 
+    public void UseUsable()
+    {
+        switch (usable)
+        {
+            case 0:
+                GeneralCanvas.canvas.FeedMessage("You have no useable!");
+                break;
+            case 1:
+                CmdThrowDynamite(name, gameObject.name);
+                break;
+            case 2:
+                Heal(50);
+                break;
+        }
+        GeneralCanvas.canvas.UseUsable();
+        usable = 0;
+    }
+
     void SetDefaults()
     {
         isDead = false;
@@ -402,7 +470,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             GeneralCanvas.canvas.DeathscreenActivate(false);
             hud.UpdateHealth(100, 100);
-            CmdEquipWeapon(0, 0);
+            CmdEquipWeapon(0);
         }
         foreach (SkinnedMeshRenderer render in visuals)
         {
@@ -410,6 +478,30 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
 
         Debug.Log(transform.name + " has respawned!");
+    }
+
+    public void Heal(int amount)
+    {
+        StartCoroutine(HealRoutine(amount));
+    }
+
+    IEnumerator HealRoutine(int amount)
+    {
+        int newAmount = amount;
+        while (newAmount > 0)
+        {
+            int amountToHeal = 5;
+            if(newAmount < 5)
+            {
+                amountToHeal = newAmount;
+            }
+            newAmount -= amountToHeal;
+            byte newHP = (byte)(testHP += amountToHeal);
+            if (newHP > 100) newHP = 100;
+            CmdSetHP(newHP);
+            GeneralCanvas.canvas.UpdateHealth(newHP, 100);
+            yield return new WaitForSeconds(.5f);
+        }
     }
 
     public void GetHit(NetworkPackages.DamagePackage dmgPck)
@@ -457,6 +549,11 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     //Server Commands
     #region Commands
+    [Command(channel = 1)]
+    void CmdSetHP(byte amount)
+    {
+        testHP = amount;
+    }
 
     [Command(channel =3)]
     void CmdJoinMatch(string id, string name)
@@ -479,6 +576,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         GameObject newDynamite = Instantiate(dynamite, controller.playerCam.transform.position, controller.playerCam.transform.rotation);
         DynamiteObject dynamiteObject = newDynamite.GetComponent<DynamiteObject>();
         dynamiteObject.SetOwner(_owner, _ownerID);
+        dynamiteObject.GetComponent<Rigidbody>().AddForce(controller.playerCam.transform.forward * 500 + Vector3.up * 100);
         NetworkServer.Spawn(newDynamite);
         RpcThrowDynamite(newDynamite);
     }
@@ -487,6 +585,18 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     void RpcThrowDynamite(GameObject go)
     {
         go.GetComponent<DynamiteObject>().LightFuse();
+    }
+
+    [Command(channel = 3)]
+    void CmdDestroyDynamite(GameObject go)
+    {
+        RpcDestroyDynamite(go);
+    }
+
+    [ClientRpc(channel = 3)]
+    void RpcDestroyDynamite(GameObject go)
+    {
+        go.GetComponent<DynamiteObject>().Explode();
     }
 
     [Command(channel = 3)]
@@ -556,15 +666,26 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     }
 
     [Command(channel = 1)]
-    void CmdEquipWeapon(byte weapon, byte pickupID)
+    void CmdEquipWeapon(byte weapon)
     {
-        RpcEquipWeapon(weapon, pickupID);
+        RpcEquipWeapon(weapon);
     }
 
     [ClientRpc(channel = 1)]
-    void RpcEquipWeapon(byte weapon, byte pickupID)
+    void RpcEquipWeapon(byte weapon)
     {
         EquipWeapon(weapon);
+    }
+
+    [Command(channel = 1)]
+    void CmdDisablePickup(byte pickupID)
+    {
+        RpcDisablePickup(pickupID);
+    }
+
+    [ClientRpc(channel = 1)]
+    void RpcDisablePickup(byte pickupID)
+    {
         if (pickupID != 0)
         {
             foreach (PickUp pu in FindObjectsOfType<PickUp>())

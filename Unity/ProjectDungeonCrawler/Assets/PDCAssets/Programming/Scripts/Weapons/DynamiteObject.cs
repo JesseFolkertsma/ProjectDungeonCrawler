@@ -1,9 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class DynamiteObject : NetworkBehaviour
+public class DynamiteObject : NetworkBehaviour, IHitable
 {
     public float damage = 150f;
     public float fuseTime = 5f;
@@ -16,6 +17,30 @@ public class DynamiteObject : NetworkBehaviour
     bool exploded = false;
     string hitter;
     string hitterID;
+
+    public string objectID
+    {
+        get
+        {
+            return "Dynamite";
+        }
+    }
+
+    public string objectName
+    {
+        get
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public NetworkInstanceId networkID
+    {
+        get
+        {
+            throw new NotImplementedException();
+        }
+    }
 
     public void SetOwner(string _hitter, string _hitterID)
     {
@@ -43,6 +68,7 @@ public class DynamiteObject : NetworkBehaviour
         if (!exploded)
         {
             exploded = true;
+            Instantiate(explosionParticle, transform.position, Quaternion.identity);
             if (isServer)
             {
                 Collider[] hits = Physics.OverlapSphere(transform.position, explosionRadius, layermask);
@@ -58,7 +84,11 @@ public class DynamiteObject : NetworkBehaviour
                 }
                 NetworkServer.Destroy(this.gameObject);
             }
-            Instantiate(explosionParticle, transform.position, Quaternion.identity);
         }
+    }
+
+    public void RpcGetHit(NetworkPackages.DamagePackage dmgPck)
+    {
+        Explode();
     }
 }
