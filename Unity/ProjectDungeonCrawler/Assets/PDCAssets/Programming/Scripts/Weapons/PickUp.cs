@@ -19,6 +19,11 @@ public class PickUp : MonoBehaviour {
     //Respawn
     public int respawnTime;
 
+    private void Awake()
+    {
+        id = transform.GetSiblingIndex() + 1;
+    }
+
     private void OnTriggerEnter(Collider other) {
         //Give weapon to player
         if (enabled) {
