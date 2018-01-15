@@ -306,7 +306,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
         if (reloadRoutine == null)
         {
-
             Zoom(false);
             state = WeaponState.Reloading;
             weaponHolderAnim.SetTrigger("Reload");
