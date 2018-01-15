@@ -185,7 +185,6 @@ public class NetworkedController : NetworkBehaviour
     {
         while (true)
         {
-            Debug.Log("plskillme");
             CmdSetGrounded(grounded);
             CmdSetX((sbyte)(xInput * 100));
             CmdSetY((sbyte)(yInput * 100));
