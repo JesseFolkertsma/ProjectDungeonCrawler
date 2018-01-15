@@ -146,7 +146,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
         else
         {
-            CmdButtonUp();
             mouseDown = false;
         }
         if (Input.GetButtonDown("Fire2"))
@@ -235,7 +234,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             if (!equipped.canReload)
             {
-                CmdButtonUp();
                 CmdEquipWeapon(0);
             }
             else
@@ -701,18 +699,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     void RpcAttack()
     {
         equipped.Attack();
-    }
-
-    [Command(channel = 4)]
-    void CmdButtonUp()
-    {
-        RpcButtonUp();
-    }
-
-    [ClientRpc(channel = 4)]
-    void RpcButtonUp()
-    {
-        equipped.AttackButtonUp();
     }
     #endregion
 }
