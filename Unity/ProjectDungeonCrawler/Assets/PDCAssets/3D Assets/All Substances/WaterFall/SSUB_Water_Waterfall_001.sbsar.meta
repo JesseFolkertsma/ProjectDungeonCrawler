@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: c8f3aca7b7d23f143a9891010fd1ebc9
-timeCreated: 1509450954
+timeCreated: 1516090562
 licenseType: Free
 SubstanceImporter:
   serializedVersion: 5
@@ -30,21 +30,21 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: $randomseed
       value:
-        scalar[0]: 9637
+        scalar[0]: 110
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Waterfall_Roughness_Intensity
       value:
-        scalar[0]: -0.948
+        scalar[0]: 0.15
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Waterfall_Normal_Intensity
       value:
-        scalar[0]: 1
+        scalar[0]: 0
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -87,7 +87,7 @@ SubstanceImporter:
     materialInformation:
       serializedVersion: 5
       offset: {x: 0, y: 0}
-      scale: {x: 5, y: 5}
+      scale: {x: 150, y: 150}
       generateMipmaps: 0
       generateAllOutputs: 0
       animationUpdateRate: 0
@@ -96,7 +96,7 @@ SubstanceImporter:
       texEnvs:
       - _BumpMap:
           texture: {instanceID: 0}
-          scale: {x: 5, y: 25}
+          scale: {x: 150, y: 15}
           offset: {x: 0, y: 0}
       - _DetailAlbedoMap:
           texture: {instanceID: 0}
@@ -112,15 +112,15 @@ SubstanceImporter:
           offset: {x: 0, y: 0}
       - _EmissionMap:
           texture: {instanceID: 0}
-          scale: {x: 5, y: 5}
+          scale: {x: 150, y: 150}
           offset: {x: 0, y: 0}
       - _MainTex:
           texture: {instanceID: 0}
-          scale: {x: 5, y: 5}
+          scale: {x: 150, y: 150}
           offset: {x: 0, y: 0}
       - _MetallicGlossMap:
           texture: {instanceID: 0}
-          scale: {x: 5, y: 25}
+          scale: {x: 150, y: 15}
           offset: {x: 0, y: 0}
       - _OcclusionMap:
           texture: {instanceID: 0}
@@ -128,7 +128,7 @@ SubstanceImporter:
           offset: {x: 0, y: 0}
       - _ParallaxMap:
           texture: {instanceID: 0}
-          scale: {x: 5, y: 25}
+          scale: {x: 150, y: 15}
           offset: {x: 0, y: 0}
       floats:
       - _BumpScale: 1
@@ -141,7 +141,7 @@ SubstanceImporter:
       - _Metallic: 0
       - _Mode: 0
       - _OcclusionStrength: 1
-      - _Parallax: 0.02
+      - _Parallax: 0.005
       - _SmoothnessTextureChannel: 0
       - _SpecularHighlights: 1
       - _SrcBlend: 1
