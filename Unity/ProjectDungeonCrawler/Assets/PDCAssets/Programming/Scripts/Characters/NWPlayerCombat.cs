@@ -356,6 +356,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         weaponHolderAnim.SetTrigger("Equip");
         weapons[equippedWeapon].gameObject.SetActive(false);
         equippedWeapon = weapon;
+        reloadRoutine = null;
         weapons[equippedWeapon].gameObject.SetActive(true);
         StartCoroutine(EquipRoutine(weapon));
         controller.rightIKPos = weapons[equippedWeapon].rightIK;
