@@ -193,7 +193,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     void Zoom(bool state)
     {
-        if (!equipped.IsInBaseState() || !equipped.data.canZoom)
+        if (!equipped.IsInBaseState() || !equipped.data.canZoom || isDead)
         {
             state = false;
         }
@@ -434,7 +434,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
                 GeneralCanvas.canvas.FeedMessage("You have no useable!");
                 break;
             case 1:
-                CmdThrowDynamite(name, gameObject.name);
+                CmdThrowDynamite(objectName, gameObject.name);
                 break;
             case 2:
                 Heal(50);
@@ -549,6 +549,22 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         StartCoroutine(Respawn());
     }
 
+    public void EnviromentDeath(DeathTrigger.DeathType type)
+    {
+        switch (type)
+        {
+            case DeathTrigger.DeathType.Water:
+                Die();
+                if (isLocalPlayer)
+                {
+                    hud.UpdateHealth(testHP, 100);
+                    CmdPlayerKilled(gameObject.name, gameObject.name);
+                    netUI.CmdFeedMessage(objectName + " has drowned!");
+                }
+                break;
+        }
+    }
+
     //Server Commands
     #region Commands
     [Command(channel = 1)]
@@ -577,15 +593,15 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     {
         GameObject newDynamite = Instantiate(dynamite, controller.playerCam.transform.position + controller.playerCam.transform.forward, controller.playerCam.transform.rotation);
         DynamiteObject dynamiteObject = newDynamite.GetComponent<DynamiteObject>();
-        dynamiteObject.SetOwner(_owner, _ownerID);
         dynamiteObject.GetComponent<Rigidbody>().AddForce(controller.playerCam.transform.forward * 500 + Vector3.up * 100);
         NetworkServer.Spawn(newDynamite);
-        RpcThrowDynamite(newDynamite);
+        RpcThrowDynamite(newDynamite, _owner, _ownerID);
     }
 
     [ClientRpc(channel = 4)]
-    void RpcThrowDynamite(GameObject go)
+    void RpcThrowDynamite(GameObject go, string _owner, string _ownerID)
     {
+        go.GetComponent<DynamiteObject>().SetOwner(_owner, _ownerID);
         go.GetComponent<DynamiteObject>().LightFuse();
     }
 
