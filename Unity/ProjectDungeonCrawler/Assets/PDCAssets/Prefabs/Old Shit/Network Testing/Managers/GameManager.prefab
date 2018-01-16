@@ -55,13 +55,53 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4293247999
   poolableObjects:
-  - objectName: MuzzleFlash
+  - objectName: RevolverMuzzleFlash
     poolObject: {fileID: 1111043792120664, guid: 7952f336e80064743b0da9bc46672455,
+      type: 2}
+    maxObjects: 10
+    isParticle: 1
+  - objectName: MinigunMuzzleFlash
+    poolObject: {fileID: 1044361267547464, guid: df73e73f66169b548be3c68e93664cbd,
+      type: 2}
+    maxObjects: 10
+    isParticle: 1
+  - objectName: SniperMuzzleFlash
+    poolObject: {fileID: 1112338688472918, guid: be81c0c2c442a5340b9bf0c968259f0e,
       type: 2}
     maxObjects: 10
     isParticle: 1
   - objectName: Decal
     poolObject: {fileID: 1401176880562982, guid: 0592bff40fca70b4ab66af5fd8717834,
+      type: 2}
+    maxObjects: 50
+    isParticle: 0
+  - objectName: WoodDecal
+    poolObject: {fileID: 1586930640859960, guid: 620857dfddb8fc74ea250cc8a7470872,
+      type: 2}
+    maxObjects: 50
+    isParticle: 0
+  - objectName: StoneDecal
+    poolObject: {fileID: 1631166973619412, guid: 48303b17b5a183943af84b74a4087fca,
+      type: 2}
+    maxObjects: 50
+    isParticle: 0
+  - objectName: FleshDecal
+    poolObject: {fileID: 1050735919103508, guid: 9a1628a39fd317e47839edf72324aa4d,
+      type: 2}
+    maxObjects: 50
+    isParticle: 0
+  - objectName: MetalDecal
+    poolObject: {fileID: 1272294069167050, guid: 02a509a7fa70ed740ba4197e20c5d32d,
+      type: 2}
+    maxObjects: 50
+    isParticle: 0
+  - objectName: WaterDecal
+    poolObject: {fileID: 1347461740356472, guid: 7b8b9052e88687e44827467ec888647a,
+      type: 2}
+    maxObjects: 50
+    isParticle: 0
+  - objectName: GlassDecal
+    poolObject: {fileID: 1196187354819846, guid: 487374365d196434da2d3190f005fa3d,
       type: 2}
     maxObjects: 50
     isParticle: 0
