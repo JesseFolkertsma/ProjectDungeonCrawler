@@ -146,7 +146,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
         else
         {
-            CmdButtonUp();
             mouseDown = false;
         }
         if (Input.GetButtonDown("Fire2"))
@@ -194,7 +193,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     void Zoom(bool state)
     {
-        if (!equipped.IsInBaseState())
+        if (!equipped.IsInBaseState() || !equipped.data.canZoom || isDead)
         {
             state = false;
         }
@@ -202,7 +201,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         GeneralCanvas.canvas.Zoom = state;
         if(state == true)
         {
-            controller.playerCam.fov = 5;
+            controller.playerCam.fov = 15;
             camClass.sensitivity.x = .2f;
             camClass.sensitivity.y = .2f;
         }
@@ -212,6 +211,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             camClass.sensitivity.x = 2;
             camClass.sensitivity.y = 2;
         }
+        equipped.mesh.gameObject.SetActive(!state);
     }
 
     void Attack()
@@ -234,7 +234,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             if (!equipped.canReload)
             {
-                CmdButtonUp();
                 CmdEquipWeapon(0);
             }
             else
@@ -248,8 +247,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     {
         equipped.data.currentAmmo--;
         equipped.PlayVisuals();
+        if (equipped.data.canZoom && !isZoomed)
+            spread = .5f;
         Zoom(false);
-        GeneralCanvas.canvas.CHSpread(equipped.data.spread);
+        GeneralCanvas.canvas.CHSpread(equipped.data.spread * 50);
         GeneralCanvas.canvas.SetAmmoCount(true, true, equipped.data.maxAmmo, equipped.data.currentAmmo);
         float rngHeight = UnityEngine.Random.Range(-spread, spread);
         float rngWidth = UnityEngine.Random.Range(-spread, spread);
@@ -305,7 +306,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
         if (reloadRoutine == null)
         {
-
             Zoom(false);
             state = WeaponState.Reloading;
             weaponHolderAnim.SetTrigger("Reload");
@@ -340,6 +340,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             case PickUp.Category.Weapon:
                 CmdEquipWeapon((byte)weapID);
+                Zoom(false);
                 break;
             case PickUp.Category.Usable:
                 usable = weapID;
@@ -351,6 +352,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     
     public void EquipWeapon(int weapon)
     {
+        Zoom(false);
         weaponHolderAnim.SetTrigger("Equip");
         weapons[equippedWeapon].gameObject.SetActive(false);
         equippedWeapon = weapon;
@@ -432,7 +434,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
                 GeneralCanvas.canvas.FeedMessage("You have no useable!");
                 break;
             case 1:
-                CmdThrowDynamite(name, gameObject.name);
+                CmdThrowDynamite(objectName, gameObject.name);
                 break;
             case 2:
                 Heal(50);
@@ -547,6 +549,22 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         StartCoroutine(Respawn());
     }
 
+    public void EnviromentDeath(DeathTrigger.DeathType type)
+    {
+        if (isLocalPlayer)
+        {
+            hud.UpdateHealth(testHP, 100);
+            CmdPlayerKilled(gameObject.name, gameObject.name);
+            Die();
+            switch (type)
+            {
+                case DeathTrigger.DeathType.Water:
+                    netUI.CmdFeedMessage(objectName + " has drowned!");
+                    break;
+            }
+        }
+    }
+
     //Server Commands
     #region Commands
     [Command(channel = 1)]
@@ -555,7 +573,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         testHP = amount;
     }
 
-    [Command(channel =3)]
+    [Command(channel = 3)]
     void CmdJoinMatch(string id, string name)
     {
         MatchManager.instance.JoinMatch(id, name);
@@ -573,30 +591,18 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     [Command(channel = 4)]
     void CmdThrowDynamite(string _owner, string _ownerID)
     {
-        GameObject newDynamite = Instantiate(dynamite, controller.playerCam.transform.position, controller.playerCam.transform.rotation);
+        GameObject newDynamite = Instantiate(dynamite, controller.playerCam.transform.position + controller.playerCam.transform.forward, controller.playerCam.transform.rotation);
         DynamiteObject dynamiteObject = newDynamite.GetComponent<DynamiteObject>();
-        dynamiteObject.SetOwner(_owner, _ownerID);
         dynamiteObject.GetComponent<Rigidbody>().AddForce(controller.playerCam.transform.forward * 500 + Vector3.up * 100);
         NetworkServer.Spawn(newDynamite);
-        RpcThrowDynamite(newDynamite);
+        RpcThrowDynamite(newDynamite, _owner, _ownerID);
     }
 
     [ClientRpc(channel = 4)]
-    void RpcThrowDynamite(GameObject go)
+    void RpcThrowDynamite(GameObject go, string _owner, string _ownerID)
     {
+        go.GetComponent<DynamiteObject>().SetOwner(_owner, _ownerID);
         go.GetComponent<DynamiteObject>().LightFuse();
-    }
-
-    [Command(channel = 3)]
-    void CmdDestroyDynamite(GameObject go)
-    {
-        RpcDestroyDynamite(go);
-    }
-
-    [ClientRpc(channel = 3)]
-    void RpcDestroyDynamite(GameObject go)
-    {
-        go.GetComponent<DynamiteObject>().Explode();
     }
 
     [Command(channel = 3)]
@@ -708,18 +714,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     void RpcAttack()
     {
         equipped.Attack();
-    }
-
-    [Command(channel = 4)]
-    void CmdButtonUp()
-    {
-        RpcButtonUp();
-    }
-
-    [ClientRpc(channel = 4)]
-    void RpcButtonUp()
-    {
-        equipped.AttackButtonUp();
     }
     #endregion
 }

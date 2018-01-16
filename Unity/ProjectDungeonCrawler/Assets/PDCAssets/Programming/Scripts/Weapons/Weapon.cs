@@ -10,6 +10,7 @@ public abstract class Weapon : MonoBehaviour
     public Animator overallAnim;
     public GameObject hitDecal;
     public GameObject weaponEffect;
+    public GameObject mesh;
     public Vector3 clientOffset;
     public Transform rightIK;
     public Transform leftIK;
@@ -32,18 +33,9 @@ public abstract class Weapon : MonoBehaviour
     public virtual void Attack()
     {
         anim.SetTrigger("Attack");
-        anim.SetBool("Attacking", true);
     }
 
-    public virtual void AttackButtonUp()
-    {
-        anim.SetBool("Attacking", false);
-    }
-
-    public virtual void RightClick(bool down)
-    {
-
-    }
+    public virtual void RightClick(bool down) { }
 
     public virtual void PlayVisuals() { }
 

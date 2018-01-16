@@ -61,6 +61,9 @@ public class DynamiteObject : NetworkBehaviour, IHitable
             yield return null;
         }
         Explode();
+        yield return new WaitForSeconds(.5f);
+        if(isServer)
+            NetworkServer.Destroy(this.gameObject);
     }
 
     public void Explode()
@@ -82,7 +85,6 @@ public class DynamiteObject : NetworkBehaviour, IHitable
                     print("My dmg is: " + newDmg);
                     hit.attachedRigidbody.GetComponent<NWPlayerCombat>().CmdGetHit(new NetworkPackages.DamagePackage(newDmg, hitter, hitterID, hit.transform.position));
                 }
-                NetworkServer.Destroy(this.gameObject);
             }
         }
     }
