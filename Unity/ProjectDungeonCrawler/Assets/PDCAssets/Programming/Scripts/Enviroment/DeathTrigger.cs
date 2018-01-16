@@ -13,6 +13,6 @@ public class DeathTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        other.GetComponent<NWPlayerCombat>().EnviromentDeath(deathType);
+        other.transform.root.GetComponent<NWPlayerCombat>().EnviromentDeath(deathType);
     }
 }
