@@ -269,8 +269,9 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         if (iHit.iHit == null)
         {
             //Hit EnviromentObject
+            Debug.Log("SPAWN DECAL");
             Vector3 hitpos = iHit.rayHit.point + iHit.rayHit.normal * .01f;
-            Quaternion hitrot = Quaternion.LookRotation(-iHit.rayHit.normal);
+            Quaternion hitrot = Quaternion.LookRotation(iHit.rayHit.normal);
             equipped.WeaponEffects(hitpos, hitrot);
             CmdEnviromentHit(hitpos, hitrot);
             return;
@@ -356,6 +357,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         weaponHolderAnim.SetTrigger("Equip");
         weapons[equippedWeapon].gameObject.SetActive(false);
         equippedWeapon = weapon;
+        reloadRoutine = null;
         weapons[equippedWeapon].gameObject.SetActive(true);
         StartCoroutine(EquipRoutine(weapon));
         controller.rightIKPos = weapons[equippedWeapon].rightIK;
@@ -551,7 +553,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     public void EnviromentDeath(DeathTrigger.DeathType type)
     {
-        if (isLocalPlayer)
+        if (isLocalPlayer && !isDead)
         {
             hud.UpdateHealth(testHP, 100);
             CmdPlayerKilled(gameObject.name, gameObject.name);

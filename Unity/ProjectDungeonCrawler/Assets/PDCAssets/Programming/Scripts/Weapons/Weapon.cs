@@ -41,10 +41,7 @@ public abstract class Weapon : MonoBehaviour
 
     public virtual void WeaponEffects(Vector3 hitpos, Quaternion hitrot)
     {
-        if (hitDecal != null)
-        {
-            GameManager.instance.SpawnObject("Decal", hitpos, hitrot);
-        }
+        GameManager.instance.SpawnObject("Decal", hitpos, hitrot);
     }
 
     public bool IsInBaseState()
