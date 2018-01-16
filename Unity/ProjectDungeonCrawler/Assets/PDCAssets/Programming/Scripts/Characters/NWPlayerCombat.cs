@@ -272,8 +272,9 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             Debug.Log("SPAWN DECAL");
             Vector3 hitpos = iHit.rayHit.point + iHit.rayHit.normal * .01f;
             Quaternion hitrot = Quaternion.LookRotation(iHit.rayHit.normal);
-            equipped.WeaponEffects(hitpos, hitrot);
-            CmdEnviromentHit(hitpos, hitrot);
+            string surface = iHit.rayHit.transform.tag.ToString();
+            equipped.WeaponEffects(hitpos, hitrot, surface);
+            CmdEnviromentHit(hitpos, hitrot, surface);
             return;
         }
 
@@ -633,18 +634,18 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     }
 
     [Command(channel = 1)]
-    void CmdEnviromentHit(Vector3 hitpos, Quaternion hitrot)
+    void CmdEnviromentHit(Vector3 hitpos, Quaternion hitrot, string surface)
     {
-        RpcEnviromentHit(hitpos, hitrot);
+        RpcEnviromentHit(hitpos, hitrot, surface);
     }
 
     [ClientRpc(channel = 1)]
-    void RpcEnviromentHit(Vector3 hitpos, Quaternion hitrot)
+    void RpcEnviromentHit(Vector3 hitpos, Quaternion hitrot, string surface)
     {
         if (!isLocalPlayer)
         {
             equipped.PlayVisuals();
-            weapons[equippedWeapon].WeaponEffects(hitpos, hitrot);
+            weapons[equippedWeapon].WeaponEffects(hitpos, hitrot, surface);
         }
     }
 

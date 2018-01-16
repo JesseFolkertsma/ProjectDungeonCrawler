@@ -55,6 +55,7 @@ GameObject:
   - component: {fileID: 4600616533902560}
   - component: {fileID: 198378701016473016}
   - component: {fileID: 199053274066291472}
+  - component: {fileID: 114005131153154808}
   m_Layer: 0
   m_Name: PAR_Stone_Impact_001
   m_TagString: Untagged
@@ -142,6 +143,19 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1327192024149594}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114005131153154808
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1631166973619412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35db431de6977bd4b9d8666a9486bb39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  particles: []
+  aSource: {fileID: 0}
 --- !u!198 &198233456067706018
 ParticleSystem:
   m_ObjectHideFlags: 1
