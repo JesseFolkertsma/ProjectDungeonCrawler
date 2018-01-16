@@ -551,17 +551,17 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     public void EnviromentDeath(DeathTrigger.DeathType type)
     {
-        switch (type)
+        if (isLocalPlayer)
         {
-            case DeathTrigger.DeathType.Water:
-                Die();
-                if (isLocalPlayer)
-                {
-                    hud.UpdateHealth(testHP, 100);
-                    CmdPlayerKilled(gameObject.name, gameObject.name);
+            hud.UpdateHealth(testHP, 100);
+            CmdPlayerKilled(gameObject.name, gameObject.name);
+            Die();
+            switch (type)
+            {
+                case DeathTrigger.DeathType.Water:
                     netUI.CmdFeedMessage(objectName + " has drowned!");
-                }
-                break;
+                    break;
+            }
         }
     }
 
@@ -573,7 +573,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         testHP = amount;
     }
 
-    [Command(channel =3)]
+    [Command(channel = 3)]
     void CmdJoinMatch(string id, string name)
     {
         MatchManager.instance.JoinMatch(id, name);

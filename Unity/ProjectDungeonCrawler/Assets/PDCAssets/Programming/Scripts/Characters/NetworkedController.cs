@@ -185,9 +185,7 @@ public class NetworkedController : NetworkBehaviour
     {
         while (true)
         {
-            CmdSetGrounded(grounded);
-            CmdSetX((sbyte)(xInput * 100));
-            CmdSetY((sbyte)(yInput * 100));
+            CmdSetAnim(grounded, crouching, (sbyte)(xInput * 100), (sbyte)(yInput * 100));
             yield return new WaitForSeconds(1 / clientAnimatorUpdateRate);
         }
     }
@@ -218,6 +216,7 @@ public class NetworkedController : NetworkBehaviour
             anim.SetFloat("MoveX", xInput);
             anim.SetFloat("MoveY", yInput);
             anim.SetBool("IsFalling", !Grounded);
+            anim.SetBool("IsCrouching", crouching);
 
             if (rightIKPos != null)
             {
@@ -447,39 +446,18 @@ public class NetworkedController : NetworkBehaviour
     //UNet Functions
     #region UNet
     [Command(channel = 3)]
-    void CmdSetGrounded(bool set)
+    void CmdSetAnim(bool setG, bool setC, sbyte x, sbyte y)
     {
-        RpcSetGrounded(set);
+        RpcSetAnim(setG, setC, x ,y);
     }
 
     [ClientRpc(channel = 3)]
-    void RpcSetGrounded(bool set)
+    void RpcSetAnim(bool setG, bool setC, sbyte x, sbyte y)
     {
-        grounded = set;
-    }
-
-    [Command(channel = 3)]
-    void CmdSetX(sbyte x)
-    {
-        RpcSetX(x);
-    }
-
-    [ClientRpc(channel = 3)]
-    void RpcSetX(sbyte x)
-    {
-        xInput = x/100;
-    }
-
-    [Command(channel = 3)]
-    void CmdSetY(sbyte y)
-    {
-        RpcSetY(y);
-    }
-
-    [ClientRpc(channel = 3)]
-    void RpcSetY(sbyte y)
-    {
-        yInput = y/100;
+        grounded = setG;
+        crouching = setC;
+        xInput = x / 100;
+        yInput = y / 100;
     }
     #endregion
 }
