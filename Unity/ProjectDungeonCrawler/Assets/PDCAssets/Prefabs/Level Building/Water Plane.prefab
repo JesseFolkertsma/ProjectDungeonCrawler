@@ -20,12 +20,13 @@ GameObject:
   m_Component:
   - component: {fileID: 4031505221932124}
   - component: {fileID: 33002081127997474}
-  - component: {fileID: 64930951347329512}
   - component: {fileID: 23916038152471780}
   - component: {fileID: 111580141808757990}
-  m_Layer: 0
+  - component: {fileID: 65705873987475328}
+  - component: {fileID: 114118772632242242}
+  m_Layer: 22
   m_Name: Water Plane
-  m_TagString: Untagged
+  m_TagString: Water
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -37,8 +38,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1308556102297268}
   m_LocalRotation: {x: -0.016858162, y: -0.14310628, z: 0.012159232, w: 0.989489}
-  m_LocalPosition: {x: 182.8, y: 13.5, z: 201.77927}
-  m_LocalScale: {x: 50, y: 0, z: 50}
+  m_LocalPosition: {x: 188.31, y: 12.48, z: 180.01}
+  m_LocalScale: {x: 50, y: 1, z: 50}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -82,8 +83,8 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1308556102297268}
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!64 &64930951347329512
-MeshCollider:
+--- !u!65 &65705873987475328
+BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -92,10 +93,8 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Convex: 0
-  m_InflateMesh: 0
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  m_Size: {x: 10, y: 4, z: 10}
+  m_Center: {x: 0, y: -2, z: 0}
 --- !u!111 &111580141808757990
 Animation:
   m_ObjectHideFlags: 1
@@ -111,3 +110,15 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!114 &114118772632242242
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1308556102297268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 553e38758f270844292f386996c86f94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deathType: 0

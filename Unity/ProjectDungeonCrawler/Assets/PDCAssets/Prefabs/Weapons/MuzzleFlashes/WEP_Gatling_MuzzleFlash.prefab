@@ -38,6 +38,7 @@ GameObject:
   - component: {fileID: 198065476746166376}
   - component: {fileID: 199207278919576690}
   - component: {fileID: 82286908044748412}
+  - component: {fileID: 114069452275307884}
   m_Layer: 10
   m_Name: WEP_Gatling_MuzzleFlash
   m_TagString: Untagged
@@ -114,18 +115,18 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: a55e15dae1acd154dba315bca07a8bc7, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.5
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 0
+  Priority: 128
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -219,6 +220,17 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &114069452275307884
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1044361267547464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35db431de6977bd4b9d8666a9486bb39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!198 &198045648179028608
 ParticleSystem:
   m_ObjectHideFlags: 1

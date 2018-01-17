@@ -39,12 +39,14 @@ public abstract class Weapon : MonoBehaviour
 
     public virtual void PlayVisuals() { }
 
-    public virtual void WeaponEffects(Vector3 hitpos, Quaternion hitrot)
+    public virtual void WeaponEffects(Vector3 hitpos, Quaternion hitrot, string type)
     {
-        if (hitDecal != null)
+        string decalName = type + "Decal";
+        if(type == "Untagged")
         {
-            GameManager.instance.SpawnObject("Decal", hitpos, hitrot);
+            decalName = "Decal";
         }
+        GameManager.instance.SpawnObject(decalName, hitpos, hitrot);
     }
 
     public bool IsInBaseState()

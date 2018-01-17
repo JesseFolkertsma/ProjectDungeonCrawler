@@ -269,10 +269,12 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         if (iHit.iHit == null)
         {
             //Hit EnviromentObject
+            Debug.Log("SPAWN DECAL");
             Vector3 hitpos = iHit.rayHit.point + iHit.rayHit.normal * .01f;
-            Quaternion hitrot = Quaternion.LookRotation(-iHit.rayHit.normal);
-            equipped.WeaponEffects(hitpos, hitrot);
-            CmdEnviromentHit(hitpos, hitrot);
+            Quaternion hitrot = Quaternion.LookRotation(iHit.rayHit.normal);
+            string surface = iHit.rayHit.transform.tag.ToString();
+            equipped.WeaponEffects(hitpos, hitrot, surface);
+            CmdEnviromentHit(hitpos, hitrot, surface);
             return;
         }
 
@@ -356,6 +358,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         weaponHolderAnim.SetTrigger("Equip");
         weapons[equippedWeapon].gameObject.SetActive(false);
         equippedWeapon = weapon;
+        reloadRoutine = null;
         weapons[equippedWeapon].gameObject.SetActive(true);
         StartCoroutine(EquipRoutine(weapon));
         controller.rightIKPos = weapons[equippedWeapon].rightIK;
@@ -551,7 +554,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     public void EnviromentDeath(DeathTrigger.DeathType type)
     {
-        if (isLocalPlayer)
+        if (isLocalPlayer && !isDead)
         {
             hud.UpdateHealth(testHP, 100);
             CmdPlayerKilled(gameObject.name, gameObject.name);
@@ -631,18 +634,18 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     }
 
     [Command(channel = 1)]
-    void CmdEnviromentHit(Vector3 hitpos, Quaternion hitrot)
+    void CmdEnviromentHit(Vector3 hitpos, Quaternion hitrot, string surface)
     {
-        RpcEnviromentHit(hitpos, hitrot);
+        RpcEnviromentHit(hitpos, hitrot, surface);
     }
 
     [ClientRpc(channel = 1)]
-    void RpcEnviromentHit(Vector3 hitpos, Quaternion hitrot)
+    void RpcEnviromentHit(Vector3 hitpos, Quaternion hitrot, string surface)
     {
         if (!isLocalPlayer)
         {
             equipped.PlayVisuals();
-            weapons[equippedWeapon].WeaponEffects(hitpos, hitrot);
+            weapons[equippedWeapon].WeaponEffects(hitpos, hitrot, surface);
         }
     }
 

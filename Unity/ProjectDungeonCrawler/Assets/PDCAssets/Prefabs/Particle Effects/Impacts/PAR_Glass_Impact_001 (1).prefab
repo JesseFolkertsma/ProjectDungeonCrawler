@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4156199860055788}
   - component: {fileID: 198002722676016168}
   - component: {fileID: 199828689564228386}
-  - component: {fileID: 114455492757008198}
+  - component: {fileID: 114336855236987704}
   m_Layer: 0
   m_Name: PAR_Glass_Impact_001 (1)
   m_TagString: Untagged
@@ -143,7 +143,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1951144693558238}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114455492757008198
+--- !u!114 &114336855236987704
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -151,9 +151,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1196187354819846}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3cedb949dfc6b44aa88e1e82ba6471d, type: 3}
+  m_Script: {fileID: 11500000, guid: 35db431de6977bd4b9d8666a9486bb39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  particles: []
+  aSource: {fileID: 0}
 --- !u!198 &198002722676016168
 ParticleSystem:
   m_ObjectHideFlags: 1
