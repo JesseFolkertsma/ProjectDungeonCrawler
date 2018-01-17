@@ -21,6 +21,7 @@ public class MatchManager : NetworkBehaviour {
     public int warmupTime = 60;
     public int matchTime = 60;
     public int matchEndTime = 10;
+    public float respawnTime = 2;
     public List<MatchData.PlayerMatchData> playerData = new List<MatchData.PlayerMatchData>();
 
     int warmUpTimeLeft;
