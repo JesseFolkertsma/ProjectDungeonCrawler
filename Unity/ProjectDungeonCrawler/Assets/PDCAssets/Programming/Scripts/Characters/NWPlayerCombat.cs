@@ -201,21 +201,26 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         GeneralCanvas.canvas.Zoom = state;
         if(state == true)
         {
-            controller.playerCam.fov = 15;
+            controller.playerCam.fov = 10;
             camClass.sensitivity.x = .2f;
             camClass.sensitivity.y = .2f;
+            GeneralCanvas.canvas.CHChange(0);
         }
         else
         {
             controller.playerCam.fov = 70;
             camClass.sensitivity.x = 2;
             camClass.sensitivity.y = 2;
+            GeneralCanvas.canvas.CHChange(equippedWeapon + 1);
         }
         equipped.mesh.gameObject.SetActive(!state);
     }
 
     void Attack()
     {
+        if (isDead)
+            return;
+
         if (!equipped.data.canHoldMouseDown && mouseDown)
             return;
 
@@ -248,7 +253,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         equipped.data.currentAmmo--;
         equipped.PlayVisuals();
         if (equipped.data.canZoom && !isZoomed)
-            spread = .5f;
+            spread = .15f;
         Zoom(false);
         GeneralCanvas.canvas.CHSpread(equipped.data.spread * 50);
         GeneralCanvas.canvas.SetAmmoCount(true, true, equipped.data.maxAmmo, equipped.data.currentAmmo);
@@ -387,7 +392,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         if (isLocalPlayer)
         {
             GeneralCanvas.canvas.SetAmmoCount(false, true, weapons[equippedWeapon].data.maxAmmo, weapons[equippedWeapon].data.currentAmmo);
-            GeneralCanvas.canvas.CHChange(wepID);
+            GeneralCanvas.canvas.CHChange(wepID + 1);
         }
         state = WeaponState.Idle;
     }
@@ -465,7 +470,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     IEnumerator Respawn()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(MatchManager.instance.respawnTime);
 
         SetDefaults();
         Transform newSpawnLocation = NetworkManager.singleton.GetStartPosition();
@@ -535,6 +540,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         if (isLocalPlayer)
         {
             GeneralCanvas.canvas.DeathscreenActivate(true);
+            GeneralCanvas.canvas.CHChange(0);
         }
 
         isDead = true;
@@ -542,6 +548,15 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             render.enabled = false;
         }
+        Instantiate(ragdoll, transform.position, transform.rotation);
+        Instantiate(ragdoll, transform.position, transform.rotation);
+        Instantiate(ragdoll, transform.position, transform.rotation);
+        Instantiate(ragdoll, transform.position, transform.rotation);
+        Instantiate(ragdoll, transform.position, transform.rotation);
+        Instantiate(ragdoll, transform.position, transform.rotation);
+        Instantiate(ragdoll, transform.position, transform.rotation);
+        Instantiate(ragdoll, transform.position, transform.rotation);
+        Instantiate(ragdoll, transform.position, transform.rotation);
         Instantiate(ragdoll, transform.position, transform.rotation);
 
         for (int i = 0; i < disableOnDeath.Length; i++)
@@ -596,7 +611,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     {
         GameObject newDynamite = Instantiate(dynamite, controller.playerCam.transform.position + controller.playerCam.transform.forward, controller.playerCam.transform.rotation);
         DynamiteObject dynamiteObject = newDynamite.GetComponent<DynamiteObject>();
-        dynamiteObject.GetComponent<Rigidbody>().AddForce(controller.playerCam.transform.forward * 500 + Vector3.up * 100);
+        dynamiteObject.GetComponent<Rigidbody>().AddForce(controller.playerCam.transform.forward * 750 + Vector3.up * 100);
         NetworkServer.Spawn(newDynamite);
         RpcThrowDynamite(newDynamite, _owner, _ownerID);
     }
