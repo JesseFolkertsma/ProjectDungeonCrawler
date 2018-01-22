@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4646454976371896}
   - component: {fileID: 33520436404451066}
   - component: {fileID: 23414021108306856}
-  - component: {fileID: 64800838834634716}
+  - component: {fileID: 65519152814150924}
   m_Layer: 0
   m_Name: SPROP_RockingChair_001
   m_TagString: Wood
@@ -81,8 +81,8 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1354946451505784}
   m_Mesh: {fileID: 4300000, guid: 58ce14e2fc47c6345a893fab576269fe, type: 3}
---- !u!64 &64800838834634716
-MeshCollider:
+--- !u!65 &65519152814150924
+BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -91,7 +91,5 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Convex: 0
-  m_InflateMesh: 0
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300000, guid: 58ce14e2fc47c6345a893fab576269fe, type: 3}
+  m_Size: {x: 0.89191145, y: 1.4506133, z: 1.2822822}
+  m_Center: {x: 0, y: 0.7194718, z: -0.008753598}
