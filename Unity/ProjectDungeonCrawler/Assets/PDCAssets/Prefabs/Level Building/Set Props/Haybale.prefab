@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4618964678804526}
   - component: {fileID: 33313324783228996}
   - component: {fileID: 23774682658712238}
+  - component: {fileID: 65091698286263716}
   m_Layer: 0
   m_Name: Haybale
   m_TagString: Wood
@@ -80,3 +81,15 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1202189627204938}
   m_Mesh: {fileID: 4300000, guid: 4d694a8a24363a14fbc95ff65fdea8d0, type: 3}
+--- !u!65 &65091698286263716
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1202189627204938}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.7755275, y: 0.51514876, z: 1.3331666}
+  m_Center: {x: 0.00000010430813, y: 0.25, z: 0}
