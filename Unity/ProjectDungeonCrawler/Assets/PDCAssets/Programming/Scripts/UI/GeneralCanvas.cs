@@ -265,7 +265,7 @@ public class GeneralCanvas : MonoBehaviour {
     }
     IEnumerator healthFill(float currentHP) {
         while(toBeRecovered != 0) {
-            hp.fillAmount = Mathf.MoveTowards(hp.fillAmount, currentHP, 0.005f);
+            hp.fillAmount = Mathf.MoveTowards(hp.fillAmount, currentHP, 0.01f);
             yield return null;
         }
     }
