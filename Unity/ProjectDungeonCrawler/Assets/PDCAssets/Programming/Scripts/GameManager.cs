@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour {
         }
         if(pObject == null)
         {
-            Debug.LogError("PoolableObject " + "'" + objectName + "'" + " does not exist");
+            Debug.LogWarning("PoolableObject " + "'" + objectName + "'" + " does not exist");
             return null;
         }
         else

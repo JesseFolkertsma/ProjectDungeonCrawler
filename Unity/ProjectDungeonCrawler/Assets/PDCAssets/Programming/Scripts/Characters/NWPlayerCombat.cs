@@ -470,7 +470,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     IEnumerator Respawn()
     {
-        yield return new WaitForSeconds(MatchManager.instance.respawnTime);
+        yield return new WaitForSeconds(2);
 
         SetDefaults();
         Transform newSpawnLocation = NetworkManager.singleton.GetStartPosition();
@@ -548,15 +548,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             render.enabled = false;
         }
-        Instantiate(ragdoll, transform.position, transform.rotation);
-        Instantiate(ragdoll, transform.position, transform.rotation);
-        Instantiate(ragdoll, transform.position, transform.rotation);
-        Instantiate(ragdoll, transform.position, transform.rotation);
-        Instantiate(ragdoll, transform.position, transform.rotation);
-        Instantiate(ragdoll, transform.position, transform.rotation);
-        Instantiate(ragdoll, transform.position, transform.rotation);
-        Instantiate(ragdoll, transform.position, transform.rotation);
-        Instantiate(ragdoll, transform.position, transform.rotation);
         Instantiate(ragdoll, transform.position, transform.rotation);
 
         for (int i = 0; i < disableOnDeath.Length; i++)
