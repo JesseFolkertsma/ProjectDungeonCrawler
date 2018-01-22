@@ -549,15 +549,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             render.enabled = false;
         }
         Instantiate(ragdoll, transform.position, transform.rotation);
-        Instantiate(ragdoll, transform.position, transform.rotation);
-        Instantiate(ragdoll, transform.position, transform.rotation);
-        Instantiate(ragdoll, transform.position, transform.rotation);
-        Instantiate(ragdoll, transform.position, transform.rotation);
-        Instantiate(ragdoll, transform.position, transform.rotation);
-        Instantiate(ragdoll, transform.position, transform.rotation);
-        Instantiate(ragdoll, transform.position, transform.rotation);
-        Instantiate(ragdoll, transform.position, transform.rotation);
-        Instantiate(ragdoll, transform.position, transform.rotation);
 
         for (int i = 0; i < disableOnDeath.Length; i++)
         {
