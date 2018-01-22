@@ -470,7 +470,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     IEnumerator Respawn()
     {
-        yield return new WaitForSeconds(MatchManager.instance.respawnTime);
+        yield return new WaitForSeconds(2);
 
         SetDefaults();
         Transform newSpawnLocation = NetworkManager.singleton.GetStartPosition();
