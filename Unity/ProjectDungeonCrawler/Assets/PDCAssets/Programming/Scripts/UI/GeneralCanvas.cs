@@ -19,9 +19,9 @@ public class GeneralCanvas : MonoBehaviour {
     }
     private void Update() {
         Controls();
-        if (Input.GetKeyDown(KeyCode.K)) {
-            SBToggle(true);
-        }
+        //if (Input.GetKeyDown(KeyCode.K)) {
+        //    SBToggle(true);
+        //}
     }
     public void MatchDataUpdate(MatchData data) {
         //Timer Update
@@ -422,7 +422,7 @@ public class GeneralCanvas : MonoBehaviour {
 
     // Enables ScoreBoard Input
     public void SBControls() {
-        /*
+        
         if (win)
         {
             SBToggle(true);
@@ -441,7 +441,7 @@ public class GeneralCanvas : MonoBehaviour {
 
                 }
             }
-        }*/
+        }
         //Testing Controls //
         //if (Input.GetKeyDown(KeyCode.T)) {
         //    AddScoreBoardEntry("hary", "misterHary");
