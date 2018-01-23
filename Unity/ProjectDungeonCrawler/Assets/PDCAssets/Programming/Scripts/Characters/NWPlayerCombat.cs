@@ -447,7 +447,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         switch (usable)
         {
             case 0:
-                GeneralCanvas.canvas.FeedMessage("You have no useable!");
+                GeneralCanvas.canvas.FeedMessage("You have no useable!", false);
                 break;
             case 1:
                 CmdThrowDynamite(objectName, gameObject.name);
@@ -538,7 +538,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             if (isLocalPlayer)
             {
                 CmdPlayerKilled(dmgPck.hitterID, gameObject.name);
-                netUI.CmdFeedMessage(dmgPck.hitter + " has killed " + objectName + "!");
+                netUI.CmdFeedMessage(dmgPck.hitter + " has killed " + objectName + "!", dmgPck.hitter, objectName);
             }
         }
     }
@@ -576,7 +576,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             switch (type)
             {
                 case DeathTrigger.DeathType.Water:
-                    netUI.CmdFeedMessage(objectName + " has drowned!");
+                    netUI.CmdFeedMessage(objectName + " has drowned!", objectName, "");
                     break;
             }
         }
