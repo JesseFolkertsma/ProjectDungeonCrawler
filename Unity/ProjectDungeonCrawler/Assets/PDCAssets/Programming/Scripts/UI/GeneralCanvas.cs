@@ -71,7 +71,7 @@ public class GeneralCanvas : MonoBehaviour {
         SBControls();
     }
     #endregion
-    #region     Ingame Menu
+    #region Ingame Menu
     //Variables//
     [Header("Ingame Menu Variables")]
     [Space]
@@ -315,7 +315,7 @@ public class GeneralCanvas : MonoBehaviour {
             else {
                 overlay.alpha = 0;
             }
-            pain = Mathf.MoveTowards(pain, 0, 0.01f);
+            pain = Mathf.MoveTowards(pain, 0, 0.001f);
             print("new pain = " + pain);
             yield return null;
         }
