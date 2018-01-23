@@ -108,8 +108,6 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
 
         //Setup for local player
-
-        //Setup name and weapon for all instances of the player
         playerName = PlayerInfo.instance.playerName;
         CmdSetName(PlayerInfo.instance.playerName);
         hud = Instantiate(canvas).GetComponentInChildren<GeneralCanvas>();
@@ -122,6 +120,11 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             if (pc != this)
                 pc.EquipWeapon(pc.equippedWeapon);
+        }
+
+        foreach(NetworkedBillboarding bill in FindObjectsOfType<NetworkedBillboarding>())
+        {
+            bill.SetupForClient(this);
         }
     }
 
