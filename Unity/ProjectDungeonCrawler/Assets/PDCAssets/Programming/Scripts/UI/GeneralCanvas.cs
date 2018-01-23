@@ -271,8 +271,12 @@ public class GeneralCanvas : MonoBehaviour {
     //Updates the health bar with the given data//
     public void ResetHealth() {
         hp.fillAmount = 1f;
-        StopCoroutine(regen);
-        StopCoroutine(lessPain);
+        if(regen != null){
+            StopCoroutine(regen);
+        }  
+        if(lessPain != null){ 
+            StopCoroutine(lessPain);
+        }
         pain = 0;
         overlay.alpha = 0;
         toBeRecovered = 0;
@@ -304,7 +308,7 @@ public class GeneralCanvas : MonoBehaviour {
         if(pain > 1) {
             pain = 1;
         }
-        print("PAIN = " + pain);
+        //print("PAIN = " + pain);
         lessPain = StartCoroutine(ReducePain());
     }
     IEnumerator ReducePain() {
@@ -316,7 +320,7 @@ public class GeneralCanvas : MonoBehaviour {
                 overlay.alpha = 0;
             }
             pain = Mathf.MoveTowards(pain, 0, 0.001f);
-            print("new pain = " + pain);
+            //print("new pain = " + pain);
             yield return null;
         }
         pain = 0;
