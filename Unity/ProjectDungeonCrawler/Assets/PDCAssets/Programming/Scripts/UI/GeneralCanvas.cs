@@ -11,7 +11,6 @@ public class GeneralCanvas : MonoBehaviour {
 
     #region General
     //Variables//
-
     public static GeneralCanvas canvas;
     private void Awake () {
         chatAnim = chatContent.parent.GetComponent<Animator>();
@@ -20,12 +19,9 @@ public class GeneralCanvas : MonoBehaviour {
     }
     private void Update() {
         Controls();
-        if (Input.GetKeyDown(KeyCode.K)) {
-            UpdateHealth(50, 100);
-        }
-        if (Input.GetKey(KeyCode.J)) {
-            UpdateHealth(20, 100);
-        }
+        //if (Input.GetKeyDown(KeyCode.K)) {
+        //    SBToggle(true);
+        //}
     }
     public void MatchDataUpdate(MatchData data) {
         //Timer Update
@@ -75,12 +71,23 @@ public class GeneralCanvas : MonoBehaviour {
         SBControls();
     }
     #endregion
-    #region     Ingame Menu
+    #region Ingame Menu
     //Variables//
+    [Header("Ingame Menu Variables")]
+    [Space]
     public Transform ingameMenu;
 
     //Toggles the IGM on or off depending on the state//
     public void IGMToggle() {
+        Cursor.visible = !Cursor.visible;
+        if (Cursor.visible)
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
         ingameMenu.GetComponent<CanvasGroup>().blocksRaycasts = !ingameMenu.GetComponent<CanvasGroup>().blocksRaycasts;
         ingameMenu.GetChild(0).GetComponent<Animator>().SetBool("Open", !ingameMenu.GetChild(0).GetComponent<Animator>().GetBool("Open"));
         ingameMenu.GetComponent<Image>().enabled = !ingameMenu.GetComponent<Image>().IsActive();
@@ -100,8 +107,9 @@ public class GeneralCanvas : MonoBehaviour {
     }
     #endregion
     #region Notifications/Kill Feed
-    
+     
     //Variables//
+    [Header("Notifications/Kill Feed Variables")]
     public GameObject feedPref;
     public Transform feedWindow;
 
@@ -128,7 +136,7 @@ public class GeneralCanvas : MonoBehaviour {
     #endregion
     #region Chat
     //Variables//
-
+    [Header("Chat Variables")]
     public Transform chat;
     public Transform chatContent;
     public GameObject chatMessage;
@@ -184,7 +192,7 @@ public class GeneralCanvas : MonoBehaviour {
     #endregion
     #region Crosshairs
     //Variables//
-
+    [Header("Crosshair Variables")]
     Transform currentCH;
     Animator currentCHAnim;
     public Transform crosshairObject;
@@ -250,24 +258,68 @@ public class GeneralCanvas : MonoBehaviour {
     #endregion
     #region Health
     //Variables/
+    [Header("Health Related Variables")]
     public Image hp;
     public float toBeRecovered;
 
     Coroutine regen;
+    [Space]
+
+    public CanvasGroup overlay;
+    public float pain;
+    Coroutine lessPain;
     //Updates the health bar with the given data//
+    public void ResetHealth() {
+        hp.fillAmount = 1f;
+        StopCoroutine(regen);
+        StopCoroutine(lessPain);
+        pain = 0;
+        overlay.alpha = 0;
+        toBeRecovered = 0;
+    }
+
     public void UpdateHealth(float currentHP, float maxHP) {
         if(regen != null)
         StopCoroutine(regen);
         toBeRecovered = (currentHP / (maxHP / 100)) / 100;
-        print(toBeRecovered);
-        print(currentHP / 100);
+        //print(toBeRecovered);
+        //print(currentHP / 100);
         regen = StartCoroutine(healthFill(currentHP / 100));
     }
     IEnumerator healthFill(float currentHP) {
-        while(toBeRecovered != 0) {
-            hp.fillAmount = Mathf.MoveTowards(hp.fillAmount, currentHP, 0.005f);
+        if (hp.fillAmount > currentHP) {
+            BloodOverlay(currentHP);
+        }
+        while (toBeRecovered != 0) {
+            hp.fillAmount = Mathf.MoveTowards(hp.fillAmount, currentHP, 0.05f);
             yield return null;
         }
+        
+    }
+    public void BloodOverlay(float newHp) {
+        if (lessPain != null)
+            StopCoroutine(lessPain);
+        float currHp = hp.fillAmount;
+        pain += (currHp -= newHp);
+        if(pain > 1) {
+            pain = 1;
+        }
+        print("PAIN = " + pain);
+        lessPain = StartCoroutine(ReducePain());
+    }
+    IEnumerator ReducePain() {
+        while(pain > 0) {
+            if (pain > 0.05f) {
+                overlay.alpha = pain;
+            }
+            else {
+                overlay.alpha = 0;
+            }
+            pain = Mathf.MoveTowards(pain, 0, 0.001f);
+            print("new pain = " + pain);
+            yield return null;
+        }
+        pain = 0;
     }
     #endregion
     #region Ammo
