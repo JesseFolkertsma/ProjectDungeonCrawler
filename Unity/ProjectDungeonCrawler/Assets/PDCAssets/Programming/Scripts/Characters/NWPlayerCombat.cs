@@ -359,13 +359,18 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     
     public void EquipWeapon(int weapon)
     {
-        Zoom(false);
         weaponHolderAnim.SetTrigger("Equip");
         weapons[equippedWeapon].gameObject.SetActive(false);
         equippedWeapon = weapon;
         reloadRoutine = null;
         weapons[equippedWeapon].gameObject.SetActive(true);
-        StartCoroutine(EquipRoutine(weapon));
+
+        if (isLocalPlayer)
+        {
+            Zoom(false);
+            StartCoroutine(EquipRoutine(weapon));
+        }
+
         controller.rightIKPos = weapons[equippedWeapon].rightIK;
         controller.leftIKPos = weapons[equippedWeapon].leftIK;
         equipped.data.currentAmmo = equipped.data.maxAmmo;
@@ -394,7 +399,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             GeneralCanvas.canvas.SetAmmoCount(false, true, weapons[equippedWeapon].data.maxAmmo, weapons[equippedWeapon].data.currentAmmo);
             GeneralCanvas.canvas.CHChange(wepID + 1);
         }
-        state = WeaponState.Idle;
+        state = WeaponState.Idle;   
     }
 
     public bool SetEquippedWeapon(int _weaponInt, bool _override)
