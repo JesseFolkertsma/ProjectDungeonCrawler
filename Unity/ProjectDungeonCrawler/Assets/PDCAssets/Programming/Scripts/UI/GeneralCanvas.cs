@@ -114,7 +114,7 @@ public class GeneralCanvas : MonoBehaviour {
     public Transform feedWindow;
 
     List<GameObject> fmList = new List<GameObject>();
-    Color ownFeedColor;
+    public Color ownFeedColor;
 
     //Put a new message into the local feed window//
     public void FeedMessage(string message, bool me) {
@@ -422,7 +422,7 @@ public class GeneralCanvas : MonoBehaviour {
 
     // Enables ScoreBoard Input
     public void SBControls() {
-        /* 
+        /*
         if (win)
         {
             SBToggle(true);
