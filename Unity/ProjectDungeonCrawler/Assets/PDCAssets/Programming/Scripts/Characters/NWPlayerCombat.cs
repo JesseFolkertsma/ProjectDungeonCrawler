@@ -484,7 +484,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         if (isLocalPlayer)
         {
             GeneralCanvas.canvas.DeathscreenActivate(false);
-            hud.UpdateHealth(100, 100);
+            hud.ResetHealth();
             CmdEquipWeapon(0);
         }
         foreach (SkinnedMeshRenderer render in visuals)
