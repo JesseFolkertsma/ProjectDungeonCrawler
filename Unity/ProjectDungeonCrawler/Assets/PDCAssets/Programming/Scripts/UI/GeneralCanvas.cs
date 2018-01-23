@@ -20,13 +20,7 @@ public class GeneralCanvas : MonoBehaviour {
     private void Update() {
         Controls();
         if (Input.GetKeyDown(KeyCode.K)) {
-            UpdateHealth((hp.fillAmount * 100) - 40, 100);
-        }
-        if (Input.GetKeyDown(KeyCode.J)) {
-            UpdateHealth((hp.fillAmount * 100) - 10, 100);
-        }
-        if (Input.GetKeyDown(KeyCode.O)) {
-            UpdateHealth(100, 100);
+            SBToggle(true);
         }
     }
     public void MatchDataUpdate(MatchData data) {
@@ -85,6 +79,15 @@ public class GeneralCanvas : MonoBehaviour {
 
     //Toggles the IGM on or off depending on the state//
     public void IGMToggle() {
+        Cursor.visible = !Cursor.visible;
+        if (Cursor.visible)
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
         ingameMenu.GetComponent<CanvasGroup>().blocksRaycasts = !ingameMenu.GetComponent<CanvasGroup>().blocksRaycasts;
         ingameMenu.GetChild(0).GetComponent<Animator>().SetBool("Open", !ingameMenu.GetChild(0).GetComponent<Animator>().GetBool("Open"));
         ingameMenu.GetComponent<Image>().enabled = !ingameMenu.GetComponent<Image>().IsActive();
@@ -411,7 +414,7 @@ public class GeneralCanvas : MonoBehaviour {
 
     // Enables ScoreBoard Input
     public void SBControls() {
-        if (win)
+        /*if (win)
         {
             SBToggle(true);
         }
@@ -429,7 +432,7 @@ public class GeneralCanvas : MonoBehaviour {
 
                 }
             }
-        }
+        }*/
         //Testing Controls //
         //if (Input.GetKeyDown(KeyCode.T)) {
         //    AddScoreBoardEntry("hary", "misterHary");
