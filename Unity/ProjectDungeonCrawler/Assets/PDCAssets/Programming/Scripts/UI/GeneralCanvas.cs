@@ -331,6 +331,7 @@ public class GeneralCanvas : MonoBehaviour {
     }
     #endregion
     #region Ammo
+    [Header("Ammo Variables")]
     //Variables//
     public Text ammoCount;
     public Transform ammoParent;
@@ -357,6 +358,7 @@ public class GeneralCanvas : MonoBehaviour {
 
 #endregion
     #region Timers
+    [Header("Timer Variables")]
     //Variables//
     public Text timerMatch;
     public Text timerWarmup;
@@ -399,6 +401,7 @@ public class GeneralCanvas : MonoBehaviour {
     #endregion
     #region Scoreboard
     //Variables//
+    [Header("Scoreboard Variables")]
 
     public Transform scoreBoard;
     public Transform scoreBoardContent;
@@ -524,6 +527,7 @@ public class GeneralCanvas : MonoBehaviour {
     }
     #endregion
     #region Usable Slot
+    [Header("Usable slot Variables")]
     public Transform slot;
     int currentUsable;
 
