@@ -114,13 +114,17 @@ public class GeneralCanvas : MonoBehaviour {
     public Transform feedWindow;
 
     List<GameObject> fmList = new List<GameObject>();
+    Color ownFeedColor;
 
     //Put a new message into the local feed window//
-    public void FeedMessage(string message) {
+    public void FeedMessage(string message, bool me) {
         GameObject newFM = Instantiate(feedPref);
         newFM.transform.SetParent(feedWindow, false);
         newFM.transform.SetAsFirstSibling();
         newFM.transform.GetChild(0).GetComponent<Text>().text = message;
+        if(me){
+            newFM.transform.GetChild(0).GetComponent<Text>().color = ownFeedColor;
+        }
         fmList.Add(newFM);
 
     }
