@@ -288,7 +288,7 @@ public class GeneralCanvas : MonoBehaviour {
             BloodOverlay(currentHP);
         }
         while (toBeRecovered != 0) {
-            hp.fillAmount = Mathf.MoveTowards(hp.fillAmount, currentHP, 0.01f);
+            hp.fillAmount = Mathf.MoveTowards(hp.fillAmount, currentHP, 0.05f);
             yield return null;
         }
         
@@ -312,7 +312,7 @@ public class GeneralCanvas : MonoBehaviour {
             else {
                 overlay.alpha = 0;
             }
-            pain = Mathf.MoveTowards(pain, 0, 0.001f);
+            pain = Mathf.MoveTowards(pain, 0, 0.01f);
             print("new pain = " + pain);
             yield return null;
         }
