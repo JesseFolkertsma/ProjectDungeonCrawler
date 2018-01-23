@@ -23,18 +23,30 @@ public class NetworkedUI : NetworkBehaviour {
     public void Init(NWPlayerCombat _pc){
         if (!isLocalPlayer)
             return;
-        CmdFeedMessage(_pc.objectName + " has joined the lobby!");
+        CmdFeedMessage(_pc.objectName + " has joined the lobby!", _pc.objectName,"");
         pc = _pc;
     }
 #endregion
     #region Feed/Notifications
     [Command(channel = 1)]
-    public void CmdFeedMessage(string message) {
-        RpcFeedMessage(message);
+    public void CmdFeedMessage(string message, string killer, string killed) {
+        RpcFeedMessage(message, killer, killed);
     }
     [ClientRpc(channel = 1)]
-    public void RpcFeedMessage(string message) {
-        GC.FeedMessage(message);
+    public void RpcFeedMessage(string message, string killer, string killed) {
+        bool isme = false;
+        foreach(NWPlayerCombat pc in FindObjectsOfType<NWPlayerCombat>())
+        {
+            if (pc.isLocalPlayer)
+            {
+                if (pc.objectName == killer || pc.objectName == killed)
+                {
+                    isme = true;
+                }
+                break;
+            }
+        }
+        GC.FeedMessage(message, isme);
     }
     #endregion
     #region Chat

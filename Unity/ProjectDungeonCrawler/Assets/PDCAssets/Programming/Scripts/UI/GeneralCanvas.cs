@@ -114,13 +114,17 @@ public class GeneralCanvas : MonoBehaviour {
     public Transform feedWindow;
 
     List<GameObject> fmList = new List<GameObject>();
+    public Color ownFeedColor;
 
     //Put a new message into the local feed window//
-    public void FeedMessage(string message) {
+    public void FeedMessage(string message, bool me) {
         GameObject newFM = Instantiate(feedPref);
         newFM.transform.SetParent(feedWindow, false);
         newFM.transform.SetAsFirstSibling();
         newFM.transform.GetChild(0).GetComponent<Text>().text = message;
+        if(me){
+            newFM.transform.GetChild(0).GetComponent<Text>().color = ownFeedColor;
+        }
         fmList.Add(newFM);
 
     }
@@ -271,8 +275,12 @@ public class GeneralCanvas : MonoBehaviour {
     //Updates the health bar with the given data//
     public void ResetHealth() {
         hp.fillAmount = 1f;
-        StopCoroutine(regen);
-        StopCoroutine(lessPain);
+        if(regen != null){
+            StopCoroutine(regen);
+        }  
+        if(lessPain != null){ 
+            StopCoroutine(lessPain);
+        }
         pain = 0;
         overlay.alpha = 0;
         toBeRecovered = 0;
@@ -304,7 +312,7 @@ public class GeneralCanvas : MonoBehaviour {
         if(pain > 1) {
             pain = 1;
         }
-        print("PAIN = " + pain);
+        //print("PAIN = " + pain);
         lessPain = StartCoroutine(ReducePain());
     }
     IEnumerator ReducePain() {
@@ -316,13 +324,14 @@ public class GeneralCanvas : MonoBehaviour {
                 overlay.alpha = 0;
             }
             pain = Mathf.MoveTowards(pain, 0, 0.001f);
-            print("new pain = " + pain);
+            //print("new pain = " + pain);
             yield return null;
         }
         pain = 0;
     }
     #endregion
     #region Ammo
+    [Header("Ammo Variables")]
     //Variables//
     public Text ammoCount;
     public Transform ammoParent;
@@ -349,6 +358,7 @@ public class GeneralCanvas : MonoBehaviour {
 
 #endregion
     #region Timers
+    [Header("Timer Variables")]
     //Variables//
     public Text timerMatch;
     public Text timerWarmup;
@@ -391,6 +401,7 @@ public class GeneralCanvas : MonoBehaviour {
     #endregion
     #region Scoreboard
     //Variables//
+    [Header("Scoreboard Variables")]
 
     public Transform scoreBoard;
     public Transform scoreBoardContent;
@@ -414,6 +425,7 @@ public class GeneralCanvas : MonoBehaviour {
 
     // Enables ScoreBoard Input
     public void SBControls() {
+        
         if (win)
         {
             SBToggle(true);
@@ -515,6 +527,7 @@ public class GeneralCanvas : MonoBehaviour {
     }
     #endregion
     #region Usable Slot
+    [Header("Usable slot Variables")]
     public Transform slot;
     int currentUsable;
 

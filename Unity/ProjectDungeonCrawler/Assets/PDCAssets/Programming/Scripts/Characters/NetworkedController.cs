@@ -144,7 +144,7 @@ public class NetworkedController : NetworkBehaviour
             headbobVariables.fovBonus = 50;
         }
 
-        if (!isLocalPlayer)
+        if (isLocalPlayer)
         {
             StartCoroutine(UpdateAnimatorClients());
         }

@@ -1,11 +1,6 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
 guid: f6a690f2c69d4f04e8deb2f18919ab05
-timeCreated: 1516697456
-=======
-guid: c8f3aca7b7d23f143a9891010fd1ebc9
-timeCreated: 1516696110
->>>>>>> eec36a01d890153b2298e791094803586d91007b
+timeCreated: 1516732608
 licenseType: Free
 SubstanceImporter:
   serializedVersion: 5
@@ -15,8 +10,8 @@ SubstanceImporter:
     prototypeName: SSUB_Water_Waterfall_001
     shaderName: 
     shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-    shaderKeywords: _ALPHAPREMULTIPLY_ON _METALLICGLOSSMAP _NORMALMAP _PARALLAXMAP
-    renderQueue: 3000
+    shaderKeywords: _METALLICGLOSSMAP _NORMALMAP _PARALLAXMAP
+    renderQueue: -1
     lightmapFlags: 4
     inputs:
     - name: $outputsize
@@ -35,28 +30,28 @@ SubstanceImporter:
         texture: {instanceID: 0}
     - name: $randomseed
       value:
-        scalar[0]: 110
+        scalar[0]: 0
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Waterfall_Roughness_Intensity
       value:
-        scalar[0]: 0.15
+        scalar[0]: -0.9
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Waterfall_Normal_Intensity
       value:
-        scalar[0]: 0.68
+        scalar[0]: 1
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
         texture: {instanceID: 0}
     - name: Waterfall_Pattern_Flow
       value:
-        scalar[0]: 100
+        scalar[0]: 0
         scalar[1]: 0
         scalar[2]: 0
         scalar[3]: 0
@@ -85,16 +80,16 @@ SubstanceImporter:
     materialInformation:
       serializedVersion: 5
       offset: {x: 0, y: 0}
-      scale: {x: 200, y: 150}
+      scale: {x: 250, y: 250}
       generateMipmaps: 1
       generateAllOutputs: 0
-      animationUpdateRate: 42
+      animationUpdateRate: 0
     materialProperties:
       serializedVersion: 3
       texEnvs:
       - _BumpMap:
           texture: {instanceID: 0}
-          scale: {x: 150, y: 150}
+          scale: {x: 1, y: 1}
           offset: {x: 0, y: 0}
       - _DetailAlbedoMap:
           texture: {instanceID: 0}
@@ -110,15 +105,15 @@ SubstanceImporter:
           offset: {x: 0, y: 0}
       - _EmissionMap:
           texture: {instanceID: 0}
-          scale: {x: 150, y: 150}
+          scale: {x: 1, y: 1}
           offset: {x: 0, y: 0}
       - _MainTex:
           texture: {instanceID: 0}
-          scale: {x: 150, y: 150}
+          scale: {x: 1, y: 1}
           offset: {x: 0, y: 0}
       - _MetallicGlossMap:
           texture: {instanceID: 0}
-          scale: {x: 150, y: 150}
+          scale: {x: 1, y: 1}
           offset: {x: 0, y: 0}
       - _OcclusionMap:
           texture: {instanceID: 0}
@@ -126,48 +121,48 @@ SubstanceImporter:
           offset: {x: 0, y: 0}
       - _ParallaxMap:
           texture: {instanceID: 0}
-          scale: {x: 150, y: 150}
+          scale: {x: 1, y: 1}
           offset: {x: 0, y: 0}
       floats:
       - _BumpScale: 1
       - _Cutoff: 0.5
       - _DetailNormalMapScale: 1
-      - _DstBlend: 10
+      - _DstBlend: 0
       - _GlossMapScale: 1
       - _Glossiness: 0.5
       - _GlossyReflections: 1
       - _Metallic: 0
-      - _Mode: 3
+      - _Mode: 0
       - _OcclusionStrength: 1
-      - _Parallax: 0.005
+      - _Parallax: 0.02
       - _SmoothnessTextureChannel: 0
       - _SpecularHighlights: 1
       - _SrcBlend: 1
       - _UVSec: 0
-      - _ZWrite: 0
+      - _ZWrite: 1
       colors:
-      - _Color: {r: 1, g: 1, b: 1, a: 0.388}
+      - _Color: {r: 1, g: 1, b: 1, a: 1}
       - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     textureParameters:
     - name: SSUB_Water_Waterfall_001_basecolor
       alphaSource: 6
-      filterMode: 0
-      aniso: 0
+      filterMode: 1
+      aniso: 1
       wrapMode: 0
     - name: SSUB_Water_Waterfall_001_normal
       alphaSource: 0
-      filterMode: 0
-      aniso: 0
+      filterMode: 1
+      aniso: 1
       wrapMode: 0
     - name: SSUB_Water_Waterfall_001_metallic
       alphaSource: 7
-      filterMode: 0
-      aniso: 0
+      filterMode: 1
+      aniso: 1
       wrapMode: 0
     - name: SSUB_Water_Waterfall_001_height
       alphaSource: 0
-      filterMode: 0
-      aniso: 0
+      filterMode: 1
+      aniso: 1
       wrapMode: 0
     textureAssignments:
     - shaderProp: _MainTex
@@ -185,8 +180,8 @@ SubstanceImporter:
     buildTargetSettings:
     - serializedVersion: 2
       buildTarget: 
-      textureWidth: 32
-      textureHeight: 32
+      textureWidth: 512
+      textureHeight: 512
       textureFormat: 0
       loadingBehavior: 1
   deletedPrototypes: []
