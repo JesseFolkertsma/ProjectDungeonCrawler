@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4621004295790780}
   - component: {fileID: 33103064331034758}
   - component: {fileID: 23534514940978824}
+  - component: {fileID: 65444901946331724}
   m_Layer: 0
   m_Name: TNT BOX
   m_TagString: Untagged
@@ -51,14 +52,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1852824502212058}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 122.235115, y: 16.2812, z: 173.87544}
+  m_LocalRotation: {x: -0, y: 0.5970965, z: -0, w: 0.80216944}
+  m_LocalPosition: {x: 167.42, y: 16.2812, z: 167.86}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4973195947198284}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 73.324005, z: 0}
 --- !u!4 &4973195947198284
 Transform:
   m_ObjectHideFlags: 1
@@ -150,3 +151,15 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1929231561790302}
   m_Mesh: {fileID: 4300000, guid: 78385cd1d3ecf5f42ab0fc2b62a36b52, type: 3}
+--- !u!65 &65444901946331724
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1852824502212058}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.3261387, y: 0.714676, z: 0.9261386}
+  m_Center: {x: 0.6, y: 0.07686937, z: 0}
