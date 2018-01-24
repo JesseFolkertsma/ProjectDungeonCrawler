@@ -3894,9 +3894,9 @@ MonoBehaviour:
     damage: 120
     range: 300
     spread: 0
-    maxAmmo: 2
-    currentAmmo: 2
-    attackRate: 1
+    maxAmmo: 10
+    currentAmmo: 10
+    attackRate: 0.75
     attackType: 0
     canHoldMouseDown: 0
     canZoom: 1
@@ -3908,7 +3908,7 @@ MonoBehaviour:
   clientOffset: {x: 0, y: 0, z: 0}
   rightIK: {fileID: 4975476967111530}
   leftIK: {fileID: 4098163175107324}
-  canReload: 1
+  canReload: 0
   pc: {fileID: 0}
   timer: 0
   gunEnd: {fileID: 4514575836029454}
@@ -3943,8 +3943,8 @@ MonoBehaviour:
     damage: 25
     range: 1000
     spread: 0.01
-    maxAmmo: 6
-    currentAmmo: 6
+    maxAmmo: 8
+    currentAmmo: 8
     attackRate: 3
     attackType: 0
     canHoldMouseDown: 0
@@ -4018,7 +4018,7 @@ MonoBehaviour:
   movementModifier: 2
   mouseSensitivity: 150
   jumpForce: 5
-  maxSlope: 200
+  maxSlope: 150
   playerLength: 1
   playerLengthCrouched: 0.5
   playerFeetThickness: 0.2
@@ -4141,12 +4141,12 @@ MonoBehaviour:
   data:
     weaponName: Minigun
     description: pew
-    damage: 10
+    damage: 12
     range: 1000
     spread: 0.02
-    maxAmmo: 150
-    currentAmmo: 150
-    attackRate: 8
+    maxAmmo: 100
+    currentAmmo: 100
+    attackRate: 10
     attackType: 0
     canHoldMouseDown: 1
     canZoom: 0
