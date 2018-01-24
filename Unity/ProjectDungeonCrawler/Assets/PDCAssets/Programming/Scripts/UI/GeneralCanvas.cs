@@ -291,6 +291,10 @@ public class GeneralCanvas : MonoBehaviour {
     public void UpdateHealth(float currentHP, float maxHP) {
         if(regen != null)
         StopCoroutine(regen);
+
+        if(currentHP < 0){
+            currentHP = 0;
+        }
         toBeRecovered = (currentHP / (maxHP / 100)) / 100;
         //print(toBeRecovered);
         //print(currentHP / 100);
