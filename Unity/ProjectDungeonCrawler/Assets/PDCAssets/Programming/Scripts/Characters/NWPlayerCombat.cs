@@ -27,6 +27,8 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     public NetworkedUI netUI;
     public WeaponState state = WeaponState.Idle;
     public Sounds sounds;
+    public SkinnedMeshRenderer charactermesh;
+    public Material[] skins;
 
 
     //private serializable
@@ -41,6 +43,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     [SerializeField] GameObject dynamite;
 
     //Private Variables
+    int skinID = 0;
     float shootTimer = 0f;
     float wepTimer = 0f;
     float timer;
@@ -97,6 +100,13 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         //Setup for every instance of the player on all clients
         controller = GetComponent<NetworkedController>();
         camClass = GetComponentInChildren<ClampedCamera>();
+
+        skinID = NetworkManager.singleton.numPlayers - 1;
+        while (skinID >= skins.Length)
+        {
+            skinID -= skins.Length - 1;
+        }
+        charactermesh.material = skins[skinID];
 
         //ComponentSetup
         wasEnabled = new bool[disableOnDeath.Length];
@@ -568,7 +578,9 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             render.enabled = false;
         }
-        Instantiate(ragdoll, transform.position, transform.rotation);
+        GameObject go = Instantiate(ragdoll, transform.position, transform.rotation);
+        SkinnedMeshRenderer ragMesh = go.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
+        ragMesh.material = skins[skinID];
 
         for (int i = 0; i < disableOnDeath.Length; i++)
         {
