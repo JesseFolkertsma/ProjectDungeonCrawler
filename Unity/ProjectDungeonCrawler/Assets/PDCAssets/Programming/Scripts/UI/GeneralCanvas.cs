@@ -159,13 +159,16 @@ public class GeneralCanvas : MonoBehaviour {
                 ToggleChat();
             }
         }
+        if(Input.GetKeyDown(KeyCode.K)){
+            SendMessage("Hary is here");
+        }
     }
     //Spawns a message in the local chat window//
     public void SendMessage(string message) {
         if (message != "") {
             if (!chatOpen) {
                 if (!chatAnim.GetBool("ChatNew")) {
-                    chatAnim.SetBool("ChatNew", true);
+                    chatAnim.SetTrigger("ChatNew2");
                 }
             }
             GameObject newMessage = Instantiate(chatMessage);
@@ -176,7 +179,6 @@ public class GeneralCanvas : MonoBehaviour {
     // Toggles the chat window
     public void ToggleChat() {
         if (chatOpen) {
-
             chatOpen = false;
             chat.GetComponent<CanvasGroup>().alpha = 0;
             inputField.DeactivateInputField();
@@ -323,7 +325,12 @@ public class GeneralCanvas : MonoBehaviour {
             else {
                 overlay.alpha = 0;
             }
-            pain = Mathf.MoveTowards(pain, 0, 0.001f);
+            if(hp.fillAmount < 0.5f){
+                pain = Mathf.MoveTowards(pain, 0, 0.0005f);
+            }
+            else{
+                pain = Mathf.MoveTowards(pain, 0, 0.001f);
+            }
             //print("new pain = " + pain);
             yield return null;
         }
