@@ -114,13 +114,17 @@ public class GeneralCanvas : MonoBehaviour {
     public Transform feedWindow;
 
     List<GameObject> fmList = new List<GameObject>();
+    public Color ownFeedColor;
 
     //Put a new message into the local feed window//
-    public void FeedMessage(string message) {
+    public void FeedMessage(string message, bool me) {
         GameObject newFM = Instantiate(feedPref);
         newFM.transform.SetParent(feedWindow, false);
         newFM.transform.SetAsFirstSibling();
         newFM.transform.GetChild(0).GetComponent<Text>().text = message;
+        if(me){
+            newFM.transform.GetChild(0).GetComponent<Text>().color = ownFeedColor;
+        }
         fmList.Add(newFM);
 
     }
@@ -155,13 +159,16 @@ public class GeneralCanvas : MonoBehaviour {
                 ToggleChat();
             }
         }
+        if(Input.GetKeyDown(KeyCode.K)){
+            SendMessage("Hary is here");
+        }
     }
     //Spawns a message in the local chat window//
     public void SendMessage(string message) {
         if (message != "") {
             if (!chatOpen) {
                 if (!chatAnim.GetBool("ChatNew")) {
-                    chatAnim.SetBool("ChatNew", true);
+                    chatAnim.SetTrigger("ChatNew2");
                 }
             }
             GameObject newMessage = Instantiate(chatMessage);
@@ -172,7 +179,6 @@ public class GeneralCanvas : MonoBehaviour {
     // Toggles the chat window
     public void ToggleChat() {
         if (chatOpen) {
-
             chatOpen = false;
             chat.GetComponent<CanvasGroup>().alpha = 0;
             inputField.DeactivateInputField();
@@ -319,7 +325,12 @@ public class GeneralCanvas : MonoBehaviour {
             else {
                 overlay.alpha = 0;
             }
-            pain = Mathf.MoveTowards(pain, 0, 0.001f);
+            if(hp.fillAmount < 0.5f){
+                pain = Mathf.MoveTowards(pain, 0, 0.0005f);
+            }
+            else{
+                pain = Mathf.MoveTowards(pain, 0, 0.001f);
+            }
             //print("new pain = " + pain);
             yield return null;
         }
@@ -327,6 +338,7 @@ public class GeneralCanvas : MonoBehaviour {
     }
     #endregion
     #region Ammo
+    [Header("Ammo Variables")]
     //Variables//
     public Text ammoCount;
     public Transform ammoParent;
@@ -353,6 +365,7 @@ public class GeneralCanvas : MonoBehaviour {
 
 #endregion
     #region Timers
+    [Header("Timer Variables")]
     //Variables//
     public Text timerMatch;
     public Text timerWarmup;
@@ -395,6 +408,7 @@ public class GeneralCanvas : MonoBehaviour {
     #endregion
     #region Scoreboard
     //Variables//
+    [Header("Scoreboard Variables")]
 
     public Transform scoreBoard;
     public Transform scoreBoardContent;
@@ -418,6 +432,7 @@ public class GeneralCanvas : MonoBehaviour {
 
     // Enables ScoreBoard Input
     public void SBControls() {
+        
         if (win)
         {
             SBToggle(true);
@@ -519,6 +534,7 @@ public class GeneralCanvas : MonoBehaviour {
     }
     #endregion
     #region Usable Slot
+    [Header("Usable slot Variables")]
     public Transform slot;
     int currentUsable;
 

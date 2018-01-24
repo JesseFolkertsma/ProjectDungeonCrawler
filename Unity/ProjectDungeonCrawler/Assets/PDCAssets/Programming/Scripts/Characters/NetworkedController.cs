@@ -291,7 +291,6 @@ public class NetworkedController : NetworkBehaviour
         {
             if (Physics.SphereCast(camHolder.position, collisionVariables.blockRayThickness, direction, out collisionVariables.colHitInfo, collisionVariables.blockRayLenght, blockPath) || Physics.SphereCast(camHolder.position - (Vector3.up * (pLength / 1.5f)), collisionVariables.blockRayThickness, direction, out collisionVariables.colHitInfo, collisionVariables.blockRayLenght, blockPath)) 
             {
-                Debug.Log("////////////////////" + collisionVariables.colHitInfo.transform.gameObject.layer.ToString());
                 if(collisionVariables.colHitInfo.transform.tag == "Ladder")
                 {
                     onLadder = true;

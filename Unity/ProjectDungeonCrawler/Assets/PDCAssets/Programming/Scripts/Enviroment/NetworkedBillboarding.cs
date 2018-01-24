@@ -8,6 +8,7 @@ public class NetworkedBillboarding : MonoBehaviour {
 
     public void SetupForClient(NWPlayerCombat _target)
     {
+        Debug.Log("I got niggered by: " + _target.objectName);
         target = _target.transform;
     }
 
@@ -16,7 +17,7 @@ public class NetworkedBillboarding : MonoBehaviour {
         if(target != null)
         {
             Vector3 lookat = new Vector3(transform.position.x, target.position.y, transform.position.z);
-            transform.rotation.SetLookRotation(lookat);
+            transform.LookAt(lookat);
         }
     }
 }
