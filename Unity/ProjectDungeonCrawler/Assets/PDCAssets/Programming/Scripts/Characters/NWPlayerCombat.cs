@@ -101,12 +101,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         controller = GetComponent<NetworkedController>();
         camClass = GetComponentInChildren<ClampedCamera>();
 
-        skinID = NetworkManager.singleton.numPlayers - 1;
-        while (skinID >= skins.Length)
-        {
-            skinID -= skins.Length - 1;
-        }
-        charactermesh.material = skins[skinID];
+        skinID = PlayerManager.PlayerList().Count;
 
         //ComponentSetup
         wasEnabled = new bool[disableOnDeath.Length];
@@ -142,10 +137,18 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
                 pc.EquipWeapon(pc.equippedWeapon);
         }
 
-        foreach(NetworkedBillboarding bill in FindObjectsOfType<NetworkedBillboarding>())
-        {
-            bill.SetupForClient(this);
-        }
+        CmdSetSkin(skinID);
+    }
+    [Command(channel = 1)]
+    void CmdSetSkin(int skinID)
+    {
+        RpcSetSkin(skinID);
+    }
+    [ClientRpc(channel = 1)]
+    void RpcSetSkin(int skinID)
+    {
+        if(!isLocalPlayer)
+            charactermesh.material = skins[skinID];
     }
 
     private void Update()
