@@ -16,7 +16,6 @@ public class NetworkedBillboarding : MonoBehaviour {
     {
         if(target != null)
         {
-            Debug.Log("LOL");
             Vector3 lookat = new Vector3(transform.position.x, target.position.y, transform.position.z);
             transform.LookAt(lookat);
         }

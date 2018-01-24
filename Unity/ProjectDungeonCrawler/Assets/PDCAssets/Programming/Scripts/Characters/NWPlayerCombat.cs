@@ -26,6 +26,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     public GameObject canvas;
     public NetworkedUI netUI;
     public WeaponState state = WeaponState.Idle;
+    public Sounds sounds;
 
 
     //private serializable
@@ -49,6 +50,15 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     GeneralCanvas hud;
     NetworkedController controller;
     ClampedCamera camClass;
+
+    [System.Serializable]
+    public struct Sounds
+    {
+        public AudioClip heal;
+        public AudioClip pickupItem;
+        public AudioClip reload;
+        public AudioClip die;
+    }
 
     Weapon equipped
     {
@@ -501,6 +511,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     public void Heal(int amount)
     {
         StartCoroutine(HealRoutine(amount));
+        CmdSound(0);
     }
 
     IEnumerator HealRoutine(int amount)
@@ -545,6 +556,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
     void Die()
     {
+        GameManager.instance.SpawnSound(sounds.die, 1, transform.position, transform.rotation);
         if (isLocalPlayer)
         {
             GeneralCanvas.canvas.DeathscreenActivate(true);
@@ -709,6 +721,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     [ClientRpc(channel = 1)]
     void RpcDisablePickup(byte pickupID)
     {
+        GameManager.instance.SpawnSound(sounds.pickupItem, .25f,transform.position, Quaternion.identity);
         if (pickupID != 0)
         {
             foreach (PickUp pu in FindObjectsOfType<PickUp>())
@@ -731,6 +744,23 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     void RpcAttack()
     {
         equipped.Attack();
+    }
+
+    [Command (channel =2)]
+    void CmdSound(int id)
+    {
+        RpcSound(id);
+    }
+
+    [ClientRpc(channel =2)]
+    void RpcSound(int id)
+    {
+        switch (id)
+        {
+            case 0:
+                GameManager.instance.SpawnSound(sounds.heal, .4f,transform.position, Quaternion.identity);
+                break;
+        }
     }
     #endregion
 }

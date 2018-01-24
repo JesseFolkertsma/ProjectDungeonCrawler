@@ -29,22 +29,22 @@ public class GameManager : MonoBehaviour {
     public GameObject SpawnObject(string objectName, Vector3 position, Quaternion rotation)
     {
         PoolableObject pObject = null;
-        foreach(PoolableObject po in poolableObjects)
+        foreach (PoolableObject po in poolableObjects)
         {
-            if(po.objectName == objectName)
+            if (po.objectName == objectName)
             {
                 pObject = po;
                 break;
             }
         }
-        if(pObject == null)
+        if (pObject == null)
         {
             Debug.LogWarning("PoolableObject " + "'" + objectName + "'" + " does not exist");
             return null;
         }
         else
         {
-            if(pObject.objectsInScene.Count >= pObject.maxObjects)
+            if (pObject.objectsInScene.Count >= pObject.maxObjects)
             {
                 GameObject newObject = pObject.objectsInScene.Peek();
                 pObject.objectsInScene.Enqueue(pObject.objectsInScene.Dequeue());
@@ -60,6 +60,54 @@ public class GameManager : MonoBehaviour {
             {
                 GameObject newObject = Instantiate(pObject.poolObject, position, rotation);
                 pObject.objectsInScene.Enqueue(newObject);
+                return newObject;
+            }
+        }
+    }
+
+    public GameObject SpawnSound(AudioClip sound, float volume,Vector3 position, Quaternion rotation)
+    {
+        string objectName = "SoundObject";
+        PoolableObject pObject = null;
+        foreach (PoolableObject po in poolableObjects)
+        {
+            if (po.objectName == objectName)
+            {
+                pObject = po;
+                break;
+            }
+        }
+        if (pObject == null)
+        {
+            Debug.LogWarning("PoolableObject " + "'" + objectName + "'" + " does not exist");
+            return null;
+        }
+        else
+        {
+            if (pObject.objectsInScene.Count >= pObject.maxObjects)
+            {
+                GameObject newObject = pObject.objectsInScene.Peek();
+                pObject.objectsInScene.Enqueue(pObject.objectsInScene.Dequeue());
+                newObject.transform.position = position;
+                newObject.transform.rotation = rotation;
+                if (pObject.isParticle)
+                {
+                    newObject.GetComponent<PoolableParticle>().Activate();
+                }
+                AudioSource aSource = newObject.GetComponent<AudioSource>();
+                aSource.volume = volume;
+                aSource.clip = sound;
+                aSource.Play();
+                return newObject;
+            }
+            else
+            {
+                GameObject newObject = Instantiate(pObject.poolObject, position, rotation);
+                pObject.objectsInScene.Enqueue(newObject);
+                AudioSource aSource = newObject.GetComponent<AudioSource>();
+                aSource.volume = volume;
+                aSource.clip = sound;
+                aSource.Play();
                 return newObject;
             }
         }

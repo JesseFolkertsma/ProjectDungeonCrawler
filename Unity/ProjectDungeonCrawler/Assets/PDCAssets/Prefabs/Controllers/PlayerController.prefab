@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 114483275787847292}
   - component: {fileID: 95579193520591850}
   - component: {fileID: 114011961504357110}
+  - component: {fileID: 82100963820866860}
   m_Layer: 17
   m_Name: PlayerController
   m_TagString: Player
@@ -3528,6 +3529,86 @@ AudioListener:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1625098297174926}
   m_Enabled: 1
+--- !u!82 &82100963820866860
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1009196950182780}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 0.025
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 30
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!92 &92667667954400026
 Behaviour:
   m_ObjectHideFlags: 1
@@ -3943,7 +4024,10 @@ MonoBehaviour:
   playerFeetThickness: 0.2
   clientAnimatorUpdateRate: 2
   footSteps:
-  - {fileID: 8300000, guid: 8d4406feafb5bd94799534918c81e575, type: 3}
+  - {fileID: 8300000, guid: 42e65e088b3f4374e851b8dbd38f3df9, type: 3}
+  - {fileID: 8300000, guid: 8bc94ec6ed537e743b481638bdcd503d, type: 3}
+  - {fileID: 8300000, guid: 5a9383dda6cabc047b7a297602e93eb4, type: 3}
+  - {fileID: 8300000, guid: e9714160ce34f2b4ab63ff8c27bd68e1, type: 3}
   rightIKPos: {fileID: 0}
   leftIKPos: {fileID: 0}
   acc: 0
@@ -3987,6 +4071,11 @@ MonoBehaviour:
   canvas: {fileID: 1530764626205202, guid: d48bb95b21becec4cb5d62936c6e06de, type: 2}
   netUI: {fileID: 0}
   state: 0
+  sounds:
+    heal: {fileID: 8300000, guid: b00ae02aee1734d44a64d886d48fa579, type: 3}
+    pickupItem: {fileID: 8300000, guid: 8ccd1f083272c0b4dbde3efe3d19b6f6, type: 3}
+    reload: {fileID: 0}
+    die: {fileID: 8300000, guid: 142b4d4291e8182458b84bdce8133677, type: 3}
   ragdoll: {fileID: 1198559511366668, guid: 8140fd135a0d1d7478098d936811488b, type: 2}
   visuals:
   - {fileID: 137730979459707588}
