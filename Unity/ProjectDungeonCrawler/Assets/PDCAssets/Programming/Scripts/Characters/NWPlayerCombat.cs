@@ -101,7 +101,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         controller = GetComponent<NetworkedController>();
         camClass = GetComponentInChildren<ClampedCamera>();
 
-        skinID = NetworkManager.singleton.numPlayers - 1;
+        skinID = PlayerManager.PlayerList().Count;
 
         //ComponentSetup
         wasEnabled = new bool[disableOnDeath.Length];
