@@ -19,8 +19,18 @@ public class MyNetworkManager : NetworkManager {
     {
         //PlayerManager.RemovePlayer(conn.playerControllers[0].gameObject.name);
         //MatchManager.instance.LeaveMatch(conn.playerControllers[0].gameObject.name);
+
         print("A player pressed alt + f4!");
         NetworkServer.Destroy(conn.playerControllers[0].gameObject);
         //base.OnServerDisconnect(conn);
+    }
+    public override void OnStopHost(){
+        print("Host stopped!");
+    }
+    public override void OnStopServer(){
+        print("Server stopped!");
+    }
+    public override void OnStopClient(){
+        print("Client stopped!");
     }
 }

@@ -512,6 +512,9 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             GeneralCanvas.canvas.DeathscreenActivate(false);
             hud.ResetHealth();
             CmdEquipWeapon(0);
+            GeneralCanvas.canvas.UseUsable();
+            usable = 0;
+            
         }
         foreach (SkinnedMeshRenderer render in visuals)
         {
