@@ -19,9 +19,12 @@ public class GeneralCanvas : MonoBehaviour {
     }
     private void Update() {
         Controls();
-        //if (Input.GetKeyDown(KeyCode.K)) {
-        //    SBToggle(true);
-        //}
+        if (Input.GetKeyDown(KeyCode.K)) {
+            UpdateHealth((hp.fillAmount * 100) - 10 ,100);
+        }
+        if (Input.GetKeyDown(KeyCode.O)) {
+            UpdateHealth(-50,100);
+        }
     }
     public void MatchDataUpdate(MatchData data) {
         //Timer Update
@@ -159,9 +162,6 @@ public class GeneralCanvas : MonoBehaviour {
                 ToggleChat();
             }
         }
-        if(Input.GetKeyDown(KeyCode.K)){
-            SendMessage("Hary is here");
-        }
     }
     //Spawns a message in the local chat window//
     public void SendMessage(string message) {
@@ -265,6 +265,7 @@ public class GeneralCanvas : MonoBehaviour {
     #region Health
     //Variables/
     [Header("Health Related Variables")]
+    public Transform bottle;
     public Image hp;
     public float toBeRecovered;
 
@@ -273,6 +274,9 @@ public class GeneralCanvas : MonoBehaviour {
 
     public CanvasGroup overlay;
     public float pain;
+    public float shake;
+    public float shakeTime;
+    Coroutine shaker;
     Coroutine lessPain;
     //Updates the health bar with the given data//
     public void ResetHealth() {
@@ -287,17 +291,39 @@ public class GeneralCanvas : MonoBehaviour {
         overlay.alpha = 0;
         toBeRecovered = 0;
     }
+    IEnumerator ShakeBottle(){
+        float time = 0;
+        while(shake > 0){
+            Vector2 ShakePos = new Vector2(0,0);
+            int seed = UnityEngine.Random.Range(-10000,10000);
+            int seed2 = UnityEngine.Random.Range(-10000,10000);
+            ShakePos.x = shake * Mathf.PerlinNoise(seed, time);
+            ShakePos.y = shake * Mathf.PerlinNoise(seed2, time);
+            bottle.position = new Vector3(ShakePos.x,ShakePos.y, bottle.position.z);
+            shake -= (shake / 100) * 5;
+            time += 0.01f;
+            yield return null;
+        }
+        shake = 0;
+    }
 
     public void UpdateHealth(float currentHP, float maxHP) {
         if(regen != null)
-        StopCoroutine(regen);
-
-        if(currentHP < 0){
-            currentHP = 0;
+            StopCoroutine(regen);
+        
+        if(currentHP <= 0){
+            currentHP = 1;
         }
+
+        if(shake == 0){
+            shake += 100 * (hp.fillAmount - (currentHP/100));
+            StartCoroutine(ShakeBottle());
+        }
+        shake += 100 * (hp.fillAmount - (currentHP/100));
         toBeRecovered = (currentHP / (maxHP / 100)) / 100;
         //print(toBeRecovered);
         //print(currentHP / 100);
+
         regen = StartCoroutine(healthFill(currentHP / 100));
     }
     IEnumerator healthFill(float currentHP) {

@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4651960789952866}
   - component: {fileID: 212005833384452880}
   - component: {fileID: 95661642308988214}
+  - component: {fileID: 114864091306400322}
   m_Layer: 0
   m_Name: SPRSHT_Fire_Flame_001
   m_TagString: Untagged
@@ -34,13 +35,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1399560189005156}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: 0.008999941, z: -0, w: 0.9999595}
+  m_LocalPosition: {x: 70.67518, y: -28.818, z: 82.885796}
+  m_LocalScale: {x: 0.99999994, y: 2.17236, z: 0.99999994}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -3.943, y: 232.15799, z: 97.991005}
 --- !u!95 &95661642308988214
 Animator:
   serializedVersion: 3
@@ -58,6 +59,18 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114864091306400322
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1399560189005156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3fa9590af6d982479f319d9527e8bd0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationOffset: {x: 0, y: 0, z: 0}
 --- !u!212 &212005833384452880
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -90,7 +103,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 7e313bae9b95e544d9b785dfdfec4bc5, type: 3}
+  m_Sprite: {fileID: 21300002, guid: 7e313bae9b95e544d9b785dfdfec4bc5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
