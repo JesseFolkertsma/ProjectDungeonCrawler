@@ -82,13 +82,16 @@ public class GeneralCanvas : MonoBehaviour {
 
     //Toggles the IGM on or off depending on the state//
     public void IGMToggle() {
-        Cursor.visible = !Cursor.visible;
-        if (Cursor.visible)
+        if (!Cursor.visible)
         {
+            ClampedCamera.hary.isEnabled = false;
+            Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
         else
         {
+            ClampedCamera.hary.isEnabled = true;
+            Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
         ingameMenu.GetComponent<CanvasGroup>().blocksRaycasts = !ingameMenu.GetComponent<CanvasGroup>().blocksRaycasts;

@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class ClampedCamera : MonoBehaviour
 {
+    public static ClampedCamera hary;
     Vector2 _mouseAbsolute;
     Vector2 _smoothMouse;
 
@@ -22,6 +23,9 @@ public class ClampedCamera : MonoBehaviour
 
     void Start()
     {
+        hary = this;
+        lockCursor = !lockCursor;
+        Screen.lockCursor = lockCursor;
         // Set target direction to the camera's initial orientation.
         targetDirection = transform.localRotation.eulerAngles;
 
