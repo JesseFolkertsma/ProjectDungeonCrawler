@@ -27,6 +27,8 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     public NetworkedUI netUI;
     public WeaponState state = WeaponState.Idle;
     public Sounds sounds;
+    public SkinnedMeshRenderer charactermesh;
+    public Material[] skins;
 
 
     //private serializable
@@ -41,6 +43,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
     [SerializeField] GameObject dynamite;
 
     //Private Variables
+    int skinID = 0;
     float shootTimer = 0f;
     float wepTimer = 0f;
     float timer;
@@ -98,6 +101,8 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         controller = GetComponent<NetworkedController>();
         camClass = GetComponentInChildren<ClampedCamera>();
 
+        skinID = PlayerManager.PlayerList().Count;
+
         //ComponentSetup
         wasEnabled = new bool[disableOnDeath.Length];
         for (int i = 0; i < disableOnDeath.Length; i++)
@@ -132,10 +137,18 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
                 pc.EquipWeapon(pc.equippedWeapon);
         }
 
-        foreach(NetworkedBillboarding bill in FindObjectsOfType<NetworkedBillboarding>())
-        {
-            bill.SetupForClient(this);
-        }
+        CmdSetSkin(skinID);
+    }
+    [Command(channel = 1)]
+    void CmdSetSkin(int skinID)
+    {
+        RpcSetSkin(skinID);
+    }
+    [ClientRpc(channel = 1)]
+    void RpcSetSkin(int skinID)
+    {
+        if(!isLocalPlayer)
+            charactermesh.material = skins[skinID];
     }
 
     private void Update()
@@ -214,7 +227,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         GeneralCanvas.canvas.Zoom = state;
         if(state == true)
         {
-            controller.playerCam.fov = 10;
+            controller.playerCam.fov = 15;
             camClass.sensitivity.x = .2f;
             camClass.sensitivity.y = .2f;
             GeneralCanvas.canvas.CHChange(0);
@@ -499,6 +512,9 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             GeneralCanvas.canvas.DeathscreenActivate(false);
             hud.ResetHealth();
             CmdEquipWeapon(0);
+            GeneralCanvas.canvas.UseUsable();
+            usable = 0;
+            
         }
         foreach (SkinnedMeshRenderer render in visuals)
         {
@@ -568,7 +584,9 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             render.enabled = false;
         }
-        Instantiate(ragdoll, transform.position, transform.rotation);
+        GameObject go = Instantiate(ragdoll, transform.position, transform.rotation);
+        SkinnedMeshRenderer ragMesh = go.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
+        ragMesh.material = skins[skinID];
 
         for (int i = 0; i < disableOnDeath.Length; i++)
         {

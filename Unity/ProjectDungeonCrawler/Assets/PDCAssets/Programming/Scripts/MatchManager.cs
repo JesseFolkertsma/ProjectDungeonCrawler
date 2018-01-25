@@ -94,6 +94,7 @@ public class MatchManager : NetworkBehaviour {
                 if (pmd.playerID == killerID)
                 {
                     pmd.deaths++;
+                    pmd.kills--;
                     return;
                 }
             }
