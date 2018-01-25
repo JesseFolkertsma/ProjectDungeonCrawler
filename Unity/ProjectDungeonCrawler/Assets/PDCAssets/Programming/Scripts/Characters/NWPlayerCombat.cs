@@ -227,7 +227,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         GeneralCanvas.canvas.Zoom = state;
         if(state == true)
         {
-            controller.playerCam.fov = 10;
+            controller.playerCam.fov = 15;
             camClass.sensitivity.x = .2f;
             camClass.sensitivity.y = .2f;
             GeneralCanvas.canvas.CHChange(0);
@@ -512,6 +512,9 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             GeneralCanvas.canvas.DeathscreenActivate(false);
             hud.ResetHealth();
             CmdEquipWeapon(0);
+            GeneralCanvas.canvas.UseUsable();
+            usable = 0;
+            
         }
         foreach (SkinnedMeshRenderer render in visuals)
         {

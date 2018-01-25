@@ -1719,6 +1719,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_MethodName: StopClient
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114289813605765752
@@ -2371,10 +2382,13 @@ MonoBehaviour:
   crosshairObject: {fileID: 224477695849236018}
   hitMark: {fileID: 95021800035987076}
   zoomPanel: {fileID: 1120935449049410}
+  bottle: {fileID: 224107227693203672}
   hp: {fileID: 114915403456794574}
   toBeRecovered: 0
   overlay: {fileID: 225259353408453018}
   pain: 0
+  shake: 0
+  shakeTime: 0.1
   ammoCount: {fileID: 114037785938035260}
   ammoParent: {fileID: 224836143031067860}
   bulletAnim: {fileID: 95142362503485680}
@@ -2725,6 +2739,17 @@ MonoBehaviour:
       - m_Target: {fileID: 114657811179255098}
         m_MethodName: IGMOptions
         m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 0}
+        m_MethodName: StopClient
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
