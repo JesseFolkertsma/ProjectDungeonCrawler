@@ -23,7 +23,7 @@ public class GeneralCanvas : MonoBehaviour {
             UpdateHealth((hp.fillAmount * 100) - 10 ,100);
         }
         if (Input.GetKeyDown(KeyCode.O)) {
-            UpdateHealth(-50,100);
+            UpdateHealth(100,100);
         }
     }
     public void MatchDataUpdate(MatchData data) {
@@ -314,12 +314,12 @@ public class GeneralCanvas : MonoBehaviour {
         if(currentHP <= 0){
             currentHP = 1;
         }
-
-        if(shake == 0){
-            shake += 100 * (hp.fillAmount - (currentHP/100));
-            StartCoroutine(ShakeBottle());
-        }
         shake += 100 * (hp.fillAmount - (currentHP/100));
+        if(shaker != null){
+            StopCoroutine(shaker);
+        }
+        shaker = StartCoroutine(ShakeBottle());
+        
         toBeRecovered = (currentHP / (maxHP / 100)) / 100;
         //print(toBeRecovered);
         //print(currentHP / 100);

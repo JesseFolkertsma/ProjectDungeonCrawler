@@ -227,7 +227,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         GeneralCanvas.canvas.Zoom = state;
         if(state == true)
         {
-            controller.playerCam.fov = 10;
+            controller.playerCam.fov = 15;
             camClass.sensitivity.x = .2f;
             camClass.sensitivity.y = .2f;
             GeneralCanvas.canvas.CHChange(0);
