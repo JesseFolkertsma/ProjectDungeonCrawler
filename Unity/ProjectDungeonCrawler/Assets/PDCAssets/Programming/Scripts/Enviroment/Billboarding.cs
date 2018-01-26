@@ -7,11 +7,6 @@ public class Billboarding : MonoBehaviour {
 	Transform player;
 	public Vector3 rotationOffset = new Vector3(90,0,-90);
 
-	void Awake(){
-		if(GameObject.FindGameObjectWithTag("Player") != null){
-			player = GameObject.FindGameObjectWithTag("Player").transform;
-		} 
-	}
 	void Update (){
 		if(player != null){
 			var lookPos = player.position - transform.position;
@@ -21,4 +16,9 @@ public class Billboarding : MonoBehaviour {
 			transform.Rotate(rotationOffset);
 		}
 	}
+
+    public void Setup(Transform target)
+    {
+        player = target;
+    }
 }
