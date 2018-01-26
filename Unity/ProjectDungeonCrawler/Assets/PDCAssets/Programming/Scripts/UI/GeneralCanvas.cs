@@ -46,6 +46,7 @@ public class GeneralCanvas : MonoBehaviour {
                 }
                 if (!found)
                 {
+                    Debug.Log("Removing: "+ beh.name.text);
                     RemoveScoreBoardEntry(beh);
                     break;
                 }
@@ -545,7 +546,7 @@ public class GeneralCanvas : MonoBehaviour {
     public void RemoveScoreBoardEntry(BoardEntryHelper beh)
     {
         entries.Remove(beh);
-        Destroy(beh);
+        Destroy(beh.gameObject);
     }
     //Adds kills or deaths to the given player entry
     public bool AddScoreBoardStat(string playerID, int kills, int deaths) {
