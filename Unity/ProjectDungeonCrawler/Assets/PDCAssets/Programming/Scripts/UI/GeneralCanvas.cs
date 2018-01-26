@@ -29,6 +29,29 @@ public class GeneralCanvas : MonoBehaviour {
     public void MatchDataUpdate(MatchData data) {
         //Timer Update
         UpdateTimer(data.seconds, data.matchState);
+        
+        //check if player leaves
+        if(data.playerData.Length < entries.Count)
+        {
+            foreach(BoardEntryHelper beh in entries)
+            {
+                bool found = false;
+                foreach(MatchData.PlayerMatchData pmd in data.playerData)
+                {
+                    if(pmd.playerID == beh.playerID)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found)
+                {
+                    Debug.Log("Removing: "+ beh.name.text);
+                    RemoveScoreBoardEntry(beh);
+                    break;
+                }
+            }
+        }
 
         //Scoreboard Update
         Debug.Log(data.playerData.Length + "entries: " + entries.Count.ToString());
@@ -511,12 +534,19 @@ public class GeneralCanvas : MonoBehaviour {
         scoreBoard.gameObject.SetActive(foo);
     }
     //Adds a new player to the scoreboard
-    public void AddScoreBoardEntry(string name, string playerID) {
+    public void AddScoreBoardEntry(string name, string playerID)
+    {
         Transform newEntry = Instantiate(scoreBoardEntryPref);
         newEntry.SetParent(scoreBoardContent, false);
         BoardEntryHelper n = newEntry.GetComponent<BoardEntryHelper>();
         n.Setup(name, playerID);
         entries.Add(n);
+    }
+    //Adds a new player to the scoreboard
+    public void RemoveScoreBoardEntry(BoardEntryHelper beh)
+    {
+        entries.Remove(beh);
+        Destroy(beh.gameObject);
     }
     //Adds kills or deaths to the given player entry
     public bool AddScoreBoardStat(string playerID, int kills, int deaths) {
