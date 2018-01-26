@@ -53,7 +53,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4588461527284158}
-  - component: {fileID: 64613578286267008}
+  - component: {fileID: 65086726050638368}
   m_Layer: 0
   m_Name: Tree_002
   m_TagString: Wood
@@ -180,8 +180,8 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1183326230467522}
   m_Mesh: {fileID: 4300002, guid: 77a595d1fc1e2234b9146015bffd6ac5, type: 3}
---- !u!64 &64613578286267008
-MeshCollider:
+--- !u!65 &65086726050638368
+BoxCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
@@ -190,7 +190,5 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Convex: 0
-  m_InflateMesh: 0
-  m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300002, guid: 77a595d1fc1e2234b9146015bffd6ac5, type: 3}
+  m_Size: {x: 0.79, y: 6.81, z: 1}
+  m_Center: {x: 0, y: 3.43, z: 0}

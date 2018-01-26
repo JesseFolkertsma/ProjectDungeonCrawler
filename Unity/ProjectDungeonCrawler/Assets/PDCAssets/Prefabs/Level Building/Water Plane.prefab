@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 111580141808757990}
   - component: {fileID: 65705873987475328}
   - component: {fileID: 114118772632242242}
+  - component: {fileID: 114583476878814754}
   m_Layer: 22
   m_Name: Water Plane
   m_TagString: Water
@@ -38,7 +39,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1308556102297268}
   m_LocalRotation: {x: -0.016858164, y: -0.14310628, z: 0.012159233, w: 0.989489}
-  m_LocalPosition: {x: 64.67876, y: -34.6368, z: 29.46193}
+  m_LocalPosition: {x: 64.67876, y: -33.8, z: 29.46193}
   m_LocalScale: {x: 50, y: 1, z: 50}
   m_Children: []
   m_Father: {fileID: 0}
@@ -57,7 +58,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: -2066409251, guid: c8f3aca7b7d23f143a9891010fd1ebc9, type: 3}
+  - {fileID: -2066409251, guid: f6a690f2c69d4f04e8deb2f18919ab05, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -122,3 +123,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathType: 0
+--- !u!114 &114583476878814754
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1308556102297268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df9cc00f44ca8424b950bc7e87ec1c69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  substance: {fileID: -2066409251, guid: f6a690f2c69d4f04e8deb2f18919ab05, type: 3}
+  flow: 1
+  speed: 8
+  valueMax: 1000000

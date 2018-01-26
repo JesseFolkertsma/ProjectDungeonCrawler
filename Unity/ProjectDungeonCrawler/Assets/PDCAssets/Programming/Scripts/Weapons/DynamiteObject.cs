@@ -75,15 +75,20 @@ public class DynamiteObject : NetworkBehaviour, IHitable
             if (isServer)
             {
                 Collider[] hits = Physics.OverlapSphere(transform.position, explosionRadius, layermask);
-                foreach(Collider hit in hits)
+                List<Rigidbody> rbs = new List<Rigidbody>();
+                foreach (Collider hit in hits)
                 {
-                    hit.attachedRigidbody.AddExplosionForce(explosionForce, transform.position, explosionRadius);
-                    float distance = Vector3.Distance(transform.position, hit.transform.position);
-                    float perc = 1 - distance / explosionRadius;
-                    print("My perc is: " + perc);
-                    byte newDmg = (byte)(damage * perc);
-                    print("My dmg is: " + newDmg);
-                    hit.attachedRigidbody.GetComponent<NWPlayerCombat>().CmdGetHit(new NetworkPackages.DamagePackage(newDmg, hitter, hitterID, hit.transform.position));
+                    if (!rbs.Contains(hit.attachedRigidbody))
+                    {
+                        rbs.Add(hit.attachedRigidbody);
+                        hit.attachedRigidbody.AddExplosionForce(explosionForce, transform.position, explosionRadius);
+                        float distance = Vector3.Distance(transform.position, hit.transform.position);
+                        float perc = 1 - distance / explosionRadius;
+                        print("My perc is: " + perc);
+                        byte newDmg = (byte)(damage * perc);
+                        print("My dmg is: " + newDmg);
+                        hit.attachedRigidbody.GetComponent<NWPlayerCombat>().CmdGetHit(new NetworkPackages.DamagePackage(newDmg, hitter, hitterID, hit.transform.position));
+                    }
                 }
             }
         }
