@@ -31,7 +31,7 @@ public class Hosting : MonoBehaviour {
             MatchMakerOn();
         }
         if (roomName != "") {
-            networkManager.matchMaker.CreateMatch(roomName, 4, true, "", "", "", 0, 0, networkManager.OnMatchCreate);
+            networkManager.matchMaker.CreateMatch(roomName, 8, true, "", "", "", 0, 0, networkManager.OnMatchCreate);
             print("Creating a room named: " + roomName);
         }
         else {

@@ -19,12 +19,6 @@ public class GeneralCanvas : MonoBehaviour {
     }
     private void Update() {
         Controls();
-        if (Input.GetKeyDown(KeyCode.K)) {
-            UpdateHealth((hp.fillAmount * 100) - 10 ,100);
-        }
-        if (Input.GetKeyDown(KeyCode.O)) {
-            UpdateHealth(100,100);
-        }
     }
     public void MatchDataUpdate(MatchData data) {
         //Timer Update
