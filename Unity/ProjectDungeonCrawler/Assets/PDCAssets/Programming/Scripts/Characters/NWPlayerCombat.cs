@@ -136,6 +136,10 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
             if (pc != this)
                 pc.EquipWeapon(pc.equippedWeapon);
         }
+        foreach(Billboarding b in FindObjectsOfType<Billboarding>())
+        {
+            b.Setup(transform);
+        }
 
         CmdSetSkin(skinID);
     }
