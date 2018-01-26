@@ -61,6 +61,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         public AudioClip pickupItem;
         public AudioClip reload;
         public AudioClip die;
+        public AudioClip zoom;
     }
 
     Weapon equipped
@@ -180,7 +181,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
         if (Input.GetButtonDown("Fire2"))
         {
-            Zoom(!isZoomed);
+            Zoom(!isZoomed, true);
         }
 
         if (Input.GetButtonDown("Reload"))
@@ -221,11 +222,18 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         }
     }
 
-    void Zoom(bool state)
+    void Zoom(bool state, bool playsound)
     {
         if (!equipped.IsInBaseState() || !equipped.data.canZoom || isDead)
         {
             state = false;
+            playsound = false;
+        }
+        if (playsound)
+        {
+            AudioSource ass = GetComponent<AudioSource>();
+            ass.clip = sounds.zoom;
+            ass.Play();
         }
         isZoomed = state;
         GeneralCanvas.canvas.Zoom = state;
@@ -284,7 +292,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         equipped.PlayVisuals();
         if (equipped.data.canZoom && !isZoomed)
             spread = .15f;
-        Zoom(false);
+        Zoom(false,false);
         GeneralCanvas.canvas.CHSpread(equipped.data.spread * 50);
         GeneralCanvas.canvas.SetAmmoCount(true, true, equipped.data.maxAmmo, equipped.data.currentAmmo);
         float rngHeight = UnityEngine.Random.Range(-spread, spread);
@@ -343,7 +351,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
         if (reloadRoutine == null)
         {
-            Zoom(false);
+            Zoom(false,false);
             state = WeaponState.Reloading;
             weaponHolderAnim.SetTrigger("Reload");
             reloadRoutine = StartCoroutine(ReloadRoutine());
@@ -377,7 +385,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
         {
             case PickUp.Category.Weapon:
                 CmdEquipWeapon((byte)weapID);
-                Zoom(false);
+                Zoom(false,false);
                 break;
             case PickUp.Category.Usable:
                 usable = weapID;
@@ -397,7 +405,7 @@ public class NWPlayerCombat : NetworkBehaviour, IHitable
 
         if (isLocalPlayer)
         {
-            Zoom(false);
+            Zoom(false,false);
             StartCoroutine(EquipRoutine(weapon));
         }
 

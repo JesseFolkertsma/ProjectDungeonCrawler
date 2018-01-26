@@ -17,8 +17,8 @@ public class MyNetworkManager : NetworkManager {
 
     public override void OnServerDisconnect(NetworkConnection conn)
     {
-        //PlayerManager.RemovePlayer(conn.playerControllers[0].gameObject.name);
-        //MatchManager.instance.LeaveMatch(conn.playerControllers[0].gameObject.name);
+        PlayerManager.RemovePlayer(conn.playerControllers[0].gameObject.name);
+        MatchManager.instance.LeaveMatch(conn.playerControllers[0].gameObject.name);
 
         print("A player pressed alt + f4!");
         NetworkServer.Destroy(conn.playerControllers[0].gameObject);
